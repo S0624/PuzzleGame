@@ -1,46 +1,48 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ColorType
+{
+    Green  = 0,    // Á∑ë.
+    Red    = 1,    // Ëµ§.
+    Yellow = 2,    // ÈªÑËâ≤.
+    Blue   = 3,    // Èùí.
+    Purple = 4,    // Á¥´.
+
+    max    = 5,    // ÊúÄÂ§ßÂÄ§(‰ªÆ).
+};
+
+// „Åì„Çå„ÅØ„Ç¢„Çø„ÉÉ„ÉÅ„Åï„Çå„Å¶„ÅÑ„Å™„Åã„Å£„Åü„Çâ„Ç¢„Çø„ÉÉ„ÉÅ„Åô„Çã„Å®„ÅÑ„ÅÜÈñ¢Êï∞.
+//[RequireComponent(typeof(Renderer))]
 public class Test : MonoBehaviour
 {
-    // à⁄ìÆë¨ìx.
-    private float _speed;
-    // Start is called before the first frame update
-    void Start()
+    static readonly Color[] color_table = new Color[] {
+        Color.green,        // Á∑ë.
+        Color.red,          // Ëµ§.
+        Color.yellow,       // ÈªÑËâ≤.
+        Color.blue,         // Èùí.
+        Color.magenta,      // Á¥´.
+
+        Color.gray,
+    };
+
+    [SerializeField] Renderer my_renderer = default!;// Ëá™ÂàÜËá™Ë∫´„ÅÆ„Éû„ÉÜ„É™„Ç¢„É´„ÇíÁôªÈå≤„Åó„Å¶„Åä„Åè(GetComponent„Çí„Å™„Åè„Åô).
+    ColorType _type = ColorType.max;
+
+    public void SetColorType(ColorType type)
     {
-        _speed = 2.5f;
+        _type = type;
+
+        my_renderer.material.color = color_table[(int)_type];
+    }
+    public ColorType GetColorType()
+    {
+        return _type;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetPos(Vector3 pos)
     {
-        
-    }
-    void FixedUpdate()
-    {
-        // HACK Ç∆ÇËÇ†Ç¶Ç∏éËÇìÆÇ©Ç∑ópÇÃèàóù(å„Ç≈Ç‡Ç¡Ç∆Ç¢Ç¢ï˚ñ@Ç…èëÇ´íºÇµÇΩÇ¢Ç»).
-        //if (Input.GetAxis("Vertical") > 0)
-        //{
-        //    // è„.
-        //    transform.position += transform.up * _speed * Time.deltaTime;
-        //}
-        if (Input.GetAxis("Vertical") < 0)
-        {
-            // â∫.
-            this.transform.localPosition -= transform.up * _speed * Time.deltaTime;
-        }
-        if (Input.GetAxis("Horizontal") > 0)
-        {
-            // âE.
-            this.transform.localPosition += transform.right * _speed * Time.deltaTime;
-        }
-        if (Input.GetAxis("Horizontal") < 0)
-        {
-            // ç∂.
-            this.transform.localPosition -= transform.right * _speed * Time.deltaTime;
-        }
-
-        this.transform.localPosition += new Vector3(0.0f,-0.01f,0.0f);
+        this.transform.localPosition = pos;
     }
 }
