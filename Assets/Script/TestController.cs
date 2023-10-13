@@ -51,10 +51,14 @@ public class TestController : MonoBehaviour
         }
     }
     // 範囲外じゃないかの判定
-    public static bool IsValidated(Vector2Int pos)
+    public bool IsValidated(Vector2Int pos)
     {
-        return 0 <= pos.x && pos.x < _borad_Width
-            && 0 <= pos.y && pos.y < _borad_Height;
+        if (0 <= pos.x && pos.x < _borad_Width
+        && 0 <= pos.y && pos.y < _borad_Height)
+        {
+            return true;
+        }
+        return false;
     }
     // フィールド内におけるかどうかの判定
     public bool IsCanSetCube(Vector2Int pos)

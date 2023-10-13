@@ -49,7 +49,6 @@ public class TestMove : MonoBehaviour
         // 上下左右に動かす
         //transform.Translate(stickVector2 * _speed * Time.deltaTime);
         //Vector2 a = stickVector2 * _speed * Time.deltaTime;
-        // HACK とりあえず手を動かす用の処理(後でもっといい方法に書き直したいな).
         _action = _testInput.Piece.Move;
         if (moveInput.y < 0 && _action.WasPressedThisFrame())
         {
@@ -62,6 +61,7 @@ public class TestMove : MonoBehaviour
             }
             else
             {
+                // 下を押されたら落下時間を無視
                 _timer = (int)(60 * 1.2f);
             }
             //_testField.GetComponent<TestController>().ClearAll();
@@ -72,8 +72,11 @@ public class TestMove : MonoBehaviour
         }
         else if (moveInput.x > 0 && _action.WasPressedThisFrame())
         {
-            _cubePos.x++;
-            CubePos(1, 0);
+            //if (_fieldObject.GetComponent<TestController>().IsValidated(_cubePos))
+            {
+                _cubePos.x++;
+                CubePos(1, 0);
+            }
             //_testField.GetComponent<TestController>().ClearAll();
             //_testField.GetComponent<TestController>().IsSetCube(_testPos,0);
             // 右.
