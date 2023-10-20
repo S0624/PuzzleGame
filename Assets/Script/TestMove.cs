@@ -89,7 +89,7 @@ public class TestMove : MonoBehaviour
         {
             if (CubeMoveState())
             {
-                if (!_fieldObject.GetComponent<TestController>().IsNextCube(_cubePos))
+                if (!_fieldObject.GetComponent<TestController>().IsNextCubeY(_cubePos))
                 {
                     _cubePos.y--;
                     _timer = 0;
@@ -129,13 +129,27 @@ public class TestMove : MonoBehaviour
                 testtimer = 0;
             }
         }
+#if DEBUG
+        // 急降下で下に落とす(DEBUG機能).
+        if (moveInput.y > 0)
+        {
+            if (_action.WasPressedThisFrame())
+            {
+                _cubePos = _fieldObject.GetComponent<TestController>().SteepDescent(_cubePos);
+                _fieldObject.GetComponent<TestController>().IsSetCube(_cubePos, _colorNum);
+                _cubePos = new Vector2Int(3, 14);
+                this.transform.position = _cubePostemp;
+                ColorRandam();
+            }
+        }
+#endif
         //else
         //{
         //    //MoveObject2(0);
         //    //MoveObject(new Vector3(0.0f, 0.0f, 0.0f));
         //}
         // 下にキューブがあったら進まないようにしたい
-        if(_timer > 60 * 1.2 && _fieldObject.GetComponent<TestController>().IsNextCube(_cubePos))
+        if (_timer > 60 * 1.2 && _fieldObject.GetComponent<TestController>().IsNextCubeY(_cubePos))
         {
             //_fieldObject.GetComponent<TestController>().IsSetCube(_cubePos, 0);
             _fieldObject.GetComponent<TestController>().IsSetCube(_cubePos, _colorNum);
@@ -176,7 +190,8 @@ public class TestMove : MonoBehaviour
     // HACK けす
     private int ColorRandam()
     {
-        _colorNum = Random.Range((int)ColorType.Green, (int)ColorType.Yellow);
+        _colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax);
+        //_colorNum = Random.Range((int)ColorType.Green, (int)ColorType.Yellow);
         this.GetComponent<Renderer>().material.color = color_table[_colorNum];
         return _colorNum;
     }
