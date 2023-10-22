@@ -129,7 +129,7 @@ public class TestMove : MonoBehaviour
                 testtimer = 0;
             }
         }
-#if DEBUG
+#if true
         // 急降下で下に落とす(DEBUG機能).
         if (moveInput.y > 0)
         {
@@ -137,6 +137,7 @@ public class TestMove : MonoBehaviour
             {
                 _cubePos = _fieldObject.GetComponent<TestController>().SteepDescent(_cubePos);
                 _fieldObject.GetComponent<TestController>().IsSetCube(_cubePos, _colorNum);
+
                 _cubePos = new Vector2Int(3, 14);
                 this.transform.position = _cubePostemp;
                 ColorRandam();
@@ -190,7 +191,8 @@ public class TestMove : MonoBehaviour
     // HACK けす
     private int ColorRandam()
     {
-        _colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax);
+        //_colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax);
+        _colorNum = Random.Range((int)ColorType.Green,4);
         //_colorNum = Random.Range((int)ColorType.Green, (int)ColorType.Yellow);
         this.GetComponent<Renderer>().material.color = color_table[_colorNum];
         return _colorNum;

@@ -84,17 +84,21 @@ public class TestController : MonoBehaviour
     public bool IsCanSetCube(Vector2Int pos)
     {
         if (!IsValidated(pos)) return false;
+        //Debug.Log(pos);
 
+        Debug.Log(_board[pos.y, pos.x]);
         return 0 == _board[pos.y, pos.x];
     }
     // フィールド内にセットする
     public bool IsSetCube(Vector2Int pos, int val)
     {
+        
         if (!IsCanSetCube(pos)) return false;
 
         _board[pos.y, pos.x] = val;
-        // もし中身が入っていたらエラー表記を出す
+        // もし中身が入っていたらエラー表記を出
         //Debug.Assert(_Cube[pos.y, pos.x] == null);
+        //Debug.Log(pos);
 
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
         _Cube[pos.y, pos.x] = Instantiate(_prefabCube, world_position, Quaternion.identity, transform);
@@ -245,9 +249,10 @@ public class TestController : MonoBehaviour
     // キューブを消す処理
     private void EraseField(int[,] tempField)
     {
+        int drapFall = 0;
         for (int x = 0; x < _borad_Width; x++)
         {
-            int drapFall = 0;
+            drapFall = 0;
             for (int y = 0; y < _borad_Height; y++)
             {
                 if (tempField[y, x] == 1)
@@ -255,6 +260,7 @@ public class TestController : MonoBehaviour
                     // こわす.
                     if (_Cube[y, x] != null) Destroy(_Cube[y, x]);
                     _Cube[y, x] = null;
+                    _board[y, x] = 0;
                     tempField[y, x] = 0;
                     drapFall++;
                 }
