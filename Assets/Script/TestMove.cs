@@ -57,79 +57,8 @@ public class TestMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-    }
-    void FixedUpdate()
-    {
-        _timer++;
-        //this.transform.position = transform.position + new Vector3(_testPos.x, _testPos.y, 0);
-        //Debug.Log(_testPos);
-        // 方向キーの入力取得
-        Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
-        // 下左右に動かす
-        //transform.Translate(stickVector2 * _speed * Time.deltaTime);
-        //Vector2 a = stickVector2 * _speed * Time.deltaTime;
-
-        if (_fieldObject.GetComponent<TestController>().IsCheckField())
-        {
-            Debug.Log("処理を止める想定");
-        }
-        _action = _testInput.Piece.Move;
-        //Debug.Log(_action.IsPressed());
-        //Debug.Log(testtimer);
-        if(_action.IsPressed())
-        {
-            testtimer++;
-        }
-
-        // HACK 斜めってどうやんねん(？？？？？？)
-        // 下.
-        //if (moveInput.y < 0 && _action.WasPressedThisFrame())
-        if (moveInput.y < 0)
-        {
-            if (CubeMoveState())
-            {
-                if (!_fieldObject.GetComponent<TestController>().IsNextCubeY(_cubePos))
-                {
-                    _cubePos.y--;
-                    _timer = 0;
-                    CubePos(0, -1);
-                }
-                else
-                {
-                    // 下を押されたら落下時間を無視
-                    _timer = (int)(60 * 1.2f);
-                }
-                testtimer = 0;
-            }
-        }
-        // 右.
-        if (moveInput.x > 0)
-        {
-            if (CubeMoveState())
-            {
-                if (!_fieldObject.GetComponent<TestController>().IsNextCubeX(_cubePos, 1))
-                {
-                    _cubePos.x++;
-                    CubePos(1, 0);
-                }
-                testtimer = 0;
-            }
-        }
-        // 左.
-        else if (moveInput.x < 0)
-        {
-            if (CubeMoveState())
-            {
-                if (!_fieldObject.GetComponent<TestController>().IsNextCubeX(_cubePos, -1))
-                {
-                    _cubePos.x--;
-                    CubePos(-1, 0);
-                }
-                testtimer = 0;
-            }
-        }
 #if true
+        Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
         // 急降下で下に落とす(DEBUG機能).
         if (moveInput.y > 0)
         {
@@ -144,6 +73,81 @@ public class TestMove : MonoBehaviour
             }
         }
 #endif
+    }
+    void FixedUpdate()
+    {
+        //this.transform.position = transform.position + new Vector3(_testPos.x, _testPos.y, 0);
+        //Debug.Log(_testPos);
+        // 方向キーの入力取得
+        // 下左右に動かす
+        //transform.Translate(stickVector2 * _speed * Time.deltaTime);
+        //Vector2 a = stickVector2 * _speed * Time.deltaTime;
+
+        if (!_fieldObject.GetComponent<TestController>().IsCheckField())
+        {
+            _timer++;
+
+            Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
+            _action = _testInput.Piece.Move;
+            //Debug.Log(_action.IsPressed());
+            //Debug.Log(testtimer);
+            if (_action.IsPressed())
+            {
+                testtimer++;
+            }
+
+            // HACK 斜めってどうやんねん(？？？？？？)
+            // 下.
+            //if (moveInput.y < 0 && _action.WasPressedThisFrame())
+            if (moveInput.y < 0)
+            {
+                if (CubeMoveState())
+                {
+                    if (!_fieldObject.GetComponent<TestController>().IsNextCubeY(_cubePos))
+                    {
+                        _cubePos.y--;
+                        _timer = 0;
+                        CubePos(0, -1);
+                    }
+                    else
+                    {
+                        // 下を押されたら落下時間を無視
+                        _timer = (int)(60 * 1.2f);
+                    }
+                    testtimer = 0;
+                }
+            }
+            // 右.
+            if (moveInput.x > 0)
+            {
+                if (CubeMoveState())
+                {
+                    if (!_fieldObject.GetComponent<TestController>().IsNextCubeX(_cubePos, 1))
+                    {
+                        _cubePos.x++;
+                        CubePos(1, 0);
+                    }
+                    testtimer = 0;
+                }
+            }
+            // 左.
+            else if (moveInput.x < 0)
+            {
+                if (CubeMoveState())
+                {
+                    if (!_fieldObject.GetComponent<TestController>().IsNextCubeX(_cubePos, -1))
+                    {
+                        _cubePos.x--;
+                        CubePos(-1, 0);
+                    }
+                    testtimer = 0;
+                }
+            }
+        }
+        //else
+        //{
+        //    Debug.Log("処理を止める想定");
+        //}
         //else
         //{
         //    //MoveObject2(0);

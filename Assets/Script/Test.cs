@@ -31,9 +31,15 @@ public class Test : MonoBehaviour
         Color.gray,         // おじゃま(グレー)
     };
 
-    [SerializeField] Renderer my_renderer = default!;// 自分自身のマテリアルを登録しておく(GetComponentをなくす).
-    ColorType _type = ColorType.PuyoMax;
+    [SerializeField] private Renderer my_renderer = default!;// 自分自身のマテリアルを登録しておく(GetComponentをなくす).
+    private ColorType _type = ColorType.PuyoMax;
+    private Rigidbody _rigidbody;
 
+    private void Start()
+    {
+        _rigidbody = GetComponent<Rigidbody>();
+        _rigidbody.IsSleeping();
+    }
     public void SetColorType(ColorType type)
     {
         _type = type;
@@ -48,5 +54,15 @@ public class Test : MonoBehaviour
     public void SetPos(Vector3 pos)
     {
         this.transform.localPosition = pos;
+    }
+    public bool IsMoveCube()
+    {
+        // オブジェクトが動いていないかどうか
+        if(!_rigidbody.IsSleeping())
+        {
+            return true;
+        }
+        return false;
+        
     }
 }

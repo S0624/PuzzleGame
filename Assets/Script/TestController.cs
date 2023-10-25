@@ -27,7 +27,7 @@ public class TestController : MonoBehaviour
 
     private int[,] _tempBoard = new int[_borad_Height, _borad_Width];
     private Vector2Int[] _cubeDirection = new Vector2Int[(int)Direction.max];
-
+    private bool _isTestEraseFlag = false;
     // ボードの中を全消しする(クリアする).
     private void ClearAll()
     {
@@ -86,7 +86,7 @@ public class TestController : MonoBehaviour
         if (!IsValidated(pos)) return false;
         //Debug.Log(pos);
 
-        Debug.Log(_board[pos.y, pos.x]);
+        //Debug.Log(_board[pos.y, pos.x]);
         return 0 == _board[pos.y, pos.x];
     }
     // フィールド内にセットする
@@ -143,6 +143,7 @@ public class TestController : MonoBehaviour
             for (int x = 0; x < _borad_Width; x++)
             {
                 _tempBoard[y , x] = 0;
+                //_board[y , x] = 0;
             }
         }
     }
@@ -150,7 +151,7 @@ public class TestController : MonoBehaviour
     {
         int eraseCount = 0;
         ColorType cubeColor;
-        
+
         //// これはテスト
         //_Cube[0, 5] = _Cube[0, 0];
         //Debug.Log(_Cube[0, 5]);
@@ -161,27 +162,33 @@ public class TestController : MonoBehaviour
             {
                 // 仮で保存する変数を初期化する
                 TempBoardClearAll();
+
+                if(IsCubeFallDown(x,y)) return true;
+
                 if(_Cube[y, x] == null)
                 {
                     // 何も入っていないので処理をとばす
                     cubeColor = ColorType.None;
                     continue;
                 }
+                // カラーの番号を取得
                 cubeColor = _Cube[y, x].GetComponent<Test>().GetColorType();
+                // 消えるかどうかの判定
                 IsRecursionCheckField(x, y, cubeColor);
-                //塗りつぶせる個数をチェックする
+                // 消せる個数をチェックする
                 eraseCount = CountTempField(_tempBoard);
-
+                // 指定された数よりも消せる数が多かったら
                 if (eraseCount >= 4)
                 {
+                    _isTestEraseFlag = true;
                     EraseField(_tempBoard);
-                    Debug.Log("けすよ");
+                    //Debug.Log("けすよ");
                     return true;
                 }
             }
         }
 
-
+        _isTestEraseFlag = false;
         return false;
     }
     // チェックしようとしているところにあるキューブが同じ色かどうか
@@ -249,34 +256,63 @@ public class TestController : MonoBehaviour
     // キューブを消す処理
     private void EraseField(int[,] tempField)
     {
-        int drapFall = 0;
+        int fallDown = 0;
         for (int x = 0; x < _borad_Width; x++)
         {
-            drapFall = 0;
+            fallDown = 0;
             for (int y = 0; y < _borad_Height; y++)
             {
                 if (tempField[y, x] == 1)
                 {
-                    // こわす.
+                    // こわす(消す)処理.
                     if (_Cube[y, x] != null) Destroy(_Cube[y, x]);
                     _Cube[y, x] = null;
                     _board[y, x] = 0;
                     tempField[y, x] = 0;
-                    drapFall++;
-                }
-                if ( y < _borad_Height - drapFall)
-                {
-
-                    Debug.Log("とおってる");
-                    _Cube[y, x] = _Cube[y + drapFall, x];
-                    
-                    //_Cube[y, x] = _Cube[0,0];
+                    fallDown++;
                 }
             }
+            FallDownField(x, fallDown);
         }
-        //Debug.Log(_Cube[0, 0]);
         //Debug.Log(_Cube[1, 0]);
 
+    }
+    private void FallDownField(int x ,int falldown)
+    {
+        // 落す処理(配列の情報をずらす(現在のフィールドにあるキューブを落す))
+        for (int y = 0; y < _borad_Height - falldown; y++)
+        {
+            if (_board[y, x] == 0)
+            {
+                _Cube[y, x] = _Cube[y + falldown, x];
+                _Cube[y + falldown, x] = null;
+                //Debug.Log(_board[y + drapFall, x]);
+                _board[y, x] = _board[y + falldown, x];
+                _board[y + falldown, x] = 0;
+                //_Cube[y, x] = _Cube[0,0];
+            }
+        }
+    }
+    // キューブが落下中かどうか
+    // HACK 落下中だと移動できなくしたいんだけどこまったことになってる
+    private bool IsCubeFallDown(int x, int y)
+    {
+        if (_isTestEraseFlag)
+        {
+            // 数値が何も入っていない場合チェックしなくてよい
+            //if (_Cube[y, x] == null)
+            //{
+            //    return false;
+            //}
+            if (_Cube[y, x] != null && _Cube[y, x].GetComponent<Test>().IsMoveCube())
+            {
+                Debug.Log("とおったよHey");
+                //_isTestEraseFlag = false;
+                return true;
+            }
+        }
+        //_isTestEraseFlag = false;
+        return false;
     }
 
 #if DEBUG
