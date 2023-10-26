@@ -5,25 +5,33 @@ using UnityEngine.InputSystem;
 
 public class TestMove : MonoBehaviour
 {
+    // ボタンの処理が行われているかどうかの変数
     private InputAction _action;
+    // ボタンの処理をするための変数.
     private TestInputManager _testInput;
-    private Rigidbody rb;
-    private Vector3 force;
+   
     // 移動速度.
     //private float _speed;
     //private float currentSpeed;
 
+    // フィールドの情報を受け取るための変数
     private GameObject _fieldObject;
+    // 移動情報
     private Vector2Int _cubePos = new Vector2Int(3,14);
+    // 仮で戻す位置を覚えておく変数
     private Vector3 _cubePostemp;
+    // 時間を図る変数(数秒たつと自動で落下させるために使用)
     private int _timer = 0;
-
-    int testtimer = 0;
+    // ボタンを押し続けているか図る(これがないと一瞬で移動してしまうため)
+   private int _inputframe = 0;
+    // 色の番号
     private int _colorNum;
+    // どの向きに回転させるか（回転処理に使用）
     private Vector2Int[] _cubeDirection = new Vector2Int[(int)Direction.max];
+    // 何回ボタンを押されたかを図るために使用する変数
     private int _direction = 0;
 
-    // HACK HELP>>>>>>>>>
+    // HACK なんかいい処理ないんですか別ファイルで全く同じの使ってる
     // 実行時に値を取得する読み取り専用の変数を生成
     static readonly Color[] color_table = new Color[] {
         Color.white,        // 白.
@@ -38,28 +46,24 @@ public class TestMove : MonoBehaviour
     };
 
     // Start is called before the first frame update
+    // 初期化処理
     void Start()
     {
+
         _testInput = new TestInputManager();
         _testInput.Enable();
 
-        rb = GetComponent<Rigidbody>();
-        force = new Vector3(1.0f, 0.0f, 0.0f);
         //_speed = 5.0f;
-
+        // フィールドを取得
         _fieldObject = GameObject.Find("Board");
         //this.transform.position = transform.position + new Vector3(_cubePos.x, _cubePos.y, 0);
         this.transform.position = Vector3.zero;
+        // 自分のポジションから
+        // これをしないといろんな位置に行ってしまうので、フィールドに合わせてキューブの位置を初期化する
         this.transform.position = transform.position +transform.position + _fieldObject.GetComponent<TestController>().fieldPos(_cubePos);
         
         //this.transform.position = new Vector3(_cubePos.x, _cubePos.y, 0);
         _cubePostemp = this.transform.position;
-        //foreach (Transform child in this.transform)
-        //{
-        //    child.transform.position = child.transform.position - new Vector3(_cubePos.x, 0, 0);
-        //    // 子オブジェクトに対する処理をここに書く
-        //    Debug.Log(child.transform.position);
-        //}
 
         _colorNum = ColorRandam();
         //_testField.GetComponent<TestController>().IsSetCube(_testPos,0);
@@ -90,13 +94,11 @@ public class TestMove : MonoBehaviour
             // HACK 回転処理 ﾋｨ.........
             foreach (Transform child in this.transform)
             {
-                Debug.Log(child);
                 child.transform.position = 
                     new Vector3(_cubeDirection[_direction].x + transform.position.x, _cubeDirection[_direction].y + transform.position.y, 0);
                 //child.transform.position.y; 
                 break;
             }
-                //Debug.Log("ぱぁ");
         }
 
         Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
@@ -124,24 +126,17 @@ public class TestMove : MonoBehaviour
     }
     void FixedUpdate()
     {
-        //this.transform.position = transform.position + new Vector3(_testPos.x, _testPos.y, 0);
-        //Debug.Log(_testPos);
         // 方向キーの入力取得
         // 下左右に動かす
-        //transform.Translate(stickVector2 * _speed * Time.deltaTime);
-        //Vector2 a = stickVector2 * _speed * Time.deltaTime;
-
         if (!_fieldObject.GetComponent<TestController>().IsCheckField())
         {
             _timer++;
 
             Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
             _action = _testInput.Piece.Move;
-            //Debug.Log(_action.IsPressed());
-            //Debug.Log(testtimer);
             if (_action.IsPressed())
             {
-                testtimer++;
+                _inputframe++;
             }
 
             // HACK 斜めってどうやんねん(？？？？？？)
@@ -163,7 +158,6 @@ public class TestMove : MonoBehaviour
                         }
                         checkPos = new Vector2Int(0, checkPos.y - (int)this.transform.position.y) + _cubePos;
                     }
-                    Debug.Log(checkPos+""+_cubePos);
                     if (!_fieldObject.GetComponent<TestController>().IsNextCubeY(checkPos))
                     {
                         _cubePos.y--;
@@ -175,7 +169,7 @@ public class TestMove : MonoBehaviour
                         // 下を押されたら落下時間を無視
                         _timer = (int)(60 * 1.2f);
                     }
-                    testtimer = 0;
+                    _inputframe = 0;
                 }
             }
 
@@ -200,7 +194,7 @@ public class TestMove : MonoBehaviour
                         _cubePos.x++;
                         CubePos(1, 0);
                     }
-                    testtimer = 0;
+                    _inputframe = 0;
                 }
             }
             // 左.
@@ -222,7 +216,7 @@ public class TestMove : MonoBehaviour
                         _cubePos.x--;
                         CubePos(-1, 0);
                     }
-                    testtimer = 0;
+                    _inputframe = 0;
                 }
             }
         }
@@ -281,26 +275,7 @@ public class TestMove : MonoBehaviour
 
     }
 
-    //void MoveObject2(float test = 1)
-    //{
-    //    //指定したスピードから現在の速度を引いて加速力を求める
-    //    currentSpeed = (_speed - rb.velocity.magnitude) * test;
-    //}
-    //void MoveObject(Vector3 currentspeed)
-    //{
-    //    if (rb.velocity.magnitude < 10)
-    //    {
-    //        Debug.Log(rb.velocity.magnitude);
-    //        //調整された加速力で力を加える
-    //        rb.AddForce(currentspeed);
-    //    }
-    //    else
-    //    {
-    //        rb.AddForce(Vector3.zero);
-    //    }
-    //}
-
-    // HACK けす
+    // HACK とりあえず雑に色を決めてるのであとでけします
     private int ColorRandam()
     {
         //_colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax);
@@ -316,7 +291,7 @@ public class TestMove : MonoBehaviour
 
     private bool CubeMoveState()
     {
-        if (testtimer > 10 || _action.WasPressedThisFrame())
+        if (_inputframe > 10 || _action.WasPressedThisFrame())
         {
             return true;
         }
