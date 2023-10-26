@@ -3,17 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // コメントがないよ？
+public enum Direction
+{
+    Down,
+    Left,
+    Up,
+    Right,
+    max,
+}
 public class TestController : MonoBehaviour
 {
     // このクラスでしか使わない想定なのでプライベートにしている
-    private enum Direction
-    {
-        Right,
-        Left,
-        Up,
-        Down,
-        max,
-    }
+    //private enum Direction
+    //{
+    //    Right,
+    //    Left,
+    //    Up,
+    //    Down,
+    //    max,
+    //}
 
     // ボードの横の最大値(6 * 15).
     private const int _borad_Width = 6;
@@ -332,9 +340,17 @@ public class TestController : MonoBehaviour
                 break;
             }
         }
+        Debug.Log(result + "pos" + pos);
         return result;
     }
 #endif
+
+    public Vector3 fieldPos(Vector2Int pos)
+    {
+        Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0);
+        return world_position;
+    }
+
     //// Start is called before the first frame update
     //void Start()
     //{

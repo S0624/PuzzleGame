@@ -35,15 +35,6 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""New action"",
-                    ""type"": ""Button"",
-                    ""id"": ""3613d57a-83f8-4bf2-9c65-b7a95e4c26c5"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -176,17 +167,6 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""147c0ea6-cf06-48de-96e3-564fb96b1fb5"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""New action"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -720,6 +700,24 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""RotationRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""135469f1-f3b4-426f-8e42-6087a4f33c1e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotationLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""105f01b8-c546-4032-8c96-3f420b154a3c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -799,6 +797,105 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""7c766459-678b-4992-b0ed-aa919a61b8aa"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""8dd1543c-b827-457a-9f6a-f5dd6df551e7"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""2da76bc1-a408-45a1-ba4d-b6190fbc109f"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""53d53ea8-28f0-444c-afec-2b3a586a8e7c"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""cec48474-ebab-4d1b-8f5f-412c6e731cd9"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bbc4ba66-71ad-4cfe-ae6b-8827580ed484"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotationRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3cd4eee1-9cf2-4c4e-bc0f-d4c4a04a331d"",
+                    ""path"": ""<Keyboard>/#(Z)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotationRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4347bd22-b1bc-4a04-b93c-70a6dcdd0a6c"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotationLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4261554a-caf2-4654-a350-c9aaa3fe47f2"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotationLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -869,7 +966,6 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
-        m_Player_Newaction = m_Player.FindAction("New action", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -885,6 +981,8 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
         // Piece
         m_Piece = asset.FindActionMap("Piece", throwIfNotFound: true);
         m_Piece_Move = m_Piece.FindAction("Move", throwIfNotFound: true);
+        m_Piece_RotationRight = m_Piece.FindAction("RotationRight", throwIfNotFound: true);
+        m_Piece_RotationLeft = m_Piece.FindAction("RotationLeft", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -945,13 +1043,11 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
-    private readonly InputAction m_Player_Newaction;
     public struct PlayerActions
     {
         private @TestInputManager m_Wrapper;
         public PlayerActions(@TestInputManager wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
-        public InputAction @Newaction => m_Wrapper.m_Player_Newaction;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -964,9 +1060,6 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMove;
-                @Newaction.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNewaction;
-                @Newaction.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNewaction;
-                @Newaction.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnNewaction;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -974,9 +1067,6 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @Newaction.started += instance.OnNewaction;
-                @Newaction.performed += instance.OnNewaction;
-                @Newaction.canceled += instance.OnNewaction;
             }
         }
     }
@@ -1091,11 +1181,15 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Piece;
     private IPieceActions m_PieceActionsCallbackInterface;
     private readonly InputAction m_Piece_Move;
+    private readonly InputAction m_Piece_RotationRight;
+    private readonly InputAction m_Piece_RotationLeft;
     public struct PieceActions
     {
         private @TestInputManager m_Wrapper;
         public PieceActions(@TestInputManager wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Piece_Move;
+        public InputAction @RotationRight => m_Wrapper.m_Piece_RotationRight;
+        public InputAction @RotationLeft => m_Wrapper.m_Piece_RotationLeft;
         public InputActionMap Get() { return m_Wrapper.m_Piece; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1108,6 +1202,12 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_PieceActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_PieceActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_PieceActionsCallbackInterface.OnMove;
+                @RotationRight.started -= m_Wrapper.m_PieceActionsCallbackInterface.OnRotationRight;
+                @RotationRight.performed -= m_Wrapper.m_PieceActionsCallbackInterface.OnRotationRight;
+                @RotationRight.canceled -= m_Wrapper.m_PieceActionsCallbackInterface.OnRotationRight;
+                @RotationLeft.started -= m_Wrapper.m_PieceActionsCallbackInterface.OnRotationLeft;
+                @RotationLeft.performed -= m_Wrapper.m_PieceActionsCallbackInterface.OnRotationLeft;
+                @RotationLeft.canceled -= m_Wrapper.m_PieceActionsCallbackInterface.OnRotationLeft;
             }
             m_Wrapper.m_PieceActionsCallbackInterface = instance;
             if (instance != null)
@@ -1115,6 +1215,12 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @RotationRight.started += instance.OnRotationRight;
+                @RotationRight.performed += instance.OnRotationRight;
+                @RotationRight.canceled += instance.OnRotationRight;
+                @RotationLeft.started += instance.OnRotationLeft;
+                @RotationLeft.performed += instance.OnRotationLeft;
+                @RotationLeft.canceled += instance.OnRotationLeft;
             }
         }
     }
@@ -1167,7 +1273,6 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
-        void OnNewaction(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
@@ -1185,5 +1290,7 @@ public partial class @TestInputManager : IInputActionCollection2, IDisposable
     public interface IPieceActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnRotationRight(InputAction.CallbackContext context);
+        void OnRotationLeft(InputAction.CallbackContext context);
     }
 }
