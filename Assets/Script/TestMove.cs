@@ -278,10 +278,16 @@ public class TestMove : MonoBehaviour
     // HACK とりあえず雑に色を決めてるのであとでけします
     private int ColorRandam()
     {
+        //　雑に色付けようとしたけどバグってる
+
         //_colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax);
-        _colorNum = Random.Range((int)ColorType.Green,4);
-        //_colorNum = Random.Range((int)ColorType.Green, (int)ColorType.Yellow);
-        //this.GetComponent<Renderer>().material.color = color_table[_colorNum];
+        //   _colorNum = Random.Range((int)ColorType.Green,4);
+        // 子オブジェクトを全て取得する
+        foreach (Transform child in this.transform)
+        {
+            _colorNum = Random.Range((int)ColorType.Green, (int)ColorType.Yellow);
+            child.GetComponent<Renderer>().material.color = color_table[_colorNum];
+        }
         return _colorNum;
     }
     private void CubePos(float x = 0, float y = 0)
