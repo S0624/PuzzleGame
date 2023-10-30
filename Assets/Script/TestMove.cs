@@ -15,7 +15,9 @@ public class TestMove : MonoBehaviour
     //private float currentSpeed;
 
     // フィールドの情報を受け取るための変数
-    private GameObject _fieldObject;
+    private GameObject _fieldObject; 
+    // 色の情報を受け取るための変数
+    private GameObject _colorManager;
     // 移動情報
     private Vector2Int _cubePos = new Vector2Int(3,14);
     // 仮で戻す位置を覚えておく変数
@@ -26,24 +28,11 @@ public class TestMove : MonoBehaviour
    private int _inputframe = 0;
     // 色の番号
     private int _colorNum;
+
     // どの向きに回転させるか（回転処理に使用）
     private Vector2Int[] _cubeDirection = new Vector2Int[(int)Direction.max];
     // 何回ボタンを押されたかを図るために使用する変数
     private int _direction = 0;
-
-    // HACK なんかいい処理ないんですか別ファイルで全く同じの使ってる
-    // 実行時に値を取得する読み取り専用の変数を生成
-    static readonly Color[] color_table = new Color[] {
-        Color.white,        // 白.
-        Color.green,        // 緑.
-        Color.red,          // 赤.
-        Color.yellow,       // 黄色.
-        Color.blue,         // 青.
-        Color.magenta,      // 紫.
-        Color.gray,         // 仮でグレーを入れる
-
-        Color.gray,         // おじゃま(グレー)
-    };
 
     // Start is called before the first frame update
     // 初期化処理
@@ -56,6 +45,7 @@ public class TestMove : MonoBehaviour
         //_speed = 5.0f;
         // フィールドを取得
         _fieldObject = GameObject.Find("Board");
+        _colorManager = GameObject.Find("ColorManager");
         //this.transform.position = transform.position + new Vector3(_cubePos.x, _cubePos.y, 0);
         this.transform.position = Vector3.zero;
         // 自分のポジションから
@@ -65,7 +55,6 @@ public class TestMove : MonoBehaviour
         //this.transform.position = new Vector3(_cubePos.x, _cubePos.y, 0);
         _cubePostemp = this.transform.position;
 
-        _colorNum = ColorRandam();
         //_testField.GetComponent<TestController>().IsSetCube(_testPos,0);
         _cubeDirection[(int)Direction.Down] = new Vector2Int(0, -1);
         _cubeDirection[(int)Direction.Left] = new Vector2Int(-1, 0);
@@ -83,7 +72,7 @@ public class TestMove : MonoBehaviour
         //    Debug.Log(child.transform.position);
         //}
 #if true
-        // 雑に回転処理を実装(お試し)
+        // HACK 雑に回転処理を実装(お試し)
         if (_testInput.Piece.RotationRight.WasPerformedThisFrame())
         {
             _direction++;
@@ -96,7 +85,8 @@ public class TestMove : MonoBehaviour
             {
                 child.transform.position = 
                     new Vector3(_cubeDirection[_direction].x + transform.position.x, _cubeDirection[_direction].y + transform.position.y, 0);
-                //child.transform.position.y; 
+                //Debug.Log(child.transform.position);
+                //child.transform.position.y;
                 break;
             }
         }
@@ -107,19 +97,7 @@ public class TestMove : MonoBehaviour
         {
             if (_action.WasPressedThisFrame())
             {
-                foreach (Transform child in this.transform)
-                {
-                    // 子オブジェクトに対する処理をここに書く
-                    Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, (int)child.transform.position.y) + _cubePos;
-                    pos = _fieldObject.GetComponent<TestController>().SteepDescent(pos);
-                    _fieldObject.GetComponent<TestController>().IsSetCube(pos, _colorNum);
-                }
-                //_cubePos = _fieldObject.GetComponent<TestController>().SteepDescent(_cubePos);
-                //_fieldObject.GetComponent<TestController>().IsSetCube(_cubePos, _colorNum);
-
-                _cubePos = new Vector2Int(3, 14);
-                this.transform.position = _cubePostemp;
-                ColorRandam();
+                Installation();
             }
         }
 #endif
@@ -246,23 +224,7 @@ public class TestMove : MonoBehaviour
 
         if (_timer > 60 * 1.2 && _fieldObject.GetComponent<TestController>().IsNextCubeY(testpos))
         {
-            //_fieldObject.GetComponent<TestController>().IsSetCube(_cubePos, 0);
-            //_fieldObject.GetComponent<TestController>().IsSetCube(_cubePos, _colorNum);
-            // 子オブジェクトを全て取得する
-            foreach (Transform child in this.transform)
-            {
-                // 子オブジェクトに対する処理をここに書く
-                Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, (int)child.transform.position.y) + _cubePos;
-                pos = _fieldObject.GetComponent<TestController>().SteepDescent(pos);
-                _fieldObject.GetComponent<TestController>().IsSetCube(pos, _colorNum);
-
-                //Vector2Int pos = new Vector2Int((int)child.transform.position.x, (int)child.transform.position.y);
-                //_fieldObject.GetComponent<TestController>().IsSetCube(pos, _colorNum);
-            }
-
-            _cubePos = new Vector2Int(3, 14);
-            this.transform.position = _cubePostemp;
-            ColorRandam();
+            Installation();
         }
 
         // HACK 時間での落下処理(仮)
@@ -272,24 +234,30 @@ public class TestMove : MonoBehaviour
             CubePos(0, -1);
             _timer = 0;
         }
-
+        //Quaternion.Slerp();
     }
 
-    // HACK とりあえず雑に色を決めてるのであとでけします
-    private int ColorRandam()
+    // 設置するときの処理
+    private void Installation()
     {
-        //　雑に色付けようとしたけどバグってる
-
-        //_colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax);
-        //   _colorNum = Random.Range((int)ColorType.Green,4);
-        // 子オブジェクトを全て取得する
+        int childcount = 0;
         foreach (Transform child in this.transform)
         {
-            _colorNum = Random.Range((int)ColorType.Green, (int)ColorType.Yellow);
-            child.GetComponent<Renderer>().material.color = color_table[_colorNum];
+            // 子オブジェクトに対する処理をここに書く
+            Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, (int)child.transform.position.y) + _cubePos;
+            pos = _fieldObject.GetComponent<TestController>().SteepDescent(pos);
+            _colorNum = _colorManager.GetComponent<TestColorManager>().GetColorNumber(child.name);
+            Debug.Log(pos.y + " " + _colorNum);
+            _fieldObject.GetComponent<TestController>().IsSetCube(pos, _colorNum);
+            childcount++;
         }
-        return _colorNum;
+
+        _cubePos = new Vector2Int(3, 14);
+        this.transform.position = _cubePostemp;
+        // HACK うーん・・・とりあえず色替えはできてるけどバグが発生してるぅ
+        _colorManager.GetComponent<TestColorManager>().ColorChenge();
     }
+
     private void CubePos(float x = 0, float y = 0)
     {
         this.transform.position = transform.position + new Vector3(x, y, 0);

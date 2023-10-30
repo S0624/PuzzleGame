@@ -191,6 +191,7 @@ public class TestController : MonoBehaviour
                     _isTestEraseFlag = true;
                     EraseField(_tempBoard);
                     //Debug.Log("けすよ");
+
                     return true;
                 }
             }
@@ -314,7 +315,7 @@ public class TestController : MonoBehaviour
             //}
             if (_Cube[y, x] != null && _Cube[y, x].GetComponent<Test>().IsMoveCube())
             {
-                Debug.Log("とおったよHey");
+                //Debug.Log("とおったよHey");
                 //_isTestEraseFlag = false;
                 return true;
             }
@@ -340,7 +341,6 @@ public class TestController : MonoBehaviour
                 break;
             }
         }
-        Debug.Log(result + "pos" + pos);
         return result;
     }
 #endif
