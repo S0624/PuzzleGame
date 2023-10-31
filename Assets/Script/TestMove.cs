@@ -81,14 +81,7 @@ public class TestMove : MonoBehaviour
                 _direction = 0;
             }
             // HACK 回転処理 ﾋｨ.........
-            foreach (Transform child in this.transform)
-            {
-                child.transform.position = 
-                    new Vector3(_cubeDirection[_direction].x + transform.position.x, _cubeDirection[_direction].y + transform.position.y, 0);
-                //Debug.Log(child.transform.position);
-                //child.transform.position.y;
-                break;
-            }
+            CubeRotation();
         }
 
         Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
@@ -138,7 +131,7 @@ public class TestMove : MonoBehaviour
                     }
                     if (!_fieldObject.GetComponent<TestController>().IsNextCubeY(checkPos))
                     {
-                        _cubePos.y--;
+                        //_cubePos.y--;
                         _timer = 0;
                         CubePos(0, -1);
                     }
@@ -154,6 +147,7 @@ public class TestMove : MonoBehaviour
             // 右.
             if (moveInput.x > 0)
             {
+                Debug.Log("右やで");
                 if (CubeMoveState())
                 {
                     Vector2Int checkPos = new Vector2Int(0, 0);
@@ -169,7 +163,7 @@ public class TestMove : MonoBehaviour
                     }
                     if (!_fieldObject.GetComponent<TestController>().IsNextCubeX(checkPos, 1))
                     {
-                        _cubePos.x++;
+                        //_cubePos.x++;
                         CubePos(1, 0);
                     }
                     _inputframe = 0;
@@ -178,6 +172,7 @@ public class TestMove : MonoBehaviour
             // 左.
             else if (moveInput.x < 0)
             {
+                Debug.Log("左やで");
                 if (CubeMoveState())
                 {
                     Vector2Int checkPos = new Vector2Int(13, 0);
@@ -191,7 +186,7 @@ public class TestMove : MonoBehaviour
                     }
                     if (!_fieldObject.GetComponent<TestController>().IsNextCubeX(checkPos, -1))
                     {
-                        _cubePos.x--;
+                        //_cubePos.x--;
                         CubePos(-1, 0);
                     }
                     _inputframe = 0;
@@ -230,7 +225,7 @@ public class TestMove : MonoBehaviour
         // HACK 時間での落下処理(仮)
         if(_timer > 60 * 1.2)
         {
-            _cubePos.y--;
+            //_cubePos.y--;
             CubePos(0, -1);
             _timer = 0;
         }
@@ -244,25 +239,39 @@ public class TestMove : MonoBehaviour
         foreach (Transform child in this.transform)
         {
             // 子オブジェクトに対する処理をここに書く
-            Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, (int)child.transform.position.y) + _cubePos;
-            pos = _fieldObject.GetComponent<TestController>().SteepDescent(pos);
+            //Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, (int)child.transform.position.y - (int)this.transform.position.y) + _cubePos;
+            Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x + _cubePos.x,
+                (int)child.transform.position.y - (int)this.transform.position.y);
+            
+            //Debug.Log(pos);
+
+            // HACK テスト用.
+            // こいつが悪さをしている
+            // こいつはforで置ける一番低い場所を取ってしまうので0からいくとそうなる（説明下手だな？）
+            pos = _fieldObject.GetComponent<TestController>().SteepDescent(pos,_direction);
             _colorNum = _colorManager.GetComponent<TestColorManager>().GetColorNumber(child.name);
-            Debug.Log(pos.y + " " + _colorNum);
+            //Debug.Log(child.position + "wa"+ child.name +"  " + pos.y + " " + _colorNum);
+            //Debug.Log(pos);
             _fieldObject.GetComponent<TestController>().IsSetCube(pos, _colorNum);
             childcount++;
         }
 
         _cubePos = new Vector2Int(3, 14);
         this.transform.position = _cubePostemp;
+        // 回転の角度をもとに戻してあげる.
+        _direction = 0;
+        CubeRotation();
         // HACK うーん・・・とりあえず色替えはできてるけどバグが発生してるぅ
         _colorManager.GetComponent<TestColorManager>().ColorChenge();
     }
 
-    private void CubePos(float x = 0, float y = 0)
+    private void CubePos(int x = 0, int y = 0)
     {
         this.transform.position = transform.position + new Vector3(x, y, 0);
+        _cubePos.x += x;
+        _cubePos.y += y;
     }
-
+    // キューブの移動状態.
     private bool CubeMoveState()
     {
         if (_inputframe > 10 || _action.WasPressedThisFrame())
@@ -270,5 +279,29 @@ public class TestMove : MonoBehaviour
             return true;
         }
         return false;
+    }
+    // 回転処理.
+    private void CubeRotation()
+    {
+        foreach (Transform child in this.transform)
+        {
+            child.transform.position =
+                new Vector3(_cubeDirection[_direction].x + transform.position.x, _cubeDirection[_direction].y + transform.position.y, 0);
+            //Debug.Log(child.transform.position);
+            //child.transform.position.y;
+            break;
+        }
+
+        Vector2Int checkPos = new Vector2Int(0, 0);
+        foreach (Transform child in this.transform)
+        {
+            // 子オブジェクトに対する処理をここに書く
+            Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 0) + _cubePos;
+
+            // HACK 壁に貫通しないように処理
+            checkPos.x = _fieldObject.GetComponent<TestController>().MoveRotaCheck(pos.x);
+            //_cubePos += checkPos;
+            CubePos(checkPos.x,0);
+        }
     }
 }

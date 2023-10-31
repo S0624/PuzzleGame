@@ -325,7 +325,7 @@ public class TestController : MonoBehaviour
     }
 
 #if DEBUG
-    public Vector2Int SteepDescent(Vector2Int pos)
+    public Vector2Int SteepDescent(Vector2Int pos, int dir)
     {
         Vector2Int result = new Vector2Int();
         // 下まで急降下させる
@@ -341,8 +341,24 @@ public class TestController : MonoBehaviour
                 break;
             }
         }
+
+        // HACK とんでもないゴリ押しの処理
+        // 上向いてる時だけ無理やり処理を強制してる
+        if (pos.y > 0)
+        {
+            result.y = result.y + pos.y;
+            return result;
+        }
+        if(dir == (int)Direction.Up)
+        {
+            if (_Cube[result.y - 2, result.x] == null)
+            {
+                result.y = result.y - 2;
+            }
+        }
         return result;
     }
+
 #endif
 
     public Vector3 fieldPos(Vector2Int pos)
@@ -351,6 +367,23 @@ public class TestController : MonoBehaviour
         return world_position;
     }
 
+    // 範囲外に行かないように調整(テスト)
+    public int MoveRotaCheck(int posX)
+    {
+        if(posX < 0)
+        {
+            //Debug.Log("こんにちわ、0より小さいわよ");
+            return 1;
+        }
+        if (posX >= _borad_Width)
+        {
+            //Debug.Log("こんにちわ、最大値より大きいわよ");
+            return -1;
+        }
+        // なにもなければ0でいいわよ
+        return 0;
+    }
+    
     //// Start is called before the first frame update
     //void Start()
     //{
