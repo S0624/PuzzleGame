@@ -31,7 +31,8 @@ public class Test : MonoBehaviour
         Color.gray,         // おじゃま(グレー)
     };
 
-    [SerializeField] private Renderer my_renderer = default!;// 自分自身のマテリアルを登録しておく(GetComponentをなくす).
+    [SerializeField] private SpriteRenderer my_renderer = default!;// 自分自身のマテリアルを登録しておく(GetComponentをなくす).
+    //[SerializeField] private Renderer my_renderer = default!;// 自分自身のマテリアルを登録しておく(GetComponentをなくす).
     private ColorType _type = ColorType.PuyoMax;
     private Rigidbody _rigidbody;
 
@@ -49,6 +50,17 @@ public class Test : MonoBehaviour
     public ColorType GetColorType()
     {
         return _type;
+    }
+    // HACK
+    public void ChangeColor(float alpha)
+    {
+        // 内部時刻timeにおけるアルファ値を反映
+        var color = my_renderer.material.color;
+        //Debug.Log(alpha);
+        color.a = alpha;
+        my_renderer.material.color = color;
+        Debug.Log(my_renderer.material.color);
+        //my_renderer.material.color = color_table[0];
     }
 
     public void SetPos(Vector3 pos)

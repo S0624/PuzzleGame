@@ -65,13 +65,17 @@ public class TestMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //// 子オブジェクトを全て取得する
-        //foreach (Transform child in this.transform)
-        //{
-        //    // 子オブジェクトに対する処理をここに書く
-        //    Debug.Log(child.transform.position);
-        //}
+
 #if true
+        // 方向キーの入力取得
+        // 下左右に動かす
+        if (!_fieldObject.GetComponent<TestController>().IsCheckField())
+        {
+            if (!_fieldObject.GetComponent<TestController>().IsGameOver())
+            {
+                MoveState();
+            }
+        }
         // HACK 雑に回転処理を実装(お試し)
         if (_testInput.Piece.RotationRight.WasPerformedThisFrame())
         {
@@ -97,102 +101,14 @@ public class TestMove : MonoBehaviour
     }
     void FixedUpdate()
     {
-        // 方向キーの入力取得
-        // 下左右に動かす
-        if (!_fieldObject.GetComponent<TestController>().IsCheckField())
-        {
-            _timer++;
+        _timer++;
+        //// 方向キーの入力取得
+        //// 下左右に動かす
+        //if (!_fieldObject.GetComponent<TestController>().IsCheckField())
+        //{
+        //    MoveState();
+        //}
 
-            Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
-            _action = _testInput.Piece.Move;
-            if (_action.IsPressed())
-            {
-                _inputframe++;
-            }
-
-            // HACK 斜めってどうやんねん(？？？？？？)
-            // 下.
-            //if (moveInput.y < 0 && _action.WasPressedThisFrame())
-            if (moveInput.y < 0)
-            {
-                if (CubeMoveState())
-                {
-                    Vector2Int checkPos = new Vector2Int(0, 14);
-
-                    foreach (Transform child in this.transform)
-                    {
-                        // 子オブジェクトに対する処理をここに書く
-                        Vector2Int pos = new Vector2Int(0, (int)child.transform.position.y);
-                        if (checkPos.y > pos.y)
-                        {
-                            checkPos = pos;
-                        }
-                        checkPos = new Vector2Int(0, checkPos.y - (int)this.transform.position.y) + _cubePos;
-                    }
-                    if (!_fieldObject.GetComponent<TestController>().IsNextCubeY(checkPos))
-                    {
-                        //_cubePos.y--;
-                        _timer = 0;
-                        CubePos(0, -1);
-                    }
-                    else
-                    {
-                        // 下を押されたら落下時間を無視
-                        _timer = (int)(60 * 1.2f);
-                    }
-                    _inputframe = 0;
-                }
-            }
-
-            // 右.
-            if (moveInput.x > 0)
-            {
-                Debug.Log("右やで");
-                if (CubeMoveState())
-                {
-                    Vector2Int checkPos = new Vector2Int(0, 0);
-
-                    foreach (Transform child in this.transform)
-                    {
-                        // 子オブジェクトに対する処理をここに書く
-                        Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 0) + _cubePos;
-                        if (checkPos.x < pos.x)
-                        {
-                            checkPos = pos;
-                        }
-                    }
-                    if (!_fieldObject.GetComponent<TestController>().IsNextCubeX(checkPos, 1))
-                    {
-                        //_cubePos.x++;
-                        CubePos(1, 0);
-                    }
-                    _inputframe = 0;
-                }
-            }
-            // 左.
-            else if (moveInput.x < 0)
-            {
-                Debug.Log("左やで");
-                if (CubeMoveState())
-                {
-                    Vector2Int checkPos = new Vector2Int(13, 0);
-                    foreach (Transform child in this.transform)
-                    {
-                        Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 0) + _cubePos;
-                        if (checkPos.x > pos.x)
-                        {
-                            checkPos = pos;
-                        }
-                    }
-                    if (!_fieldObject.GetComponent<TestController>().IsNextCubeX(checkPos, -1))
-                    {
-                        //_cubePos.x--;
-                        CubePos(-1, 0);
-                    }
-                    _inputframe = 0;
-                }
-            }
-        }
         //else
         //{
         //    Debug.Log("処理を止める想定");
@@ -205,7 +121,6 @@ public class TestMove : MonoBehaviour
 
         // 下にキューブがあったら進まないようにしたい
         Vector2Int testpos = new Vector2Int(0, 14);
-
         foreach (Transform child in this.transform)
         {
             // 子オブジェクトに対する処理をここに書く
@@ -230,6 +145,98 @@ public class TestMove : MonoBehaviour
             _timer = 0;
         }
         //Quaternion.Slerp();
+    }
+
+    private void MoveState()
+    {
+
+        Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
+        _action = _testInput.Piece.Move;
+        if (_action.IsPressed())
+        {
+            _inputframe++;
+        }
+
+        // HACK 斜めってどうやんねん(？？？？？？)
+        // 下.
+        //if (moveInput.y < 0 && _action.WasPressedThisFrame())
+        if (moveInput.y < 0)
+        {
+            if (CubeMoveState())
+            {
+                Vector2Int checkPos = new Vector2Int(0, 14);
+
+                foreach (Transform child in this.transform)
+                {
+                    // 子オブジェクトに対する処理をここに書く
+                    Vector2Int pos = new Vector2Int(0, (int)child.transform.position.y);
+                    if (checkPos.y > pos.y)
+                    {
+                        checkPos = pos;
+                    }
+                    checkPos = new Vector2Int(0, checkPos.y - (int)this.transform.position.y) + _cubePos;
+                }
+                if (!_fieldObject.GetComponent<TestController>().IsNextCubeY(checkPos))
+                {
+                    //_cubePos.y--;
+                    _timer = 0;
+                    CubePos(0, -1);
+                }
+                else
+                {
+                    // 下を押されたら落下時間を無視
+                    _timer = (int)(60 * 1.2f);
+                }
+                _inputframe = 0;
+            }
+        }
+
+        // 右.
+        if (moveInput.x > 0)
+        {
+            if (CubeMoveState())
+            {
+                Vector2Int checkPos = new Vector2Int(0, 0);
+
+                foreach (Transform child in this.transform)
+                {
+                    // 子オブジェクトに対する処理をここに書く
+                    Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 0) + _cubePos;
+                    if (checkPos.x < pos.x)
+                    {
+                        checkPos = pos;
+                    }
+                }
+                if (!_fieldObject.GetComponent<TestController>().IsNextCubeX(checkPos, 1))
+                {
+                    //_cubePos.x++;
+                    CubePos(1, 0);
+                }
+                _inputframe = 0;
+            }
+        }
+        // 左.
+        else if (moveInput.x < 0)
+        {
+            if (CubeMoveState())
+            {
+                Vector2Int checkPos = new Vector2Int(13, 0);
+                foreach (Transform child in this.transform)
+                {
+                    Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 0) + _cubePos;
+                    if (checkPos.x > pos.x)
+                    {
+                        checkPos = pos;
+                    }
+                }
+                if (!_fieldObject.GetComponent<TestController>().IsNextCubeX(checkPos, -1))
+                {
+                    //_cubePos.x--;
+                    CubePos(-1, 0);
+                }
+                _inputframe = 0;
+            }
+        }
     }
 
     // 設置するときの処理

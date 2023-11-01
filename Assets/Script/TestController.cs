@@ -36,6 +36,11 @@ public class TestController : MonoBehaviour
     private int[,] _tempBoard = new int[_borad_Height, _borad_Width];
     private Vector2Int[] _cubeDirection = new Vector2Int[(int)Direction.max];
     private bool _isTestEraseFlag = false;
+
+    // 点滅周期[s]
+    [SerializeField] private float _cycle = 1;
+
+    private double _time;
     // ボードの中を全消しする(クリアする).
     private void ClearAll()
     {
@@ -182,14 +187,18 @@ public class TestController : MonoBehaviour
                 // カラーの番号を取得
                 cubeColor = _Cube[y, x].GetComponent<Test>().GetColorType();
                 // 消えるかどうかの判定
-                IsRecursionCheckField(x, y, cubeColor);
+                if (!_isTestEraseFlag)
+                {
+                    IsRecursionCheckField(x, y, cubeColor);
+                }
                 // 消せる個数をチェックする
                 eraseCount = CountTempField(_tempBoard);
                 // 指定された数よりも消せる数が多かったら
                 if (eraseCount >= 4)
                 {
                     _isTestEraseFlag = true;
-                    EraseField(_tempBoard);
+                    FrashField(_tempBoard);
+                    //EraseField(_tempBoard);
                     //Debug.Log("けすよ");
 
                     return true;
@@ -261,6 +270,29 @@ public class TestController : MonoBehaviour
             }
         }
         return count;
+    }
+    // 光らせたいからそのテスト
+    private void FrashField(int[,] tempField)
+    {
+        // 内部時刻を経過させる
+        _time += Time.deltaTime;
+
+        // 周期cycleで繰り返す波のアルファ値計算
+        var alpha = Mathf.Cos((float)(2 * Mathf.PI * _time / _cycle)) * 0.5f + 0.5f;
+        for (int x = 0; x < _borad_Width; x++)
+        {
+            for (int y = 0; y < _borad_Height; y++)
+            {
+                if (tempField[y, x] == 1)
+                {
+                    // 点滅？処理.
+                    _Cube[y, x].GetComponent<Test>().ChangeColor(alpha);
+                    //if (_Cube[y, x] != null) Destroy(_Cube[y, x]);
+                }
+            }
+        }
+
+        //EraseField(tempField);
     }
     // キューブを消す処理
     private void EraseField(int[,] tempField)
@@ -384,6 +416,18 @@ public class TestController : MonoBehaviour
         return 0;
     }
     
+    public bool IsGameOver()
+    {
+        // HACK とりあえず雑にテストでゲームオーバー処理をしようとしてる
+        if(_Cube[_borad_Height - 1,3] != null || _Cube[_borad_Height - 1, 2] != null)
+        {
+            //Debug.Log("Game Over");
+            return true;
+        }
+        return false;
+
+    }
+
     //// Start is called before the first frame update
     //void Start()
     //{
