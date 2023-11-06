@@ -41,6 +41,11 @@ public class TestController : MonoBehaviour
     [SerializeField] private float _cycle = 1;
 
     private double _time;
+
+    private int flashcount = 0;
+
+    // 点滅中かどうか
+    private bool _isFlashAnimation;
     // ボードの中を全消しする(クリアする).
     private void ClearAll()
     {
@@ -202,9 +207,17 @@ public class TestController : MonoBehaviour
                     //Debug.Log("けすよ");
 
                     return true;
+                    //if (_isFlashAnimation)
+                    //{
+                    //    return true;
+                    //}
                 }
             }
         }
+        //if(_isFlashAnimation)
+        //{
+        //    return true;
+        //}
 
         _isTestEraseFlag = false;
         return false;
@@ -274,11 +287,13 @@ public class TestController : MonoBehaviour
     // 光らせたいからそのテスト
     private void FrashField(int[,] tempField)
     {
+        //var alpha = 0.0f;
+        _isFlashAnimation = true;
+        float blinkSpeed = 10.0f; // 点滅の速さ
         // 内部時刻を経過させる
         _time += Time.deltaTime;
-
         // 周期cycleで繰り返す波のアルファ値計算
-        var alpha = Mathf.Cos((float)(2 * Mathf.PI * _time / _cycle)) * 0.5f + 0.5f;
+        var alpha = 0.5f + 0.5f * Mathf.Sin(blinkSpeed * (float)_time);
         for (int x = 0; x < _borad_Width; x++)
         {
             for (int y = 0; y < _borad_Height; y++)
@@ -291,8 +306,19 @@ public class TestController : MonoBehaviour
                 }
             }
         }
+        // HACK なんか気持ち悪い処理になってる
+        if (alpha >= 0.98)
+        {
+            flashcount++;
+        }
+        // 三回点滅したら.
+        if (flashcount >= 3)
+        {
+            flashcount = 0;
+            _isFlashAnimation = false;
 
-        //EraseField(tempField);
+            EraseField(tempField);
+        }
     }
     // キューブを消す処理
     private void EraseField(int[,] tempField)
@@ -315,8 +341,6 @@ public class TestController : MonoBehaviour
             }
             FallDownField(x, fallDown);
         }
-        //Debug.Log(_Cube[1, 0]);
-
     }
     private void FallDownField(int x ,int falldown)
     {

@@ -132,19 +132,22 @@ public class TestMove : MonoBehaviour
             testpos = new Vector2Int(0, testpos.y - (int)this.transform.position.y) + _cubePos;
         }
 
-        if (_timer > 60 * 1.2 && _fieldObject.GetComponent<TestController>().IsNextCubeY(testpos))
+        if (!_fieldObject.GetComponent<TestController>().IsCheckField())
         {
-            Installation();
-        }
+            if (_timer > 60 * 1.2 && _fieldObject.GetComponent<TestController>().IsNextCubeY(testpos))
+            {
+                Installation();
+            }
 
-        // HACK 時間での落下処理(仮)
-        if(_timer > 60 * 1.2)
-        {
-            //_cubePos.y--;
-            CubePos(0, -1);
-            _timer = 0;
+            // HACK 時間での落下処理(仮)
+            if (_timer > 60 * 1.2)
+            {
+                //_cubePos.y--;
+                CubePos(0, -1);
+                _timer = 0;
+            }
+            //Quaternion.Slerp();
         }
-        //Quaternion.Slerp();
     }
 
     private void MoveState()
