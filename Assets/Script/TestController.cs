@@ -33,7 +33,7 @@ public class TestController : MonoBehaviour
     private int[,] _board = new int[_borad_Height, _borad_Width];
     private GameObject[,] _Cube = new GameObject[_borad_Height, _borad_Width];
 
-    private int[,] _tempBoard = new int[_borad_Height, _borad_Width];
+    private int[,] _eraseBoard = new int[_borad_Height, _borad_Width];
     private Vector2Int[] _cubeDirection = new Vector2Int[(int)Direction.max];
     private bool _isTestEraseFlag = false;
 
@@ -46,6 +46,9 @@ public class TestController : MonoBehaviour
 
     // 点滅中かどうか
     private bool _isFlashAnimation;
+
+    float test = 0.1f;
+
     // ボードの中を全消しする(クリアする).
     private void ClearAll()
     {
@@ -154,14 +157,13 @@ public class TestController : MonoBehaviour
     }
 
     // 消す場所を保存する変数を初期化する.
-    private  void TempBoardClearAll()
+    private  void EraseBoardClearAll()
     {
         for (int y = 0; y < _borad_Height; y++)
         {
             for (int x = 0; x < _borad_Width; x++)
             {
-                _tempBoard[y , x] = 0;
-                //_board[y , x] = 0;
+                _eraseBoard[y , x] = 0;
             }
         }
     }
@@ -169,21 +171,18 @@ public class TestController : MonoBehaviour
     {
         int eraseCount = 0;
         ColorType cubeColor;
-
-        //// これはテスト
-        //_Cube[0, 5] = _Cube[0, 0];
-        //Debug.Log(_Cube[0, 5]);
-
+        int[,] tempBorad  = new int[_borad_Height, _borad_Width];
+        // 仮で保存する変数を初期化する
+        EraseBoardClearAll();
         for (int y = 0; y < _borad_Height; y++)
         {
             for (int x = 0; x < _borad_Width; x++)
             {
-                // 仮で保存する変数を初期化する
-                TempBoardClearAll();
+                ClearTempBorad(tempBorad);
 
-                if(IsCubeFallDown(x,y)) return true;
+                if (IsCubeFallDown(x, y)) return true;
 
-                if(_Cube[y, x] == null)
+                if (_Cube[y, x] == null)
                 {
                     // 何も入っていないので処理をとばす
                     cubeColor = ColorType.None;
@@ -192,35 +191,39 @@ public class TestController : MonoBehaviour
                 // カラーの番号を取得
                 cubeColor = _Cube[y, x].GetComponent<Test>().GetColorType();
                 // 消えるかどうかの判定
-                if (!_isTestEraseFlag)
-                {
-                    IsRecursionCheckField(x, y, cubeColor);
-                }
+                IsRecursionCheckField(tempBorad,x, y, cubeColor);
                 // 消せる個数をチェックする
-                eraseCount = CountTempField(_tempBoard);
+                eraseCount = CountTempField(tempBorad);
                 // 指定された数よりも消せる数が多かったら
                 if (eraseCount >= 4)
                 {
-                    _isTestEraseFlag = true;
-                    FrashField(_tempBoard);
-                    //EraseField(_tempBoard);
-                    //Debug.Log("けすよ");
-
-                    return true;
-                    //if (_isFlashAnimation)
-                    //{
-                    //    return true;
-                    //}
+                    TempEraseField(tempBorad);
+                    //return true;
                 }
             }
         }
-        //if(_isFlashAnimation)
+        FrashField(_eraseBoard);
+        //if (_isTestEraseFlag)
         //{
         //    return true;
         //}
+        if (_isFlashAnimation)
+        {
+            return true;
+        }
+        //_isTestEraseFlag = false;
 
-        _isTestEraseFlag = false;
         return false;
+    }
+    private void ClearTempBorad(int[,] tempField)
+    {
+        for (int x = 0; x < _borad_Width; x++)
+        {
+            for (int y = 0; y < _borad_Height; y++)
+            {
+                tempField[y,x] = 0;
+            }
+        }
     }
     // チェックしようとしているところにあるキューブが同じ色かどうか
     private bool IsSameColor(ColorType colorType, int x, int y)
@@ -238,7 +241,7 @@ public class TestController : MonoBehaviour
         return false;
     }
 
-    private bool IsRecursionCheckField(int x, int y, ColorType color)
+    private bool IsRecursionCheckField(int[,] tempField, int x, int y, ColorType color)
     {
         //違う色なので終了
         if (!IsSameColor(color, x, y))
@@ -246,7 +249,7 @@ public class TestController : MonoBehaviour
             return false;
         }
         //同じ色の場合
-        _tempBoard[y,x] = 1;        //同じ色がつながっている
+        tempField[y,x] = 1;        //同じ色がつながっている
 
         for (int dir = 0; dir < (int)Direction.max; dir++)
         {
@@ -259,13 +262,12 @@ public class TestController : MonoBehaviour
             if (indexY < 0) continue;
             if (indexY > _borad_Height - 1) continue;
 
-            if (_tempBoard[indexY,indexX] == 0)//すでにつながっている判定されている部分はチェックしない
+            if (tempField[indexY,indexX] == 0)//すでにつながっている判定されている部分はチェックしない
             {
                 // 位置をずらしてチェックする
-                IsRecursionCheckField(indexX, indexY,color);
+                IsRecursionCheckField(tempField,indexX, indexY,color);
             }
         }
-
         return false;
     }
     // 仮で変数に保存した消せる場所をカウントする
@@ -284,16 +286,76 @@ public class TestController : MonoBehaviour
         }
         return count;
     }
-    // 光らせたいからそのテスト
+    // 仮で変数に保存した消せる場所をカウントする
+    private void TempEraseField(int[,] tempField)
+    {
+        for (int x = 0; x < _borad_Width; x++)
+        {
+            for (int y = 0; y < _borad_Height; y++)
+            {
+                if (tempField[y, x] == 1)
+                {
+                    _eraseBoard[y, x] = 1;
+                }
+            }
+        }
+    }
+    // HACK 光らせたいからそのテスト
     private void FrashField(int[,] tempField)
     {
-        //var alpha = 0.0f;
-        _isFlashAnimation = true;
-        float blinkSpeed = 10.0f; // 点滅の速さ
+        _isTestEraseFlag = true;
+
+        ////var alpha = 0.0f;
+        //_isFlashAnimation = true;
+        //float blinkSpeed = 5.0f; // 点滅の速さ
+        //// 内部時刻を経過させる
+        ////_time += test ;
+        ////_time ++;
+        ////_time += 0.1f;
+        ////_time += Time.deltaTime;
+        //// 周期cycleで繰り返す波のアルファ値計算
+        //var alpha = 0.5f + 0.5f * Mathf.Sin(blinkSpeed * (float)_time);
+        ////var alpha = _time;
+        //Debug.Log(_time + "alphaの値" + alpha);
+        //for (int x = 0; x < _borad_Width; x++)
+        //{
+        //    for (int y = 0; y < _borad_Height; y++)
+        //    {
+        //        if (tempField[y, x] == 1)
+        //        {
+        //            _time += Time.deltaTime;
+        //            // 点滅？処理.
+        //            _Cube[y, x].GetComponent<Test>().ChangeColor((float)alpha);
+        //            //if (_Cube[y, x] != null) Destroy(_Cube[y, x]);
+        //        }
+        //    }
+        //}
+        ////if(alpha < 0 || alpha > 1)
+        ////{
+        ////    test *= -1;
+        ////}
+        //// HACK なんか気持ち悪い処理になってる なんか、なんかちがう
+        //if (alpha >= 0.99f)
+        ////if (alpha >= 1.0f)
+        //{
+        //    flashcount++;
+        //}
+        //// 三回点滅したら.
+        //if (flashcount >= 3)
+        //{
+        //    flashcount = 0;
+        //    _isFlashAnimation = false;
+        //    //_time = 0.0f;
+        //    alpha = 1.0f;
+        //    EraseField(tempField);
+        //}
+
+        // HACK テスト実装
         // 内部時刻を経過させる
-        _time += Time.deltaTime;
-        // 周期cycleで繰り返す波のアルファ値計算
-        var alpha = 0.5f + 0.5f * Mathf.Sin(blinkSpeed * (float)_time);
+        _time += test ;
+        
+        var alpha = _time;
+
         for (int x = 0; x < _borad_Width; x++)
         {
             for (int y = 0; y < _borad_Height; y++)
@@ -301,13 +363,18 @@ public class TestController : MonoBehaviour
                 if (tempField[y, x] == 1)
                 {
                     // 点滅？処理.
-                    _Cube[y, x].GetComponent<Test>().ChangeColor(alpha);
+                    _isFlashAnimation = true;
+                    _Cube[y, x].GetComponent<Test>().ChangeColor((float)alpha);
                     //if (_Cube[y, x] != null) Destroy(_Cube[y, x]);
                 }
             }
         }
-        // HACK なんか気持ち悪い処理になってる
-        if (alpha >= 0.98)
+        if (alpha < 0 || alpha > 1)
+        {
+            test *= -1;
+        }
+        // HACK なんか気持ち悪い処理になってる なんか、なんかちがう
+        if (alpha >= 1.0f)
         {
             flashcount++;
         }
@@ -316,7 +383,7 @@ public class TestController : MonoBehaviour
         {
             flashcount = 0;
             _isFlashAnimation = false;
-
+            _time = 1.0f;
             EraseField(tempField);
         }
     }
@@ -341,6 +408,7 @@ public class TestController : MonoBehaviour
             }
             FallDownField(x, fallDown);
         }
+        _isTestEraseFlag = false;
     }
     private void FallDownField(int x ,int falldown)
     {
@@ -424,17 +492,27 @@ public class TestController : MonoBehaviour
     }
 
     // 範囲外に行かないように調整(テスト)
-    public int MoveRotaCheck(int posX)
+    public int MoveRotaCheck(Vector2Int pos)
     {
-        if(posX < 0)
+        if(pos.x < 0)
         {
             //Debug.Log("こんにちわ、0より小さいわよ");
             return 1;
         }
-        if (posX >= _borad_Width)
+        if (pos.x >= _borad_Width)
         {
             //Debug.Log("こんにちわ、最大値より大きいわよ");
             return -1;
+        }
+        if (_Cube[pos.y, pos.x + 1] != null)
+        {
+            //Debug.Log("こんにちわ、0より小さいわよ");
+            return -1;
+        }
+        if (_Cube[pos.y, pos.x - 1] != null)
+        {
+            //Debug.Log("こんにちわ、最大値より大きいわよ");
+            return 1;
         }
         // なにもなければ0でいいわよ
         return 0;

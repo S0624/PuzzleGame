@@ -59,7 +59,6 @@ public class Test : MonoBehaviour
         //Debug.Log(alpha);
         color.a = alpha;
         my_renderer.material.color = color;
-        //my_renderer.material.color = color_table[0];
     }
 
     public void SetPos(Vector3 pos)

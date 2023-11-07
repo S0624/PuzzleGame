@@ -77,12 +77,24 @@ public class TestMove : MonoBehaviour
             }
         }
         // HACK 雑に回転処理を実装(お試し)
+        // 右回り
         if (_testInput.Piece.RotationRight.WasPerformedThisFrame())
         {
             _direction++;
             if( _direction >= 4 )
             {
                 _direction = 0;
+            }
+            // HACK 回転処理 ﾋｨ.........
+            CubeRotation();
+        }
+        // 左まわり
+        else if (_testInput.Piece.RotationLeft.WasPerformedThisFrame())
+        {
+            _direction--;
+            if (_direction < 0)
+            {
+                _direction = 3;
             }
             // HACK 回転処理 ﾋｨ.........
             CubeRotation();
@@ -297,8 +309,6 @@ public class TestMove : MonoBehaviour
         {
             child.transform.position =
                 new Vector3(_cubeDirection[_direction].x + transform.position.x, _cubeDirection[_direction].y + transform.position.y, 0);
-            //Debug.Log(child.transform.position);
-            //child.transform.position.y;
             break;
         }
 
@@ -306,10 +316,12 @@ public class TestMove : MonoBehaviour
         foreach (Transform child in this.transform)
         {
             // 子オブジェクトに対する処理をここに書く
-            Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 0) + _cubePos;
+            Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 
+                (int)child.transform.position.y - (int)this.transform.position.y) + _cubePos;
 
             // HACK 壁に貫通しないように処理
-            checkPos.x = _fieldObject.GetComponent<TestController>().MoveRotaCheck(pos.x);
+            Debug.Log(child.name + pos);
+            checkPos.x = _fieldObject.GetComponent<TestController>().MoveRotaCheck(pos);
             //_cubePos += checkPos;
             CubePos(checkPos.x,0);
         }
