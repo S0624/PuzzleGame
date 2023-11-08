@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+// HACK テスト用の移動実装
 
 public class TestMove : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class TestMove : MonoBehaviour
     // 時間を図る変数(数秒たつと自動で落下させるために使用)
     private int _timer = 0;
     // ボタンを押し続けているか図る(これがないと一瞬で移動してしまうため)
-   private int _inputframe = 0;
+    private int _inputframe = 0;
     // 色の番号
     private int _colorNum;
 
@@ -66,7 +67,6 @@ public class TestMove : MonoBehaviour
     void Update()
     {
 
-#if true
         // 方向キーの入力取得
         // 下左右に動かす
         if (!_fieldObject.GetComponent<TestController>().IsCheckField())
@@ -100,6 +100,8 @@ public class TestMove : MonoBehaviour
             CubeRotation();
         }
 
+        // 本来は上移動はない
+#if true
         Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
         // 急降下で下に落とす(DEBUG機能).
         if (moveInput.y > 0)

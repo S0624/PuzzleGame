@@ -491,29 +491,28 @@ public class TestController : MonoBehaviour
         return world_position;
     }
 
-    // 範囲外に行かないように調整(テスト)
+    // 範囲外に行かないように調整
+    // HACK ここで回したときに壁じゃなくキューブに当たった場合どうするか
     public int MoveRotaCheck(Vector2Int pos)
     {
         if(pos.x < 0)
         {
-            //Debug.Log("こんにちわ、0より小さいわよ");
             return 1;
         }
         if (pos.x >= _borad_Width)
         {
-            //Debug.Log("こんにちわ、最大値より大きいわよ");
             return -1;
         }
-        if (_Cube[pos.y, pos.x + 1] != null)
-        {
-            //Debug.Log("こんにちわ、0より小さいわよ");
-            return -1;
-        }
-        if (_Cube[pos.y, pos.x - 1] != null)
-        {
-            //Debug.Log("こんにちわ、最大値より大きいわよ");
-            return 1;
-        }
+        //if (_Cube[pos.y, pos.x + 1] != null)
+        //{
+        //    //Debug.Log("こんにちわ、0より小さいわよ");
+        //    return -1;
+        //}
+        //if (_Cube[pos.y, pos.x - 1] != null)
+        //{
+        //    //Debug.Log("こんにちわ、最大値より大きいわよ");
+        //    return 1;
+        //}
         // なにもなければ0でいいわよ
         return 0;
     }

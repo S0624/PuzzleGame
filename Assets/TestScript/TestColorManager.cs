@@ -36,7 +36,7 @@ public class TestColorManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // HACK ヒィッ
+        // HACK ヒィッ とんでもないコードしてる
         _cubeColor[0] = _nowCube;
         _cubeColor[1] = _nextCube;
         _cubeColor[2] = _nextnextCube;
