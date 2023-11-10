@@ -13,20 +13,10 @@ public enum Direction
 }
 public class TestController : MonoBehaviour
 {
-    // このクラスでしか使わない想定なのでプライベートにしている
-    //private enum Direction
-    //{
-    //    Right,
-    //    Left,
-    //    Up,
-    //    Down,
-    //    max,
-    //}
-
-    // ボードの横の最大値(6 * 15).
+    // ボードの横の最大値(6 * 13).
     private const int _borad_Width = 6;
     // ボードの縦の最大値.
-    private const int _borad_Height = 15;
+    private const int _borad_Height = 13;
 
     [SerializeField] private GameObject _prefabCube = default;
 
@@ -144,8 +134,8 @@ public class TestController : MonoBehaviour
     // X軸(左右方向)におけるかどうかのチェック
     public bool IsNextCubeX(Vector2Int pos,int add)
     {
-        //// ゼロだったらおけるようにする
-        if (pos.x + add < 0 || pos.x + add > 5)
+        // 範囲外じゃないかどうか
+        if (pos.x + add < 0 || pos.x + add > _borad_Width - 1)
         {
             return true;
         }
@@ -493,15 +483,31 @@ public class TestController : MonoBehaviour
 
     // 範囲外に行かないように調整
     // HACK ここで回したときに壁じゃなくキューブに当たった場合どうするか
-    public int MoveRotaCheck(Vector2Int pos)
+    //public int MoveRotaCheck(Vector2Int pos, Vector2Int direction)
+    public Vector2Int MoveRotaCheck(Vector2Int pos, Vector2Int direction)
     {
+        Vector2Int rotaPos = new Vector2Int();
+        //rotaPos = direction * -1;
         if(pos.x < 0)
         {
-            return 1;
+            rotaPos = new Vector2Int(1,0);
+            return rotaPos;
         }
         if (pos.x >= _borad_Width)
         {
-            return -1;
+            rotaPos = new Vector2Int(-1,0);
+            return rotaPos;
+        }
+        if (pos.y < 0)
+        {
+            rotaPos = new Vector2Int(0, 1);
+            Debug.Log("posが0以下やで");
+            return rotaPos;
+        }
+        if (_Cube[pos.y,pos.x] != null)
+        {
+            rotaPos = -direction;
+            return rotaPos;
         }
         //if (_Cube[pos.y, pos.x + 1] != null)
         //{
@@ -513,16 +519,18 @@ public class TestController : MonoBehaviour
         //    //Debug.Log("こんにちわ、最大値より大きいわよ");
         //    return 1;
         //}
+
         // なにもなければ0でいいわよ
-        return 0;
+        return rotaPos;
     }
     
     public bool IsGameOver()
     {
         // HACK とりあえず雑にテストでゲームオーバー処理をしようとしてる
-        if(_Cube[_borad_Height - 1,3] != null || _Cube[_borad_Height - 1, 2] != null)
+        // 2をマイナスしている理由は12のところがばってんで13は使用しないので12をみたいため
+        if(_Cube[_borad_Height - 2,3] != null || _Cube[_borad_Height - 2, 4] != null)
         {
-            //Debug.Log("Game Over");
+            Debug.Log("Game Over");
             return true;
         }
         return false;
