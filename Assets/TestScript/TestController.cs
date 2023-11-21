@@ -28,7 +28,7 @@ public class TestController : MonoBehaviour
     private bool _isTestEraseFlag = false;
 
     // 点滅周期[s]
-    [SerializeField] private float _cycle = 1;
+    //[SerializeField] private float _cycle = 1;
 
     private double _time;
 
@@ -39,6 +39,15 @@ public class TestController : MonoBehaviour
 
     float test = 0.1f;
 
+    // スコアのカウント用
+    private int _score = 10;
+    private int _eraseCount = 0;
+
+    // 連鎖カウント
+    private int _chainCount = 0;
+
+    // 全消しフラグ
+    private bool _isClearAll = false;
     // ボードの中を全消しする(クリアする).
     private void ClearAll()
     {
@@ -103,7 +112,7 @@ public class TestController : MonoBehaviour
     // フィールド内にセットする
     public bool IsSetCube(Vector2Int pos, int val)
     {
-        
+
         if (!IsCanSetCube(pos)) return false;
 
         _board[pos.y, pos.x] = val;
@@ -121,18 +130,18 @@ public class TestController : MonoBehaviour
     public bool IsNextCubeY(Vector2Int pos)
     {
         // ゼロだったらおけるようにする
-        if(pos.y == 0)
+        if (pos.y == 0)
         {
             return true;
         }
-        if(_Cube[pos.y - 1, pos.x] != null)
+        if (_Cube[pos.y - 1, pos.x] != null)
         {
             return true;
         }
         return false;
     }
     // X軸(左右方向)におけるかどうかのチェック
-    public bool IsNextCubeX(Vector2Int pos,int add)
+    public bool IsNextCubeX(Vector2Int pos, int add)
     {
         // 範囲外じゃないかどうか
         if (pos.x + add < 0 || pos.x + add > _borad_Width - 1)
@@ -147,18 +156,38 @@ public class TestController : MonoBehaviour
     }
 
     // 消す場所を保存する変数を初期化する.
-    private  void EraseBoardClearAll()
+    private void EraseBoardClearAll()
     {
         for (int y = 0; y < _borad_Height; y++)
         {
             for (int x = 0; x < _borad_Width; x++)
             {
-                _eraseBoard[y , x] = 0;
+                _eraseBoard[y, x] = 0;
             }
         }
+
     }
+    // 全消ししたかどうかを見る(テスト)
+    private void FieldAllClear()
+    {
+        for (int y = 0; y < _borad_Height; y++)
+        {
+            for (int x = 0; x < _borad_Width; x++)
+            {
+                // 中身があることになる
+                if (_Cube[y, x] != null)
+                {
+                    break;
+                }
+            }
+            //Debug.Log("WWWWWWWWW");
+        }
+    } 
+
+    
     public bool IsCheckField()
     {
+        FieldAllClear();
         int eraseCount = 0;
         ColorType cubeColor;
         int[,] tempBorad  = new int[_borad_Height, _borad_Width];
@@ -203,7 +232,21 @@ public class TestController : MonoBehaviour
         }
         //_isTestEraseFlag = false;
 
+        //_chainCount = 0;
         return false;
+    }
+    private void Update()
+    {
+        if(IsCheckField())
+        {
+            _chainCount++;
+        }
+        else
+        {
+            _chainCount = 0;
+        }
+        //Debug.Log(_chainCount);
+
     }
     private void ClearTempBorad(int[,] tempField)
     {
@@ -374,6 +417,8 @@ public class TestController : MonoBehaviour
             flashcount = 0;
             _isFlashAnimation = false;
             _time = 1.0f;
+            // 連鎖カウント.
+            //_chainCount++;
             EraseField(tempField);
         }
     }
@@ -394,6 +439,7 @@ public class TestController : MonoBehaviour
                     _board[y, x] = 0;
                     tempField[y, x] = 0;
                     fallDown++;
+                    _eraseCount++;
                 }
             }
             FallDownField(x, fallDown);
@@ -470,6 +516,7 @@ public class TestController : MonoBehaviour
                 result.y = result.y - 2;
             }
         }
+        EraseScore();
         return result;
     }
 
@@ -486,6 +533,7 @@ public class TestController : MonoBehaviour
     //public int MoveRotaCheck(Vector2Int pos, Vector2Int direction)
     public Vector2Int MoveRotaCheck(Vector2Int pos, Vector2Int direction)
     {
+        Debug.Log(EraseScore());
         Vector2Int rotaPos = new Vector2Int();
         //rotaPos = direction * -1;
         if(pos.x < 0)
@@ -523,7 +571,15 @@ public class TestController : MonoBehaviour
         // なにもなければ0でいいわよ
         return rotaPos;
     }
-    
+    public int EraseScore()
+    {
+        //Debug.Log(_eraseCount * 10);
+        return _score * _eraseCount;
+    }
+    public void SetScore()
+    {
+        _eraseCount = 0;
+    }
     public bool IsGameOver()
     {
         // HACK とりあえず雑にテストでゲームオーバー処理をしようとしてる

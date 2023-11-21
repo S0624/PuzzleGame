@@ -10,7 +10,6 @@ public class TestMove : MonoBehaviour
     private InputAction _action;
     // ボタンの処理をするための変数.
     private TestInputManager _testInput;
-   
     // 移動速度.
     //private float _speed;
     //private float currentSpeed;
@@ -31,6 +30,8 @@ public class TestMove : MonoBehaviour
     private int _inputframe = 0;
     // 色の番号
     private int _colorNum;
+    // 移動用のスコア
+    private int _moveScore = 0;
 
     // どの向きに回転させるか（回転処理に使用）
     private Vector2Int[] _cubeDirection = new Vector2Int[(int)Direction.max];
@@ -68,7 +69,7 @@ public class TestMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //Debug.Log(_fieldObject.GetComponent<TestController>().IsCheckField());
         // 方向キーの入力取得
         // 下左右に動かす
         if (!_fieldObject.GetComponent<TestController>().IsGameOver())
@@ -187,6 +188,7 @@ public class TestMove : MonoBehaviour
         {
             if (CubeMoveState())
             {
+                _moveScore++;
                 Vector2Int checkPos = new Vector2Int(0, _borad_Height);
 
                 foreach (Transform child in this.transform)
@@ -261,13 +263,13 @@ public class TestMove : MonoBehaviour
                 _inputframe = 0;
             }
         }
-
     }
 
     // 設置するときの処理
     private void Installation()
     {
         int childcount = 0;
+        _moveScore = 0;
         foreach (Transform child in this.transform)
         {
             // 子オブジェクトに対する処理をここに書く
@@ -334,5 +336,14 @@ public class TestMove : MonoBehaviour
             //_cubePos += checkPos;
             CubePos(checkPos.x, checkPos.y);
         }
+    }
+    // 仮実装
+    public int MoveScore()
+    {
+        return _moveScore;
+    }
+    public void SetScore()
+    {
+        _moveScore = 0;
     }
 }
