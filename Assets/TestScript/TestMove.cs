@@ -69,6 +69,7 @@ public class TestMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        CubeDestory();
         //Debug.Log(_fieldObject.GetComponent<TestController>().IsCheckField());
         // 方向キーの入力取得
         // 下左右に動かす
@@ -77,10 +78,7 @@ public class TestMove : MonoBehaviour
             // HACK こいつが悪さをしている
             if (!_fieldObject.GetComponent<TestController>().IsCheckField())
             {
-                //if (!_fieldObject.GetComponent<TestController>().IsGameOver())
-                {
-                    MoveState();
-                }
+                MoveState();
             }
             // HACK 雑に回転処理を実装(お試し)
             // 右回り
@@ -173,7 +171,6 @@ public class TestMove : MonoBehaviour
 
     private void MoveState()
     {
-
         Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
         _action = _testInput.Piece.Move;
         if (_action.IsPressed())
@@ -268,34 +265,50 @@ public class TestMove : MonoBehaviour
     // 設置するときの処理
     private void Installation()
     {
-        int childcount = 0;
+        if (!_fieldObject.GetComponent<TestController>().IsGameOver())
+        {
+            int childcount = 0;
         _moveScore = 0;
+        //_fieldObject.GetComponent<TestController>().GetInstallation(true);
         foreach (Transform child in this.transform)
         {
             // 子オブジェクトに対する処理をここに書く
             //Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, (int)child.transform.position.y - (int)this.transform.position.y) + _cubePos;
             Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x + _cubePos.x,
                 (int)child.transform.position.y - (int)this.transform.position.y);
-            
+
             //Debug.Log(pos);
 
             // HACK テスト用.
             // こいつが悪さをしている
             // こいつはforで置ける一番低い場所を取ってしまうので0からいくとそうなる（説明下手だな？）
-            pos = _fieldObject.GetComponent<TestController>().SteepDescent(pos,_direction);
+            pos = _fieldObject.GetComponent<TestController>().SteepDescent(pos, _direction);
             _colorNum = _colorManager.GetComponent<TestColorManager>().GetColorNumber(child.name);
             //Debug.Log(child.position + "wa"+ child.name +"  " + pos.y + " " + _colorNum);
             _fieldObject.GetComponent<TestController>().IsSetCube(pos, _colorNum);
             childcount++;
         }
-
-        _cubePos = new Vector2Int(3, _borad_Height);
-        this.transform.position = _cubePostemp;
-        // 回転の角度をもとに戻してあげる.
-        _direction = 0;
-        CubeRotation();
-        // HACK うーん・・・とりあえず色替えはできてるけどバグが発生してるぅ
-        _colorManager.GetComponent<TestColorManager>().ColorChenge();
+        //_fieldObject.GetComponent<TestController>().IsFieldUpdate();
+        //if (!_fieldObject.GetComponent<TestController>().SetInstallation())
+        //{
+            //_fieldObject.GetComponent<TestController>().GetInstallation(false);
+            _cubePos = new Vector2Int(3, _borad_Height);
+            this.transform.position = _cubePostemp;
+            // 回転の角度をもとに戻してあげる.
+            _direction = 0;
+            CubeRotation();
+            // HACK うーん・・・とりあえず色替えはできてるけどバグが発生してるぅ
+            _colorManager.GetComponent<TestColorManager>().ColorChenge();
+        //}
+        }
+    }
+    // ゲームオーバーだったら消す.(テスト)
+    private void CubeDestory()
+    {
+        if (_fieldObject.GetComponent<TestController>().IsGameOver())
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void CubePos(int x = 0, int y = 0)

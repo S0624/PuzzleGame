@@ -45,6 +45,10 @@ public class TestController : MonoBehaviour
 
     // 連鎖カウント
     private int _chainCount = 0;
+    // 設置したかのフラグ.
+    private bool _isInstallaion = false;
+    // HACK テスト用のフラグ(処理が終わったよ、のフラグ)
+    private bool _isProcess = false;
 
     // 全消しフラグ
     private bool _isClearAll = false;
@@ -115,6 +119,7 @@ public class TestController : MonoBehaviour
 
         if (!IsCanSetCube(pos)) return false;
 
+        // 色番号をセット.
         _board[pos.y, pos.x] = val;
         // もし中身が入っていたらエラー表記を出
         //Debug.Assert(_Cube[pos.y, pos.x] == null);
@@ -124,6 +129,8 @@ public class TestController : MonoBehaviour
         _Cube[pos.y, pos.x] = Instantiate(_prefabCube, world_position, Quaternion.identity, transform);
         _Cube[pos.y, pos.x].GetComponent<Test>().SetColorType((ColorType)val);
 
+        // 設置したよ
+        _isInstallaion = true;
         return true;
     }
     // Y軸(下方向)におけるかどうかのチェック
@@ -168,8 +175,11 @@ public class TestController : MonoBehaviour
 
     }
     // 全消ししたかどうかを見る(テスト)
-    private void FieldAllClear()
+    public bool FieldAllClear()
     {
+        // 中身が入っているかのフラグ
+        bool isEmpty  = true;
+        isEmpty = _isInstallaion;
         for (int y = 0; y < _borad_Height; y++)
         {
             for (int x = 0; x < _borad_Width; x++)
@@ -177,20 +187,25 @@ public class TestController : MonoBehaviour
                 // 中身があることになる
                 if (_Cube[y, x] != null)
                 {
+                    isEmpty = false;
                     break;
                 }
             }
-            //Debug.Log("WWWWWWWWW");
+            // 中身が入っていたらfor文を抜ける.
+            if(!isEmpty)
+            {
+                break;
+            }
         }
+        return isEmpty;
     } 
 
     
     public bool IsCheckField()
     {
-        FieldAllClear();
         int eraseCount = 0;
         ColorType cubeColor;
-        int[,] tempBorad  = new int[_borad_Height, _borad_Width];
+        int[,] tempBorad = new int[_borad_Height, _borad_Width];
         // 仮で保存する変数を初期化する
         EraseBoardClearAll();
         for (int y = 0; y < _borad_Height; y++)
@@ -210,44 +225,82 @@ public class TestController : MonoBehaviour
                 // カラーの番号を取得
                 cubeColor = _Cube[y, x].GetComponent<Test>().GetColorType();
                 // 消えるかどうかの判定
-                IsRecursionCheckField(tempBorad,x, y, cubeColor);
+                IsRecursionCheckField(tempBorad, x, y, cubeColor);
                 // 消せる個数をチェックする
                 eraseCount = CountTempField(tempBorad);
                 // 指定された数よりも消せる数が多かったら
                 if (eraseCount >= 4)
                 {
+                    _isProcess = true;
                     TempEraseField(tempBorad);
                     //return true;
                 }
             }
         }
-        FrashField(_eraseBoard);
-        //if (_isTestEraseFlag)
+        //if (_isInstallaion)
         //{
-        //    return true;
+            FrashField(_eraseBoard);
         //}
+
         if (_isFlashAnimation)
         {
             return true;
         }
-        //_isTestEraseFlag = false;
-
-        //_chainCount = 0;
+        _isProcess = false;
         return false;
     }
-    private void Update()
-    {
-        if(IsCheckField())
-        {
-            _chainCount++;
-        }
-        else
-        {
-            _chainCount = 0;
-        }
-        //Debug.Log(_chainCount);
+    //public void IsFieldUpdate()
+    //{
+    //    int eraseCount = 0;
+    //    ColorType cubeColor;
+    //    int[,] tempBorad = new int[_borad_Height, _borad_Width];
+    //    //// 仮で保存する変数を初期化する
+    //    //EraseBoardClearAll();
+    //    for (int y = 0; y < _borad_Height; y++)
+    //    {
+    //        for (int x = 0; x < _borad_Width; x++)
+    //        {
+    //            ClearTempBorad(tempBorad);
 
-    }
+    //            //if (IsCubeFallDown(x, y)) return true;
+
+    //            if (_Cube[y, x] == null)
+    //            {
+    //                // 何も入っていないので処理をとばす
+    //                cubeColor = ColorType.None;
+    //                continue;
+    //            }
+    //            // カラーの番号を取得
+    //            cubeColor = _Cube[y, x].GetComponent<Test>().GetColorType();
+    //            // 消えるかどうかの判定
+    //            IsRecursionCheckField(tempBorad, x, y, cubeColor);
+    //            // 消せる個数をチェックする
+    //            eraseCount = CountTempField(tempBorad);
+    //            // 指定された数よりも消せる数が多かったら
+    //            if (eraseCount >= 4)
+    //            {
+    //                TempEraseField(tempBorad);
+    //                //return true;
+    //            }
+    //        }
+    //    }
+
+    //    FrashField(_eraseBoard);
+    //    //if (_isFlashAnimation)
+    //    //{
+    //    //    return true;
+    //    //}
+    //}
+
+    //public void GetInstallation(bool flag)
+    //{
+    //    _isInstallaion = flag;
+    //}
+    //public bool SetInstallation()
+    //{
+    //    Debug.Log("_isProcess" + _isProcess);
+    //    return _isProcess;
+    //}
     private void ClearTempBorad(int[,] tempField)
     {
         for (int x = 0; x < _borad_Width; x++)
@@ -521,7 +574,7 @@ public class TestController : MonoBehaviour
     }
 
 #endif
-
+    // うごかすキューブをフィールドの座標に変換する
     public Vector3 fieldPos(Vector2Int pos)
     {
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0);
@@ -533,7 +586,7 @@ public class TestController : MonoBehaviour
     //public int MoveRotaCheck(Vector2Int pos, Vector2Int direction)
     public Vector2Int MoveRotaCheck(Vector2Int pos, Vector2Int direction)
     {
-        Debug.Log(EraseScore());
+        //Debug.Log(EraseScore());
         Vector2Int rotaPos = new Vector2Int();
         //rotaPos = direction * -1;
         if(pos.x < 0)
@@ -571,6 +624,7 @@ public class TestController : MonoBehaviour
         // なにもなければ0でいいわよ
         return rotaPos;
     }
+    // 消した分のスコアを計算する
     public int EraseScore()
     {
         //Debug.Log(_eraseCount * 10);
@@ -580,13 +634,14 @@ public class TestController : MonoBehaviour
     {
         _eraseCount = 0;
     }
+    // ゲームオーバーフラグ
     public bool IsGameOver()
     {
         // HACK とりあえず雑にテストでゲームオーバー処理をしようとしてる
         // 2をマイナスしている理由は12のところがばってんで13は使用しないので12をみたいため
         if(_Cube[_borad_Height - 2,3] != null || _Cube[_borad_Height - 2, 4] != null)
         {
-            Debug.Log("Game Over");
+            //Debug.Log("Game Over");
             return true;
         }
         return false;
