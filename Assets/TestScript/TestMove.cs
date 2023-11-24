@@ -288,20 +288,24 @@ public class TestMove : MonoBehaviour
             _fieldObject.GetComponent<TestController>().IsSetCube(pos, _colorNum);
             childcount++;
         }
-        //_fieldObject.GetComponent<TestController>().IsFieldUpdate();
-        //if (!_fieldObject.GetComponent<TestController>().SetInstallation())
-        //{
+            //_fieldObject.GetComponent<TestController>().IsFieldUpdate();
+            CubeReGenerete();
             //_fieldObject.GetComponent<TestController>().GetInstallation(false);
-            _cubePos = new Vector2Int(3, _borad_Height);
-            this.transform.position = _cubePostemp;
-            // 回転の角度をもとに戻してあげる.
-            _direction = 0;
-            CubeRotation();
-            // HACK うーん・・・とりあえず色替えはできてるけどバグが発生してるぅ
-            _colorManager.GetComponent<TestColorManager>().ColorChenge();
-        //}
         }
     }
+    // キューブの再生成.
+    private void CubeReGenerete()
+    {
+        _cubePos = new Vector2Int(3, _borad_Height);
+        this.transform.position = _cubePostemp;
+        // 回転の角度をもとに戻してあげる.
+        _direction = 0;
+        CubeRotation();
+        // HACK うーん・・・とりあえず色替えはできてるけどバグが発生してるぅ
+        _colorManager.GetComponent<TestColorManager>().ColorChenge();
+
+    }
+
     // ゲームオーバーだったら消す.(テスト)
     private void CubeDestory()
     {
