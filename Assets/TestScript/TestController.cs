@@ -53,6 +53,8 @@ public class TestController : MonoBehaviour
 
     // 全消しフラグ
     private bool _isClearAll = false;
+    // フィールドの処理のフラグ
+    private bool _isField = false;
     // ボードの中を全消しする(クリアする).
     private void ClearAll()
     {
@@ -109,9 +111,7 @@ public class TestController : MonoBehaviour
     public bool IsCanSetCube(Vector2Int pos)
     {
         if (!IsValidated(pos)) return false;
-        //Debug.Log(pos);
 
-        //Debug.Log(_board[pos.y, pos.x]);
         return 0 == _board[pos.y, pos.x];
     }
     // フィールド内にセットする
@@ -123,8 +123,6 @@ public class TestController : MonoBehaviour
         // 色番号をセット.
         _board[pos.y, pos.x] = val;
         // もし中身が入っていたらエラー表記を出
-        //Debug.Assert(_Cube[pos.y, pos.x] == null);
-        //Debug.Log(pos);
 
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
         _Cube[pos.y, pos.x] = Instantiate(_prefabCube, world_position, Quaternion.identity, transform);
@@ -135,14 +133,14 @@ public class TestController : MonoBehaviour
         return true;
     }
     // Y軸(下方向)におけるかどうかのチェック
-    public bool IsNextCubeY(Vector2Int pos)
+    public bool IsNextCubeY(Vector2Int pos, int add)
     {
         // ゼロだったらおけるようにする
         if (pos.y == 0)
         {
             return true;
         }
-        if (_Cube[pos.y - 1, pos.x] != null)
+        if (_Cube[pos.y - 1, pos.x + add] != null)
         {
             return true;
         }
@@ -255,61 +253,26 @@ public class TestController : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log("連鎖数 " + _chainCount);
+        _isField = IsCheckField();
+        if (!_isField)
+        {
+            _chainCount = 0;
+        }
 
     }
-    //public void IsFieldUpdate()
-    //{
-    //    int eraseCount = 0;
-    //    ColorType cubeColor;
-    //    int[,] tempBorad = new int[_borad_Height, _borad_Width];
-    //    //// 仮で保存する変数を初期化する
-    //    //EraseBoardClearAll();
-    //    for (int y = 0; y < _borad_Height; y++)
-    //    {
-    //        for (int x = 0; x < _borad_Width; x++)
-    //        {
-    //            ClearTempBorad(tempBorad);
+    public bool IsFieldUpdate()
+    {
+        return _isField;
+    }
 
-    //            //if (IsCubeFallDown(x, y)) return true;
-
-    //            if (_Cube[y, x] == null)
-    //            {
-    //                // 何も入っていないので処理をとばす
-    //                cubeColor = ColorType.None;
-    //                continue;
-    //            }
-    //            // カラーの番号を取得
-    //            cubeColor = _Cube[y, x].GetComponent<Test>().GetColorType();
-    //            // 消えるかどうかの判定
-    //            IsRecursionCheckField(tempBorad, x, y, cubeColor);
-    //            // 消せる個数をチェックする
-    //            eraseCount = CountTempField(tempBorad);
-    //            // 指定された数よりも消せる数が多かったら
-    //            if (eraseCount >= 4)
-    //            {
-    //                TempEraseField(tempBorad);
-    //                //return true;
-    //            }
-    //        }
-    //    }
-
-    //    FrashField(_eraseBoard);
-    //    //if (_isFlashAnimation)
-    //    //{
-    //    //    return true;
-    //    //}
-    //}
-
-    //public void GetInstallation(bool flag)
-    //{
-    //    _isInstallaion = flag;
-    //}
-    //public bool SetInstallation()
-    //{
-    //    Debug.Log("_isProcess" + _isProcess);
-    //    return _isProcess;
-    //}
+    public void GetInstallation(bool flag)
+    {
+        _isInstallaion = flag;
+    }
+    public bool SetInstallation()
+    {
+        return _isProcess;
+    }
     private void ClearTempBorad(int[,] tempField)
     {
         for (int x = 0; x < _borad_Width; x++)
@@ -481,7 +444,7 @@ public class TestController : MonoBehaviour
             _isEraseFlag = true;
             flashcount = 0;
             _isFlashAnimation = false;
-            _time = 1.0f;
+            _time = 0.8f;
             test *= -1;
         }
         if (_isEraseFlag)
@@ -492,6 +455,7 @@ public class TestController : MonoBehaviour
         }
         else if (!_isFlashAnimation)
         {
+            _isTestEraseFlag = false;
             //_chainCount = 0;
         }
 
@@ -519,7 +483,7 @@ public class TestController : MonoBehaviour
             FallDownField(x, fallDown);
         }
         _chainCount++;
-        _isTestEraseFlag = false;
+        //_isTestEraseFlag = false;
     }
     private void FallDownField(int x ,int falldown)
     {
@@ -553,7 +517,8 @@ public class TestController : MonoBehaviour
         return false;
     }
 
-#if DEBUG
+//#if DEBUG
+    // クイック処理
     public Vector2Int SteepDescent(Vector2Int pos, int dir)
     {
         Vector2Int result = new Vector2Int();
@@ -589,7 +554,7 @@ public class TestController : MonoBehaviour
         return result;
     }
 
-#endif
+//#endif
     // うごかすキューブをフィールドの座標に変換する
     public Vector3 fieldPos(Vector2Int pos)
     {
@@ -618,7 +583,7 @@ public class TestController : MonoBehaviour
         if (pos.y < 0)
         {
             rotaPos = new Vector2Int(0, 1);
-            Debug.Log("posが0以下やで");
+            //Debug.Log("posが0以下やで");
             return rotaPos;
         }
         if (_Cube[pos.y,pos.x] != null)

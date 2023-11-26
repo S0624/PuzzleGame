@@ -76,7 +76,8 @@ public class TestMove : MonoBehaviour
         if (!_fieldObject.GetComponent<TestController>().IsGameOver())
         {
             // HACK こいつが悪さをしている
-            if (!_fieldObject.GetComponent<TestController>().IsCheckField())
+            if (!_fieldObject.GetComponent<TestController>().IsFieldUpdate())
+            //if (!_fieldObject.GetComponent<TestController>().IsCheckField())
             {
                 MoveState();
             }
@@ -105,7 +106,7 @@ public class TestMove : MonoBehaviour
             }
 
             // 本来はクイック移動はない
-#if true
+//#if true
             Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
             // 急降下で下に落とす(DEBUG機能).
             if (moveInput.y > 0)
@@ -116,7 +117,7 @@ public class TestMove : MonoBehaviour
                 }
             }
         }
-#endif
+//#endif
     }
     void FixedUpdate()
     {
@@ -151,9 +152,10 @@ public class TestMove : MonoBehaviour
             testpos = new Vector2Int(0, testpos.y - (int)this.transform.position.y) + _cubePos;
         }
         //Debug.Log(_timer);
-        if (!_fieldObject.GetComponent<TestController>().IsCheckField())
+        if (!_fieldObject.GetComponent<TestController>().IsFieldUpdate())
+        //if (!_fieldObject.GetComponent<TestController>().IsCheckField())
         {
-            if (_timer > 60 * 1.2 && _fieldObject.GetComponent<TestController>().IsNextCubeY(testpos))
+            if (_timer > 60 * 1.2 && _fieldObject.GetComponent<TestController>().IsNextCubeY(testpos, _cubeDirection[_direction].x))
             {
                 Installation();
             }
@@ -198,7 +200,7 @@ public class TestMove : MonoBehaviour
                     }
                     checkPos = new Vector2Int(0, checkPos.y - (int)this.transform.position.y) + _cubePos;
                 }
-                if (!_fieldObject.GetComponent<TestController>().IsNextCubeY(checkPos))
+                if (!_fieldObject.GetComponent<TestController>().IsNextCubeY(checkPos, _cubeDirection[_direction].x))
                 {
                     //_cubePos.y--;
                     _timer = 0;
