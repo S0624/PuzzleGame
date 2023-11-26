@@ -98,7 +98,9 @@ public class TestColorManager : MonoBehaviour
         foreach (Transform child in _cubeColor[2].transform)
         {
 #if true
-            _colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax - 3);
+            //  色の数
+            _colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax - 1);
+            //_colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax - 2);
 #endif
             child.GetComponent<Renderer>().material.color = color_table[_colorNum];
         }

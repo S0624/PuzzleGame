@@ -124,38 +124,34 @@ public class TestMove : MonoBehaviour
         _timer++;
         //// 方向キーの入力取得
         //// 下左右に動かす
-        //if (!_fieldObject.GetComponent<TestController>().IsCheckField())
-        //{
-        //    MoveState();
-        //}
 
-        //else
-        //{
-        //    Debug.Log("処理を止める想定");
-        //}
-        //else
-        //{
-        //    //MoveObject2(0);
-        //    //MoveObject(new Vector3(0.0f, 0.0f, 0.0f));
-        //}
 
         // 下にキューブがあったら進まないようにしたい
-        Vector2Int testpos = new Vector2Int(0, _borad_Height);
+        bool isTestMove = false;
+        Vector2Int checkPos = new Vector2Int(0, _borad_Height);
+
         foreach (Transform child in this.transform)
         {
             // 子オブジェクトに対する処理をここに書く
-            Vector2Int pos = new Vector2Int(0, (int)child.transform.position.y);
-            if (testpos.y > pos.y)
+            Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x,
+                (int)child.transform.position.y);
+            //if (checkPos.y > pos.y)
             {
-                testpos = pos;
+                checkPos = pos;
             }
-            testpos = new Vector2Int(0, testpos.y - (int)this.transform.position.y) + _cubePos;
+            checkPos = new Vector2Int(checkPos.x, checkPos.y - (int)this.transform.position.y) + _cubePos;
+
+            isTestMove = _fieldObject.GetComponent<TestController>().IsNextCubeY(checkPos, 0);
+            if (isTestMove)
+            {
+                break;
+            }
         }
         //Debug.Log(_timer);
         if (!_fieldObject.GetComponent<TestController>().IsFieldUpdate())
         //if (!_fieldObject.GetComponent<TestController>().IsCheckField())
         {
-            if (_timer > 60 * 1.2 && _fieldObject.GetComponent<TestController>().IsNextCubeY(testpos, _cubeDirection[_direction].x))
+            if (_timer > 60 * 1.2 && isTestMove)
             {
                 Installation();
             }
@@ -185,6 +181,7 @@ public class TestMove : MonoBehaviour
         //if (moveInput.y < 0 && _action.WasPressedThisFrame())
         if (moveInput.y < 0)
         {
+            bool isTestMove  = false;
             if (CubeMoveState())
             {
                 _moveScore++;
@@ -193,14 +190,22 @@ public class TestMove : MonoBehaviour
                 foreach (Transform child in this.transform)
                 {
                     // 子オブジェクトに対する処理をここに書く
-                    Vector2Int pos = new Vector2Int(0, (int)child.transform.position.y);
-                    if (checkPos.y > pos.y)
+                    Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x,
+                        (int)child.transform.position.y);
+                    //if (checkPos.y > pos.y)
                     {
                         checkPos = pos;
                     }
-                    checkPos = new Vector2Int(0, checkPos.y - (int)this.transform.position.y) + _cubePos;
+                    checkPos = new Vector2Int(checkPos.x, checkPos.y - (int)this.transform.position.y) + _cubePos;
+                    
+                    isTestMove = _fieldObject.GetComponent<TestController>().IsNextCubeY(checkPos, 0);
+                    if(isTestMove)
+                    {
+                        break;
+                    }
                 }
-                if (!_fieldObject.GetComponent<TestController>().IsNextCubeY(checkPos, _cubeDirection[_direction].x))
+                
+                if (!isTestMove)
                 {
                     //_cubePos.y--;
                     _timer = 0;
