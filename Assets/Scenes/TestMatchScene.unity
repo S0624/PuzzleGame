@@ -268,7 +268,7 @@ GameObject:
   - component: {fileID: 119861352}
   - component: {fileID: 119861353}
   m_Layer: 0
-  m_Name: Field
+  m_Name: RightField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -452,57 +452,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 180859541}
-  - component: {fileID: 180859540}
-  - component: {fileID: 180859539}
   m_Layer: 0
-  m_Name: NextNextPuyo
+  m_Name: LeftNextNextPuyo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &180859539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180859538}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
---- !u!114 &180859540
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 180859538}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &180859541
 Transform:
   m_ObjectHideFlags: 0
@@ -668,6 +624,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06544c76f29b115499762c0fc9f8e960, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _testController: {fileID: 0}
+  _testMove: {fileID: 0}
 --- !u!1 &201810779
 GameObject:
   m_ObjectHideFlags: 0
@@ -679,7 +637,7 @@ GameObject:
   - component: {fileID: 201810781}
   - component: {fileID: 201810780}
   m_Layer: 0
-  m_Name: Field
+  m_Name: LeftField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -815,9 +773,7 @@ GameObject:
   - component: {fileID: 272334535}
   - component: {fileID: 272334534}
   - component: {fileID: 272334533}
-  - component: {fileID: 272334532}
   - component: {fileID: 272334537}
-  - component: {fileID: 272334538}
   m_Layer: 0
   m_Name: Puyo2
   m_TagString: Untagged
@@ -825,18 +781,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &272334532
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272334531}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &272334533
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -931,14 +875,44 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &272334538
+--- !u!1 &278976790
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 278976793}
+  - component: {fileID: 278976791}
+  - component: {fileID: 278976792}
+  m_Layer: 0
+  m_Name: InputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &278976791
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 272334531}
-  m_Enabled: 0
+  m_GameObject: {fileID: 278976790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70dd8bc49c4fcdd47818382867919c08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &278976792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278976790}
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
@@ -958,9 +932,24 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Piece
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!4 &278976793
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278976790}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -411.1458, y: -392.89847, z: -10.535994}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1654032359}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &376023347
 GameObject:
   m_ObjectHideFlags: 0
@@ -971,7 +960,7 @@ GameObject:
   m_Component:
   - component: {fileID: 376023348}
   m_Layer: 0
-  m_Name: BaseStage (1)
+  m_Name: RightStage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -991,7 +980,7 @@ Transform:
   m_Children:
   - {fileID: 119861352}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &484134405
 GameObject:
@@ -1137,57 +1126,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 513328989}
-  - component: {fileID: 513328988}
-  - component: {fileID: 513328987}
   m_Layer: 0
-  m_Name: NextPuyo
+  m_Name: LeftNextPuyo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &513328987
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 513328986}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
---- !u!114 &513328988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 513328986}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &513328989
 Transform:
   m_ObjectHideFlags: 0
@@ -1353,9 +1298,7 @@ GameObject:
   - component: {fileID: 600664820}
   - component: {fileID: 600664819}
   - component: {fileID: 600664818}
-  - component: {fileID: 600664817}
   - component: {fileID: 600664816}
-  - component: {fileID: 600664815}
   m_Layer: 0
   m_Name: NextNextPuyo1
   m_TagString: Untagged
@@ -1378,36 +1321,6 @@ Transform:
   m_Father: {fileID: 180859541}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &600664815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 600664813}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Piece
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &600664816
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1424,18 +1337,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &600664817
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 600664813}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &600664818
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1772,9 +1673,8 @@ GameObject:
   m_Component:
   - component: {fileID: 653497629}
   - component: {fileID: 653497630}
-  - component: {fileID: 653497631}
   m_Layer: 0
-  m_Name: Puyo
+  m_Name: LeftPuyo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1809,92 +1709,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &653497631
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 653497628}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 855cf462-91e8-4ba9-ac94-3e4c818b4136
-    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow,/XInputControllerWindows/leftStick]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: e9d85b5c-6ebf-4bb6-a32c-bf8d6a7ea57d
-    m_ActionName: UI/Navigate[/XInputControllerWindows/leftStick/up,/XInputControllerWindows/rightStick/up,/XInputControllerWindows/leftStick/down,/XInputControllerWindows/rightStick/down,/XInputControllerWindows/leftStick/left,/XInputControllerWindows/rightStick/left,/XInputControllerWindows/leftStick/right,/XInputControllerWindows/rightStick/right,/XInputControllerWindows/dpad,/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: bfde3fcd-537d-4767-8d2c-59f4f0a8edf7
-    m_ActionName: UI/Submit[/Keyboard/enter,/XInputControllerWindows/buttonSouth]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 49dea80e-dcc2-474f-93ca-4cbf407322f7
-    m_ActionName: UI/Cancel[/Keyboard/escape,/XInputControllerWindows/buttonEast]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 21d8b1d7-28a7-4a26-95be-a21ee429d5e8
-    m_ActionName: UI/Point[/Mouse/position,/Pen/position]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 86425704-1d7e-47f9-85be-88e595d3f7fc
-    m_ActionName: UI/Click[/Mouse/leftButton,/Pen/tip]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 2b8bdbf5-808f-4170-aa23-8fe2b95a1a6c
-    m_ActionName: UI/ScrollWheel[/Mouse/scroll]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 74ed68ba-943b-4c23-9c71-f610e193450d
-    m_ActionName: UI/MiddleClick[/Mouse/middleButton]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 0db1aea4-18bb-4fcf-8dc9-ec944acf6585
-    m_ActionName: UI/RightClick[/Mouse/rightButton]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 76163942-d5a9-42f9-87fa-beba4b355ba6
-    m_ActionName: UI/TrackedDevicePosition
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 73bec0b1-4887-46ae-834f-3454090f6a78
-    m_ActionName: UI/TrackedDeviceOrientation
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 07f49508-84ff-4778-9b50-a8283ca572dc
-    m_ActionName: Piece/Move[/XInputControllerWindows/dpad,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow,/XInputControllerWindows/leftStick/up,/XInputControllerWindows/leftStick/down,/XInputControllerWindows/leftStick/left,/XInputControllerWindows/leftStick/right]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 135469f1-f3b4-426f-8e42-6087a4f33c1e
-    m_ActionName: Piece/RotationRight[/XInputControllerWindows/buttonEast,/Keyboard/z]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 105f01b8-c546-4032-8c96-3f420b154a3c
-    m_ActionName: Piece/RotationLeft[/Keyboard/x,/XInputControllerWindows/buttonSouth]
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
+  _inputManager: {fileID: 278976791}
+  _playerIndex: 0
+  _fieldObject: {fileID: 201810780}
 --- !u!1 &704427321
 GameObject:
   m_ObjectHideFlags: 0
@@ -1907,9 +1724,7 @@ GameObject:
   - component: {fileID: 704427328}
   - component: {fileID: 704427327}
   - component: {fileID: 704427326}
-  - component: {fileID: 704427325}
   - component: {fileID: 704427324}
-  - component: {fileID: 704427323}
   m_Layer: 0
   m_Name: NextPuyo2
   m_TagString: Untagged
@@ -1932,36 +1747,6 @@ Transform:
   m_Father: {fileID: 513328989}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &704427323
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 704427321}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Piece
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &704427324
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1978,18 +1763,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &704427325
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 704427321}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &704427326
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2262,7 +2035,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &811552423
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2496,9 +2269,7 @@ GameObject:
   - component: {fileID: 887873211}
   - component: {fileID: 887873210}
   - component: {fileID: 887873209}
-  - component: {fileID: 887873208}
   - component: {fileID: 887873207}
-  - component: {fileID: 887873206}
   m_Layer: 0
   m_Name: NextPuyo1
   m_TagString: Untagged
@@ -2521,36 +2292,6 @@ Transform:
   m_Father: {fileID: 513328989}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &887873206
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 887873204}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Piece
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &887873207
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2567,18 +2308,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &887873208
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 887873204}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &887873209
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2956,9 +2685,7 @@ GameObject:
   - component: {fileID: 989235277}
   - component: {fileID: 989235276}
   - component: {fileID: 989235275}
-  - component: {fileID: 989235274}
   - component: {fileID: 989235273}
-  - component: {fileID: 989235272}
   m_Layer: 0
   m_Name: Puyo2
   m_TagString: Untagged
@@ -2981,36 +2708,6 @@ Transform:
   m_Father: {fileID: 1379091267}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &989235272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 989235270}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Piece
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &989235273
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3027,18 +2724,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &989235274
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 989235270}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &989235275
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3211,9 +2896,7 @@ GameObject:
   - component: {fileID: 1035721207}
   - component: {fileID: 1035721206}
   - component: {fileID: 1035721205}
-  - component: {fileID: 1035721204}
   - component: {fileID: 1035721203}
-  - component: {fileID: 1035721202}
   m_Layer: 0
   m_Name: NextPuyo2
   m_TagString: Untagged
@@ -3236,36 +2919,6 @@ Transform:
   m_Father: {fileID: 1517807287}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1035721202
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1035721200}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Piece
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &1035721203
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3282,18 +2935,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &1035721204
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1035721200}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &1035721205
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3369,9 +3010,7 @@ GameObject:
   - component: {fileID: 1036436483}
   - component: {fileID: 1036436482}
   - component: {fileID: 1036436481}
-  - component: {fileID: 1036436480}
   - component: {fileID: 1036436479}
-  - component: {fileID: 1036436478}
   m_Layer: 0
   m_Name: NextPuyo1
   m_TagString: Untagged
@@ -3394,36 +3033,6 @@ Transform:
   m_Father: {fileID: 1517807287}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1036436478
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1036436476}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Piece
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &1036436479
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3440,18 +3049,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &1036436480
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1036436476}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &1036436481
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3770,9 +3367,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1379091267}
   - component: {fileID: 1379091269}
-  - component: {fileID: 1379091268}
   m_Layer: 0
-  m_Name: Puyo
+  m_Name: RightPuyo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3795,36 +3391,6 @@ Transform:
   m_Father: {fileID: 119861352}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1379091268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1379091266}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!114 &1379091269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3837,6 +3403,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _inputManager: {fileID: 278976791}
+  _playerIndex: 1
+  _fieldObject: {fileID: 119861353}
 --- !u!1 &1433818134
 GameObject:
   m_ObjectHideFlags: 0
@@ -3849,9 +3418,7 @@ GameObject:
   - component: {fileID: 1433818141}
   - component: {fileID: 1433818140}
   - component: {fileID: 1433818139}
-  - component: {fileID: 1433818138}
   - component: {fileID: 1433818137}
-  - component: {fileID: 1433818136}
   m_Layer: 0
   m_Name: NextNextPuyo1
   m_TagString: Untagged
@@ -3874,36 +3441,6 @@ Transform:
   m_Father: {fileID: 1723909163}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1433818136
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1433818134}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Piece
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &1433818137
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3920,18 +3457,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &1433818138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1433818134}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &1433818139
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4007,9 +3532,7 @@ GameObject:
   - component: {fileID: 1499574968}
   - component: {fileID: 1499574967}
   - component: {fileID: 1499574966}
-  - component: {fileID: 1499574965}
   - component: {fileID: 1499574964}
-  - component: {fileID: 1499574963}
   m_Layer: 0
   m_Name: Puyo1
   m_TagString: Untagged
@@ -4032,36 +3555,6 @@ Transform:
   m_Father: {fileID: 1379091267}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1499574963
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1499574961}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Piece
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &1499574964
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4078,18 +3571,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &1499574965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1499574961}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &1499574966
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4162,10 +3643,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1517807287}
-  - component: {fileID: 1517807289}
-  - component: {fileID: 1517807288}
   m_Layer: 0
-  m_Name: NextPuyo
+  m_Name: RightNextPuyo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4188,48 +3667,6 @@ Transform:
   m_Father: {fileID: 119861352}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1517807288
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1517807286}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
---- !u!114 &1517807289
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1517807286}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1523644942
 GameObject:
   m_ObjectHideFlags: 0
@@ -4652,6 +4089,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1654032359}
   - component: {fileID: 1654032358}
+  - component: {fileID: 1654032361}
   - component: {fileID: 1654032360}
   m_Layer: 0
   m_Name: GameManager
@@ -4667,7 +4105,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654032357}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0ab16439b06cdc47b75e6251d987be8, type: 3}
   m_Name: 
@@ -4675,6 +4113,8 @@ MonoBehaviour:
   GameOverImg: {fileID: 56472850064453421, guid: 5f416759abc01c74a9c2e2f94903a5e9, type: 3}
   AllClearImg: {fileID: 8784868718936140701, guid: e21f11f254dd3b549801279d68a2cfb1, type: 3}
   Canvas: {fileID: 811552422}
+  _testController: {fileID: 201810780}
+  _move: {fileID: 0}
 --- !u!4 &1654032359
 Transform:
   m_ObjectHideFlags: 0
@@ -4686,9 +4126,11 @@ Transform:
   m_LocalPosition: {x: 414.34845, y: 397.85938, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 278976793}
+  - {fileID: 2092515528}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1654032360
 MonoBehaviour:
@@ -4703,6 +4145,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _scene: TitleScene
+  _controller: {fileID: 201810780}
+--- !u!114 &1654032361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1654032357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5c3f3950de2ad44fb7f12c27066afb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameOverImg: {fileID: 56472850064453421, guid: 5f416759abc01c74a9c2e2f94903a5e9, type: 3}
+  AllClearImg: {fileID: 8784868718936140701, guid: e21f11f254dd3b549801279d68a2cfb1, type: 3}
+  Canvas: {fileID: 811552422}
+  _testController: {fileID: 201810780}
+  _leftMove: {fileID: 653497630}
+  _rightMove: {fileID: 1379091269}
 --- !u!1 &1688719089
 GameObject:
   m_ObjectHideFlags: 0
@@ -4851,6 +4312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60476c0c0e77aac40b2d3d3571e827e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _testController: {fileID: 0}
 --- !u!1 &1723909162
 GameObject:
   m_ObjectHideFlags: 0
@@ -4860,10 +4322,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1723909163}
-  - component: {fileID: 1723909165}
-  - component: {fileID: 1723909164}
   m_Layer: 0
-  m_Name: NextNextPuyo
+  m_Name: RightNextNextPuyo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4886,48 +4346,6 @@ Transform:
   m_Father: {fileID: 119861352}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1723909164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1723909162}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
---- !u!114 &1723909165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1723909162}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1829670470
 GameObject:
   m_ObjectHideFlags: 0
@@ -5037,9 +4455,7 @@ GameObject:
   - component: {fileID: 2034186338}
   - component: {fileID: 2034186337}
   - component: {fileID: 2034186336}
-  - component: {fileID: 2034186335}
   - component: {fileID: 2034186334}
-  - component: {fileID: 2034186333}
   m_Layer: 0
   m_Name: NextNextPuyo2
   m_TagString: Untagged
@@ -5062,36 +4478,6 @@ Transform:
   m_Father: {fileID: 1723909163}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2034186333
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2034186331}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Piece
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &2034186334
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5108,18 +4494,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &2034186335
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2034186331}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &2034186336
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5195,9 +4569,7 @@ GameObject:
   - component: {fileID: 2074924253}
   - component: {fileID: 2074924252}
   - component: {fileID: 2074924251}
-  - component: {fileID: 2074924250}
   - component: {fileID: 2074924249}
-  - component: {fileID: 2074924248}
   m_Layer: 0
   m_Name: NextNextPuyo2
   m_TagString: Untagged
@@ -5220,36 +4592,6 @@ Transform:
   m_Father: {fileID: 180859541}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2074924248
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2074924246}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Piece
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &2074924249
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5266,18 +4608,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &2074924250
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2074924246}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &2074924251
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5448,6 +4778,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2092515528}
   - component: {fileID: 2092515527}
+  - component: {fileID: 2092515529}
   m_Layer: 0
   m_Name: ColorManager
   m_TagString: Untagged
@@ -5478,13 +4809,28 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2092515526}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.9497266, y: 3.4194274, z: 7.9763775}
+  m_LocalPosition: {x: -411.3987, y: -394.43994, z: 7.9763775}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_Father: {fileID: 1654032359}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2092515529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2092515526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a04cf2f1cd674742b7da5befae57503, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _nowCube: {fileID: 1379091266}
+  _nextCube: {fileID: 1517807286}
+  _nextnextCube: {fileID: 1723909162}
 --- !u!1 &2112224755
 GameObject:
   m_ObjectHideFlags: 0
@@ -5495,7 +4841,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2112224756}
   m_Layer: 0
-  m_Name: BaseStage
+  m_Name: LeftStage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5529,9 +4875,7 @@ GameObject:
   - component: {fileID: 2130274227}
   - component: {fileID: 2130274226}
   - component: {fileID: 2130274225}
-  - component: {fileID: 2130274224}
   - component: {fileID: 2130274223}
-  - component: {fileID: 2130274222}
   m_Layer: 0
   m_Name: Puyo1
   m_TagString: Untagged
@@ -5554,36 +4898,6 @@ Transform:
   m_Father: {fileID: 653497629}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2130274222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2130274220}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 50cade6cc0406634995166e293cb2d2a, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Piece
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!54 &2130274223
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5600,18 +4914,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!114 &2130274224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2130274220}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ec4c60e8c3a3ba4d8fa936553409827, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &2130274225
 SphereCollider:
   m_ObjectHideFlags: 0

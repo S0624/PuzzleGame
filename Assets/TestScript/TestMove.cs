@@ -1,23 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.InputSystem;
+﻿using UnityEngine;
 // HACK テスト用の移動実装
 
 public class TestMove : MonoBehaviour
 {
-    // ボタンの処理が行われているかどうかの変数
-    private InputAction _action;
-    // ボタンの処理をするための変数.
-    private TestInputManager _testInput;
+    // スクリプトの取得.
+    [SerializeField] private InputState _inputManager;
+    // 何Pか指定する(テスト).
+    [SerializeField] private int _playerIndex;
+
+    // フィールドの情報を受け取るための変数
+    public TestController _fieldObject; 
+    // 色の情報を受け取るための変数
+    private GameObject _colorManager;
     // 移動速度.
     //private float _speed;
     //private float currentSpeed;
-
-    // フィールドの情報を受け取るための変数
-    private GameObject _fieldObject; 
-    // 色の情報を受け取るための変数
-    private GameObject _colorManager;
     // 移動情報
     // HACK たすけて！！！！！
     private const int _borad_Height = 13 - 1;
@@ -42,19 +39,12 @@ public class TestMove : MonoBehaviour
     // 初期化処理
     void Start()
     {
-
-        _testInput = new TestInputManager();
-        _testInput.Enable();
-
-        //_speed = 5.0f;
-        // フィールドを取得
-        _fieldObject = GameObject.Find("Field");
         _colorManager = GameObject.Find("ColorManager");
         //this.transform.position = transform.position + new Vector3(_cubePos.x, _cubePos.y, 0);
         this.transform.position = Vector3.zero;
         // 自分のポジションから
         // これをしないといろんな位置に行ってしまうので、フィールドに合わせてキューブの位置を初期化する
-        this.transform.position = transform.position +transform.position + _fieldObject.GetComponent<TestController>().fieldPos(_cubePos);
+        this.transform.position = transform.position +transform.position + _fieldObject.fieldPos(_cubePos);
         
         //this.transform.position = new Vector3(_cubePos.x, _cubePos.y, 0);
         _cubePostemp = this.transform.position;
@@ -66,24 +56,24 @@ public class TestMove : MonoBehaviour
         _cubeDirection[(int)Direction.Right] = new Vector2Int(1, 0);
     }
 
-    // Update is called once per frame
-    void Update()
+    // 移動したときの処理.
+    public void RotaUpdate()
     {
+        // キーの入力情報取得
+        _inputManager.GetInputPlayerPadNum(_playerIndex);
         CubeDestory();
-        //Debug.Log(_fieldObject.GetComponent<TestController>().IsCheckField());
         // 方向キーの入力取得
         // 下左右に動かす
-        if (!_fieldObject.GetComponent<TestController>().IsGameOver())
+        if (!_fieldObject.IsGameOver())
         {
             // HACK こいつが悪さをしている
-            if (!_fieldObject.GetComponent<TestController>().IsFieldUpdate())
-            //if (!_fieldObject.GetComponent<TestController>().IsCheckField())
+            if (!_fieldObject.IsFieldUpdate())
             {
                 MoveState();
             }
             // HACK 雑に回転処理を実装(お試し)
             // 右回り
-            if (_testInput.Piece.RotationRight.WasPerformedThisFrame())
+            if (_inputManager.GetInputRotaDate(RotaState.right))
             {
                 _direction++;
                 if (_direction >= 4)
@@ -94,7 +84,7 @@ public class TestMove : MonoBehaviour
                 CubeRotation();
             }
             // 左まわり
-            else if (_testInput.Piece.RotationLeft.WasPerformedThisFrame())
+            else if (_inputManager.GetInputRotaDate(RotaState.left))
             {
                 _direction--;
                 if (_direction < 0)
@@ -106,25 +96,24 @@ public class TestMove : MonoBehaviour
             }
 
             // 本来はクイック移動はない
-//#if true
-            Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
+            //#if true
+            Vector2 moveInput = _inputManager.GetInputMoveDate();
             // 急降下で下に落とす(DEBUG機能).
             if (moveInput.y > 0)
             {
-                if (_action.WasPressedThisFrame())
+                if (_inputManager.DGetInputWasPressData())
                 {
                     Installation();
                 }
             }
         }
-//#endif
+        //#endif
     }
-    void FixedUpdate()
+    // 回転したときの処理.
+    public void MoveUpdate()
     {
         _timer++;
-        //// 方向キーの入力取得
         //// 下左右に動かす
-
 
         // 下にキューブがあったら進まないようにしたい
         bool isTestMove = false;
@@ -141,15 +130,13 @@ public class TestMove : MonoBehaviour
             }
             checkPos = new Vector2Int(checkPos.x, checkPos.y - (int)this.transform.position.y) + _cubePos;
 
-            isTestMove = _fieldObject.GetComponent<TestController>().IsNextCubeY(checkPos, 0);
+            isTestMove = _fieldObject.IsNextCubeY(checkPos, 0);
             if (isTestMove)
             {
                 break;
             }
         }
-        //Debug.Log(_timer);
-        if (!_fieldObject.GetComponent<TestController>().IsFieldUpdate())
-        //if (!_fieldObject.GetComponent<TestController>().IsCheckField())
+        if (!_fieldObject.IsFieldUpdate())
         {
             if (_timer > 60 * 1.2 && isTestMove)
             {
@@ -163,22 +150,19 @@ public class TestMove : MonoBehaviour
                 CubePos(0, -1);
                 _timer = 0;
             }
-            //Quaternion.Slerp();
         }
     }
 
     private void MoveState()
     {
-        Vector2 moveInput = this._testInput.Piece.Move.ReadValue<Vector2>();
-        _action = _testInput.Piece.Move;
-        if (_action.IsPressed())
+        Vector2 moveInput = _inputManager.GetInputMoveDate();
+        if (_inputManager.IsMovePressed())
         {
             _inputframe++;
         }
 
         // HACK 斜めってどうやんねん(？？？？？？)
         // 下.
-        //if (moveInput.y < 0 && _action.WasPressedThisFrame())
         if (moveInput.y < 0)
         {
             bool isTestMove  = false;
@@ -198,7 +182,7 @@ public class TestMove : MonoBehaviour
                     }
                     checkPos = new Vector2Int(checkPos.x, checkPos.y - (int)this.transform.position.y) + _cubePos;
                     
-                    isTestMove = _fieldObject.GetComponent<TestController>().IsNextCubeY(checkPos, 0);
+                    isTestMove = _fieldObject.IsNextCubeY(checkPos, 0);
                     if(isTestMove)
                     {
                         break;
@@ -237,7 +221,7 @@ public class TestMove : MonoBehaviour
                     }
 
                 }
-                if (!_fieldObject.GetComponent<TestController>().IsNextCubeX(checkPos, 1))
+                if (!_fieldObject.IsNextCubeX(checkPos, 1))
                 {
                     //_cubePos.x++;
                     CubePos(1, 0);
@@ -259,7 +243,7 @@ public class TestMove : MonoBehaviour
                         checkPos = pos;
                     }
                 }
-                if (!_fieldObject.GetComponent<TestController>().IsNextCubeX(checkPos, -1))
+                if (!_fieldObject.IsNextCubeX(checkPos, -1))
                 {
                     //_cubePos.x--;
                     CubePos(-1, 0);
@@ -272,29 +256,29 @@ public class TestMove : MonoBehaviour
     // 設置するときの処理
     private void Installation()
     {
-        if (!_fieldObject.GetComponent<TestController>().IsGameOver())
+        if (!_fieldObject.IsGameOver())
         {
             int childcount = 0;
-        _moveScore = 0;
-        //_fieldObject.GetComponent<TestController>().GetInstallation(true);
-        foreach (Transform child in this.transform)
-        {
-            // 子オブジェクトに対する処理をここに書く
-            //Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, (int)child.transform.position.y - (int)this.transform.position.y) + _cubePos;
-            Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x + _cubePos.x,
-                (int)child.transform.position.y - (int)this.transform.position.y);
+            _moveScore = 0;
+            //_fieldObject.GetComponent<TestController>().GetInstallation(true);
+            foreach (Transform child in this.transform)
+            {
+                // 子オブジェクトに対する処理をここに書く
+                //Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, (int)child.transform.position.y - (int)this.transform.position.y) + _cubePos;
+                Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x + _cubePos.x,
+                    (int)child.transform.position.y - (int)this.transform.position.y);
 
-            //Debug.Log(pos);
+                //Debug.Log(pos);
 
-            // HACK テスト用.
-            // こいつが悪さをしている
-            // こいつはforで置ける一番低い場所を取ってしまうので0からいくとそうなる（説明下手だな？）
-            pos = _fieldObject.GetComponent<TestController>().SteepDescent(pos, _direction);
-            _colorNum = _colorManager.GetComponent<TestColorManager>().GetColorNumber(child.name);
-            //Debug.Log(child.position + "wa"+ child.name +"  " + pos.y + " " + _colorNum);
-            _fieldObject.GetComponent<TestController>().IsSetCube(pos, _colorNum);
-            childcount++;
-        }
+                // HACK テスト用.
+                // こいつが悪さをしている
+                // こいつはforで置ける一番低い場所を取ってしまうので0からいくとそうなる（説明下手だな？）
+                pos = _fieldObject.SteepDescent(pos, _direction);
+                _colorNum = _colorManager.GetComponent<TestColorManager>().GetColorNumber(child.name,childcount);
+                //Debug.Log(child.position + "wa"+ child.name +"  " + pos.y + " " + _colorNum);
+                _fieldObject.IsSetCube(pos, _colorNum);
+                childcount++;
+            }
             //_fieldObject.GetComponent<TestController>().IsFieldUpdate();
             CubeReGenerete();
             //_fieldObject.GetComponent<TestController>().GetInstallation(false);
@@ -316,7 +300,7 @@ public class TestMove : MonoBehaviour
     // ゲームオーバーだったら消す.(テスト)
     private void CubeDestory()
     {
-        if (_fieldObject.GetComponent<TestController>().IsGameOver())
+        if (_fieldObject.IsGameOver())
         {
             Destroy(gameObject);
         }
@@ -331,7 +315,7 @@ public class TestMove : MonoBehaviour
     // キューブの移動状態.
     private bool CubeMoveState()
     {
-        if (_inputframe > 10 || _action.WasPressedThisFrame())
+        if (_inputframe > 10 || _inputManager.DGetInputWasPressData())
         {
             return true;
         }
@@ -356,7 +340,7 @@ public class TestMove : MonoBehaviour
 
             // HACK 壁に貫通しないように処理
             //Debug.Log(child.name + pos);
-            checkPos = _fieldObject.GetComponent<TestController>().MoveRotaCheck(pos, _cubeDirection[_direction]);
+            checkPos = _fieldObject.MoveRotaCheck(pos, _cubeDirection[_direction]);
             //_cubePos += checkPos;
             CubePos(checkPos.x, checkPos.y);
         }

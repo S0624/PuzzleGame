@@ -10,16 +10,17 @@ public class LoadSceneManager : MonoBehaviour
     // ボタンの処理をするための変数.
     private TestInputManager _input;
     // 仮取得
-    private TestController _controller;
+    //public GameObject _field;
+    public TestController _controller;
     // Start is called before the first frame update
     void Start()
     {
         _input = new TestInputManager();
         _input.Enable();
-        if (GameObject.Find("Field"))
-        { 
-            _controller = GameObject.Find("Field").GetComponent<TestController>();
-        } 
+        //if (GameObject.Find("Field"))
+        //{ 
+        //    _controller = GameObject.Find("Field").GetComponent<TestController>();
+        //} 
     }
 
     // Update is called once per frame

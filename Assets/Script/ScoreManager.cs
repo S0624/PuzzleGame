@@ -5,8 +5,8 @@ using TMPro;
 public class ScoreManager : MonoBehaviour
 {
     // 仮実装用
-    private TestController _testController;
-    private TestMove _testMove;
+    public TestController _testController;
+    public TestMove _testMove;
     // テキストではなくテキストメッシュプロを使用している.
     private TextMeshProUGUI _scoreText;
     // スコアを入れる用の変数.
@@ -14,8 +14,8 @@ public class ScoreManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _testController = GameObject.Find("Field").GetComponent<TestController>();
-        _testMove = GameObject.Find("Puyo").GetComponent<TestMove>();
+        //_testController = GameObject.Find("Field").GetComponent<TestController>();
+        //_testMove = GameObject.Find("Puyo").GetComponent<TestMove>();
         // 初期化処理.
         _scoreText = GetComponent<TextMeshProUGUI>();
         // HACK 仮で適当な値を入れている

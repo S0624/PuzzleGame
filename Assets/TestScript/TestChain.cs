@@ -5,7 +5,7 @@ using TMPro;
 public class TestChain : MonoBehaviour
 {
     // 仮実装用
-    private TestController _testController;
+    public TestController _testController;
     // テキストではなくテキストメッシュプロを使用している.
     private TextMeshProUGUI _chainText;
     // スコアを入れる用の変数.
@@ -15,7 +15,7 @@ public class TestChain : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _testController = GameObject.Find("Field").GetComponent<TestController>();
+        //_testController = GameObject.Find("Field").GetComponent<TestController>();
         // 初期化処理.
         _chainText = GetComponent<TextMeshProUGUI>();
         // HACK 仮で適当な値を入れている

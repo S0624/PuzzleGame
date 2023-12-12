@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameMainManager : MonoBehaviour
+public class GameMainMatchManager : MonoBehaviour
 {
     // 画像をいれる
     [Header("表示させる画像たち")]
@@ -14,7 +14,8 @@ public class GameMainManager : MonoBehaviour
     private GameObject _allClearTex = null;
     // オブジェクトの取得.
     public TestController _testController;
-    public TestMove _move;
+    public TestMove _leftMove;
+    public TestMove _rightMove;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,7 +26,8 @@ public class GameMainManager : MonoBehaviour
     void Update()
     {
         // キューブの回転処理.
-        _move.RotaUpdate();
+        _leftMove.RotaUpdate();
+        _rightMove.RotaUpdate();
         // テスト用 ゲームオーバーになったら画像を表示
         GenereteGameOver();
         GenereteAllClear();
@@ -33,7 +35,8 @@ public class GameMainManager : MonoBehaviour
     void FixedUpdate()
     {
         // キューブの移動処理.
-        _move.MoveUpdate();
+        _leftMove.MoveUpdate();
+        _rightMove.MoveUpdate();
     }
     // テスト用 ゲームオーバーになったら画像を表示
     private void GenereteGameOver()
