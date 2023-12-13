@@ -11,16 +11,16 @@ public class TestMove : MonoBehaviour
     // フィールドの情報を受け取るための変数
     public TestController _fieldObject; 
     // 色の情報を受け取るための変数
-    private GameObject _colorManager;
+    public TestColorManager _colorManager;
     // 移動速度.
     //private float _speed;
     //private float currentSpeed;
     // 移動情報
     // HACK たすけて！！！！！
     private const int _borad_Height = 13 - 1;
-    private Vector2Int _cubePos = new Vector2Int(3, _borad_Height);
+    private Vector2Int _spherePos = new Vector2Int(3, _borad_Height);
     // 仮で戻す位置を覚えておく変数
-    private Vector3 _cubePostemp;
+    private Vector3 _spherePostemp;
     // 時間を図る変数(数秒たつと自動で落下させるために使用)
     private int _timer = 0;
     // ボタンを押し続けているか図る(これがないと一瞬で移動してしまうため)
@@ -31,7 +31,7 @@ public class TestMove : MonoBehaviour
     private int _moveScore = 0;
 
     // どの向きに回転させるか（回転処理に使用）
-    private Vector2Int[] _cubeDirection = new Vector2Int[(int)Direction.max];
+    private Vector2Int[] _sphereDirection = new Vector2Int[(int)Direction.max];
     // 何回ボタンを押されたかを図るために使用する変数
     private int _direction = 0;
 
@@ -39,21 +39,21 @@ public class TestMove : MonoBehaviour
     // 初期化処理
     void Start()
     {
-        _colorManager = GameObject.Find("ColorManager");
+        //_colorManager = GameObject.Find("ColorManager");
         //this.transform.position = transform.position + new Vector3(_cubePos.x, _cubePos.y, 0);
         this.transform.position = Vector3.zero;
         // 自分のポジションから
         // これをしないといろんな位置に行ってしまうので、フィールドに合わせてキューブの位置を初期化する
-        this.transform.position = transform.position +transform.position + _fieldObject.fieldPos(_cubePos);
+        this.transform.position = transform.position +transform.position + _fieldObject.fieldPos(_spherePos);
         
         //this.transform.position = new Vector3(_cubePos.x, _cubePos.y, 0);
-        _cubePostemp = this.transform.position;
+        _spherePostemp = this.transform.position;
 
         //_testField.GetComponent<TestController>().IsSetCube(_testPos,0);
-        _cubeDirection[(int)Direction.Down] = new Vector2Int(0, -1);
-        _cubeDirection[(int)Direction.Left] = new Vector2Int(-1, 0);
-        _cubeDirection[(int)Direction.Up] = new Vector2Int(0, 1);
-        _cubeDirection[(int)Direction.Right] = new Vector2Int(1, 0);
+        _sphereDirection[(int)Direction.Down] = new Vector2Int(0, -1);
+        _sphereDirection[(int)Direction.Left] = new Vector2Int(-1, 0);
+        _sphereDirection[(int)Direction.Up] = new Vector2Int(0, 1);
+        _sphereDirection[(int)Direction.Right] = new Vector2Int(1, 0);
     }
 
     // 移動したときの処理.
@@ -61,7 +61,7 @@ public class TestMove : MonoBehaviour
     {
         // キーの入力情報取得
         _inputManager.GetInputPlayerPadNum(_playerIndex);
-        CubeDestory();
+        SphereDestory();
         // 方向キーの入力取得
         // 下左右に動かす
         if (!_fieldObject.IsGameOver())
@@ -81,7 +81,7 @@ public class TestMove : MonoBehaviour
                     _direction = 0;
                 }
                 // HACK 回転処理 ﾋｨ.........
-                CubeRotation();
+                SphereRotation();
             }
             // 左まわり
             else if (_inputManager.GetInputRotaDate(RotaState.left))
@@ -92,7 +92,7 @@ public class TestMove : MonoBehaviour
                     _direction = 3;
                 }
                 // HACK 回転処理 ﾋｨ.........
-                CubeRotation();
+                SphereRotation();
             }
 
             // 本来はクイック移動はない
@@ -128,9 +128,9 @@ public class TestMove : MonoBehaviour
             {
                 checkPos = pos;
             }
-            checkPos = new Vector2Int(checkPos.x, checkPos.y - (int)this.transform.position.y) + _cubePos;
+            checkPos = new Vector2Int(checkPos.x, checkPos.y - (int)this.transform.position.y) + _spherePos;
 
-            isTestMove = _fieldObject.IsNextCubeY(checkPos, 0);
+            isTestMove = _fieldObject.IsNextSphereY(checkPos, 0);
             if (isTestMove)
             {
                 break;
@@ -147,7 +147,7 @@ public class TestMove : MonoBehaviour
             if (_timer > 60 * 1.2)
             {
                 //_cubePos.y--;
-                CubePos(0, -1);
+                CSpherePos(0, -1);
                 _timer = 0;
             }
         }
@@ -166,7 +166,7 @@ public class TestMove : MonoBehaviour
         if (moveInput.y < 0)
         {
             bool isTestMove  = false;
-            if (CubeMoveState())
+            if (SphereMoveState())
             {
                 _moveScore++;
                 Vector2Int checkPos = new Vector2Int(0, _borad_Height);
@@ -180,9 +180,9 @@ public class TestMove : MonoBehaviour
                     {
                         checkPos = pos;
                     }
-                    checkPos = new Vector2Int(checkPos.x, checkPos.y - (int)this.transform.position.y) + _cubePos;
+                    checkPos = new Vector2Int(checkPos.x, checkPos.y - (int)this.transform.position.y) + _spherePos;
                     
-                    isTestMove = _fieldObject.IsNextCubeY(checkPos, 0);
+                    isTestMove = _fieldObject.IsNextSphereY(checkPos, 0);
                     if(isTestMove)
                     {
                         break;
@@ -193,7 +193,7 @@ public class TestMove : MonoBehaviour
                 {
                     //_cubePos.y--;
                     _timer = 0;
-                    CubePos(0, -1);
+                    CSpherePos(0, -1);
                 }
                 else
                 {
@@ -207,24 +207,24 @@ public class TestMove : MonoBehaviour
         // 右.
         if (moveInput.x > 0)
         {
-            if (CubeMoveState())
+            if (SphereMoveState())
             {
                 Vector2Int checkPos = new Vector2Int(0, 0);
 
                 foreach (Transform child in this.transform)
                 {
                     // 子オブジェクトに対する処理をここに書く
-                    Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 0) + _cubePos;
+                    Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 0) + _spherePos;
                     if (checkPos.x < pos.x)
                     {
                         checkPos = pos;
                     }
 
                 }
-                if (!_fieldObject.IsNextCubeX(checkPos, 1))
+                if (!_fieldObject.IsNextSphereX(checkPos, 1))
                 {
                     //_cubePos.x++;
-                    CubePos(1, 0);
+                    CSpherePos(1, 0);
                 }
                 _inputframe = 0;
             }
@@ -232,21 +232,21 @@ public class TestMove : MonoBehaviour
         // 左.
         else if (moveInput.x < 0)
         {
-            if (CubeMoveState())
+            if (SphereMoveState())
             {
                 Vector2Int checkPos = new Vector2Int(7, 0);
                 foreach (Transform child in this.transform)
                 {
-                    Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 0) + _cubePos;
+                    Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 0) + _spherePos;
                     if (checkPos.x >= pos.x)
                     {
                         checkPos = pos;
                     }
                 }
-                if (!_fieldObject.IsNextCubeX(checkPos, -1))
+                if (!_fieldObject.IsNextSphereX(checkPos, -1))
                 {
                     //_cubePos.x--;
-                    CubePos(-1, 0);
+                    CSpherePos(-1, 0);
                 }
                 _inputframe = 0;
             }
@@ -265,7 +265,7 @@ public class TestMove : MonoBehaviour
             {
                 // 子オブジェクトに対する処理をここに書く
                 //Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, (int)child.transform.position.y - (int)this.transform.position.y) + _cubePos;
-                Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x + _cubePos.x,
+                Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x + _spherePos.x,
                     (int)child.transform.position.y - (int)this.transform.position.y);
 
                 //Debug.Log(pos);
@@ -276,29 +276,29 @@ public class TestMove : MonoBehaviour
                 pos = _fieldObject.SteepDescent(pos, _direction);
                 _colorNum = _colorManager.GetComponent<TestColorManager>().GetColorNumber(child.name,childcount);
                 //Debug.Log(child.position + "wa"+ child.name +"  " + pos.y + " " + _colorNum);
-                _fieldObject.IsSetCube(pos, _colorNum);
+                _fieldObject.IsSetSphere(pos, _colorNum);
                 childcount++;
             }
             //_fieldObject.GetComponent<TestController>().IsFieldUpdate();
-            CubeReGenerete();
+            SphereReGenerete();
             //_fieldObject.GetComponent<TestController>().GetInstallation(false);
         }
     }
     // キューブの再生成.
-    private void CubeReGenerete()
+    private void SphereReGenerete()
     {
-        _cubePos = new Vector2Int(3, _borad_Height);
-        this.transform.position = _cubePostemp;
+        _spherePos = new Vector2Int(3, _borad_Height);
+        this.transform.position = _spherePostemp;
         // 回転の角度をもとに戻してあげる.
         _direction = 0;
-        CubeRotation();
+        SphereRotation();
         // HACK うーん・・・とりあえず色替えはできてるけどバグが発生してるぅ
-        _colorManager.GetComponent<TestColorManager>().ColorChenge();
+        _colorManager.GetComponent<TestColorManager>().ColorChenge(this.gameObject.name);
 
     }
 
     // ゲームオーバーだったら消す.(テスト)
-    private void CubeDestory()
+    private void SphereDestory()
     {
         if (_fieldObject.IsGameOver())
         {
@@ -306,14 +306,14 @@ public class TestMove : MonoBehaviour
         }
     }
 
-    private void CubePos(int x = 0, int y = 0)
+    private void CSpherePos(int x = 0, int y = 0)
     {
         this.transform.position = transform.position + new Vector3(x, y, 0);
-        _cubePos.x += x;
-        _cubePos.y += y;
+        _spherePos.x += x;
+        _spherePos.y += y;
     }
     // キューブの移動状態.
-    private bool CubeMoveState()
+    private bool SphereMoveState()
     {
         if (_inputframe > 10 || _inputManager.DGetInputWasPressData())
         {
@@ -322,12 +322,12 @@ public class TestMove : MonoBehaviour
         return false;
     }
     // 回転処理.
-    private void CubeRotation()
+    private void SphereRotation()
     {
         foreach (Transform child in this.transform)
         {
             child.transform.position =
-                new Vector3(_cubeDirection[_direction].x + transform.position.x, _cubeDirection[_direction].y + transform.position.y, 0);
+                new Vector3(_sphereDirection[_direction].x + transform.position.x, _sphereDirection[_direction].y + transform.position.y, 0);
             break;
         }
 
@@ -336,13 +336,13 @@ public class TestMove : MonoBehaviour
         {
             // 子オブジェクトに対する処理をここに書く
             Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 
-                (int)child.transform.position.y - (int)this.transform.position.y) + _cubePos;
+                (int)child.transform.position.y - (int)this.transform.position.y) + _spherePos;
 
             // HACK 壁に貫通しないように処理
             //Debug.Log(child.name + pos);
-            checkPos = _fieldObject.MoveRotaCheck(pos, _cubeDirection[_direction]);
+            checkPos = _fieldObject.MoveRotaCheck(pos, _sphereDirection[_direction]);
             //_cubePos += checkPos;
-            CubePos(checkPos.x, checkPos.y);
+            CSpherePos(checkPos.x, checkPos.y);
         }
     }
     // 仮実装

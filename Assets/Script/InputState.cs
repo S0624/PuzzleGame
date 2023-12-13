@@ -2,12 +2,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum RotaState
-{
-    left,
-    right,
-    max,
-}
 public class InputState : MonoBehaviour
 {
     private TestInputManager[] _testControl;

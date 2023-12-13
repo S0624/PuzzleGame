@@ -2,24 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ColorType
-{
-    None,
-    Green,    // 緑.
-    Red,    // 赤.
-    Yellow,    // 黄色.
-    Blue,    // 青.
-    Purple,    // 紫.
-    PuyoMax,       // ぷよ最大値(仮).
-    hindrance,     // おじゃま(仮).
-};
+//public enum ColorType
+//{
+//    None,
+//    Green,    // 緑.
+//    Red,    // 赤.
+//    Yellow,    // 黄色.
+//    Blue,    // 青.
+//    Purple,    // 紫.
+//    PuyoMax,       // ぷよ最大値(仮).
+//    hindrance,     // おじゃま(仮).
+//};
 
 // これはアタッチされていなかったらアタッチするという関数.
 //[RequireComponent(typeof(Renderer))]
 public class Test : MonoBehaviour
 {
     // 実行時に値を取得する読み取り専用の変数を生成
-    static readonly Color[] color_table = new Color[] {
+    public static readonly Color[] color_table = new Color[] {
         Color.white,        // 緑.
         Color.green,        // 緑.
         Color.red,          // 赤.
@@ -65,7 +65,7 @@ public class Test : MonoBehaviour
     {
         this.transform.localPosition = pos;
     }
-    public bool IsMoveCube()
+    public bool IsMoveSphere()
     {
         // オブジェクトが動いていないかどうか
         if(!_rigidbody.IsSleeping())

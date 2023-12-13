@@ -3,14 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // コメントがないよ？
-public enum Direction
-{
-    Down,
-    Left,
-    Up,
-    Right,
-    max,
-}
+
 public class TestController : MonoBehaviour
 {
     // ボードの横の最大値(6 * 13).
@@ -18,13 +11,13 @@ public class TestController : MonoBehaviour
     // ボードの縦の最大値.
     private const int _borad_Height = 13;
 
-    [SerializeField] private GameObject _prefabCube = default;
+    [SerializeField] private GameObject _prefabSphere = default;
 
     private int[,] _board = new int[_borad_Height, _borad_Width];
-    private GameObject[,] _Cube = new GameObject[_borad_Height, _borad_Width];
+    private GameObject[,] _sphere = new GameObject[_borad_Height, _borad_Width];
 
     private int[,] _eraseBoard = new int[_borad_Height, _borad_Width];
-    private Vector2Int[] _cubeDirection = new Vector2Int[(int)Direction.max];
+    private Vector2Int[] _sphereDirection = new Vector2Int[(int)Direction.max];
     private bool _isTestEraseFlag = false;
     private bool _isEraseFlag = false;
 
@@ -46,6 +39,9 @@ public class TestController : MonoBehaviour
 
     // 連鎖カウント
     private int _chainCount = 0;
+    private int _prevChainCount = 0;
+    private int _bonus = 2;
+
     // 設置したかのフラグ.
     private bool _isInstallaion = false;
     // HACK テスト用のフラグ(処理が終わったよ、のフラグ)
@@ -64,8 +60,8 @@ public class TestController : MonoBehaviour
             {
                 _board[y, x] = 0;
 
-                if (_Cube[y, x] != null) Destroy(_Cube[y, x]);
-                _Cube[y, x] = null;
+                if (_sphere[y, x] != null) Destroy(_sphere[y, x]);
+                _sphere[y, x] = null;
             }
         }
     }
@@ -75,10 +71,10 @@ public class TestController : MonoBehaviour
     {
         // HACK テストテストテストテスト
         // タテヨコ方向のチェックをforで回せないか実装してみるためのテスト実装(四つ分配列でもつ)
-        _cubeDirection[(int)Direction.Right] = new Vector2Int(1, 0);
-        _cubeDirection[(int)Direction.Left] = new Vector2Int(-1, 0);
-        _cubeDirection[(int)Direction.Up] = new Vector2Int(0, 1);
-        _cubeDirection[(int)Direction.Down] = new Vector2Int(0, -1);
+        _sphereDirection[(int)Direction.Right] = new Vector2Int(1, 0);
+        _sphereDirection[(int)Direction.Left] = new Vector2Int(-1, 0);
+        _sphereDirection[(int)Direction.Up] = new Vector2Int(0, 1);
+        _sphereDirection[(int)Direction.Down] = new Vector2Int(0, -1);
     }
     // 生成する.
     private void Generate()
@@ -91,7 +87,7 @@ public class TestController : MonoBehaviour
         {
             for (int x = 0; x < _borad_Width; x++)
             {
-                IsSetCube(new Vector2Int(x, y), Random.Range(1, (int)ColorType.PuyoMax));
+                IsSetSphere(new Vector2Int(x, y), Random.Range(1, (int)ColorType.PuyoMax));
             }
         }
     }
@@ -108,53 +104,53 @@ public class TestController : MonoBehaviour
         return false;
     }
     // フィールド内におけるかどうかの判定
-    public bool IsCanSetCube(Vector2Int pos)
+    public bool IsCanSetSphere(Vector2Int pos)
     {
         if (!IsValidated(pos)) return false;
 
         return 0 == _board[pos.y, pos.x];
     }
     // フィールド内にセットする
-    public bool IsSetCube(Vector2Int pos, int val)
+    public bool IsSetSphere(Vector2Int pos, int val)
     {
 
-        if (!IsCanSetCube(pos)) return false;
+        if (!IsCanSetSphere(pos)) return false;
 
         // 色番号をセット.
         _board[pos.y, pos.x] = val;
         // もし中身が入っていたらエラー表記を出
 
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
-        _Cube[pos.y, pos.x] = Instantiate(_prefabCube, world_position, Quaternion.identity, transform);
-        _Cube[pos.y, pos.x].GetComponent<Test>().SetColorType((ColorType)val);
+        _sphere[pos.y, pos.x] = Instantiate(_prefabSphere, world_position, Quaternion.identity, transform);
+        _sphere[pos.y, pos.x].GetComponent<Test>().SetColorType((ColorType)val);
 
         // 設置したよ
         _isInstallaion = true;
         return true;
     }
     // Y軸(下方向)におけるかどうかのチェック
-    public bool IsNextCubeY(Vector2Int pos, int add)
+    public bool IsNextSphereY(Vector2Int pos, int add)
     {
         // ゼロだったらおけるようにする
         if (pos.y == 0)
         {
             return true;
         }
-        if (_Cube[pos.y - 1, pos.x + add] != null)
+        if (_sphere[pos.y - 1, pos.x + add] != null)
         {
             return true;
         }
         return false;
     }
     // X軸(左右方向)におけるかどうかのチェック
-    public bool IsNextCubeX(Vector2Int pos, int add)
+    public bool IsNextSphereX(Vector2Int pos, int add)
     {
         // 範囲外じゃないかどうか
         if (pos.x + add < 0 || pos.x + add > _borad_Width - 1)
         {
             return true;
         }
-        if (_Cube[pos.y, pos.x + add] != null)
+        if (_sphere[pos.y, pos.x + add] != null)
         {
             return true;
         }
@@ -184,7 +180,7 @@ public class TestController : MonoBehaviour
             for (int x = 0; x < _borad_Width; x++)
             {
                 // 中身があることになる
-                if (_Cube[y, x] != null)
+                if (_sphere[y, x] != null)
                 {
                     isEmpty = false;
                     break;
@@ -203,7 +199,7 @@ public class TestController : MonoBehaviour
     public bool IsCheckField()
     {
         int eraseCount = 0;
-        ColorType cubeColor;
+        ColorType sphereColor;
         int[,] tempBorad = new int[_borad_Height, _borad_Width];
         bool isFrash = false; 
         // 仮で保存する変数を初期化する
@@ -214,20 +210,20 @@ public class TestController : MonoBehaviour
             {
                 ClearTempBorad(tempBorad);
 
-                if (IsCubeFallDown(x, y))
+                if (IsSphereFallDown(x, y))
                 {
                     return true;
                 }
-                if (_Cube[y, x] == null)
+                if (_sphere[y, x] == null)
                 {
                     // 何も入っていないので処理をとばす
-                    cubeColor = ColorType.None;
+                    sphereColor = ColorType.None;
                     continue;
                 }
                 // カラーの番号を取得
-                cubeColor = _Cube[y, x].GetComponent<Test>().GetColorType();
+                sphereColor = _sphere[y, x].GetComponent<Test>().GetColorType();
                 // 消えるかどうかの判定
-                IsRecursionCheckField(tempBorad, x, y, cubeColor);
+                IsRecursionCheckField(tempBorad, x, y, sphereColor);
                 // 消せる個数をチェックする
                 eraseCount = CountTempField(tempBorad);
                 // 指定された数よりも消せる数が多かったら
@@ -257,6 +253,7 @@ public class TestController : MonoBehaviour
         if (!_isField)
         {
             _chainCount = 0;
+            _bonus = 0;
         }
 
     }
@@ -292,9 +289,9 @@ public class TestController : MonoBehaviour
         if (y > _borad_Height - 1) return false;
 
 
-        if(_Cube[y, x] == null) return false;
+        if(_sphere[y, x] == null) return false;
         //指定した位置に指定された色が置かれているかチェックをする
-        if (_Cube[y, x].GetComponent<Test>().GetColorType() == colorType) return true;
+        if (_sphere[y, x].GetComponent<Test>().GetColorType() == colorType) return true;
 
         return false;
     }
@@ -311,8 +308,8 @@ public class TestController : MonoBehaviour
 
         for (int dir = 0; dir < (int)Direction.max; dir++)
         {
-            int indexX = x + _cubeDirection[dir].x;
-            int indexY = y + _cubeDirection[dir].y;
+            int indexX = x + _sphereDirection[dir].x;
+            int indexY = y + _sphereDirection[dir].y;
 
             //範囲外はチェックしない
             if (indexX < 0) continue;
@@ -425,7 +422,7 @@ public class TestController : MonoBehaviour
                 {
                     _isTestEraseFlag = true;
                      //点滅？処理.
-                    _Cube[y, x].GetComponent<Test>().ChangeColor((float)alpha);
+                    _sphere[y, x].GetComponent<Test>().ChangeColor((float)alpha);
                 }
             }
         }
@@ -472,8 +469,8 @@ public class TestController : MonoBehaviour
                 if (tempField[y, x] == 1)
                 {
                     // こわす(消す)処理.
-                    if (_Cube[y, x] != null) Destroy(_Cube[y, x]);
-                    _Cube[y, x] = null;
+                    if (_sphere[y, x] != null) Destroy(_sphere[y, x]);
+                    _sphere[y, x] = null;
                     _board[y, x] = 0;
                     tempField[y, x] = 0;
                     fallDown++;
@@ -492,8 +489,8 @@ public class TestController : MonoBehaviour
         {
             if (_board[y, x] == 0)
             {
-                _Cube[y, x] = _Cube[y + falldown, x];
-                _Cube[y + falldown, x] = null;
+                _sphere[y, x] = _sphere[y + falldown, x];
+                _sphere[y + falldown, x] = null;
                 //Debug.Log(_board[y + drapFall, x]);
                 _board[y, x] = _board[y + falldown, x];
                 _board[y + falldown, x] = 0;
@@ -503,11 +500,11 @@ public class TestController : MonoBehaviour
     }
     // キューブが落下中かどうか
     // HACK 落下中だと移動できなくしたいんだけどこまったことになってる
-    private bool IsCubeFallDown(int x, int y)
+    private bool IsSphereFallDown(int x, int y)
     {
         if (_isTestEraseFlag)
         {
-            if (_Cube[y, x] != null && _Cube[y, x].GetComponent<Test>().IsMoveCube())
+            if (_sphere[y, x] != null && _sphere[y, x].GetComponent<Test>().IsMoveSphere())
             {
                 //Debug.Log("とおったよHey");
                 //_isTestEraseFlag = false;
@@ -525,7 +522,7 @@ public class TestController : MonoBehaviour
         // 下まで急降下させる
         for (int y = _borad_Height - 1; y >= 0; y--)
         {
-            if (_Cube[y, pos.x] == null)
+            if (_sphere[y, pos.x] == null)
             {
                 result.x = pos.x;
                 result.y = y;
@@ -545,7 +542,7 @@ public class TestController : MonoBehaviour
         }
         if(dir == (int)Direction.Up)
         {
-            if (_Cube[result.y - 2, result.x] == null)
+            if (_sphere[result.y - 2, result.x] == null)
             {
                 result.y = result.y - 2;
             }
@@ -586,7 +583,7 @@ public class TestController : MonoBehaviour
             //Debug.Log("posが0以下やで");
             return rotaPos;
         }
-        if (_Cube[pos.y,pos.x] != null)
+        if (_sphere[pos.y,pos.x] != null)
         {
             rotaPos = -direction;
             return rotaPos;
@@ -608,8 +605,31 @@ public class TestController : MonoBehaviour
     // 消した分のスコアを計算する
     public int EraseScore()
     {
-        //Debug.Log(_eraseCount * 10);
-        return _score * _eraseCount;
+        // HACK きれいにする
+        ScoreCalculation();
+        return (_score * _eraseCount) * (_bonus);
+    }
+    // スコアの計算を行っている.
+    private void ScoreCalculation()
+    {
+        // HACK きれいにする
+        // 連鎖数が1の時はボーナスなし
+        // 2以上は倍数でふやし、8連鎖以上だと+32で固定する
+        if (_chainCount == 1)
+        {
+            _bonus = 4;
+        }
+        // 前のフレームより連鎖数が増えていたら処理をする.
+        if (_chainCount > _prevChainCount && _chainCount > 1 && _chainCount < 8)
+        {
+            _bonus *= 2;
+        }
+        if (_chainCount >= 8 && _chainCount > _prevChainCount)
+        {
+            _bonus += 32;
+        }
+        Debug.Log((_score * _eraseCount) * (_bonus) / 70);
+        _prevChainCount = _chainCount;
     }
     public void SetScore()
     {
@@ -625,7 +645,7 @@ public class TestController : MonoBehaviour
     {
         // HACK とりあえず雑にテストでゲームオーバー処理をしようとしてる
         // 2をマイナスしている理由は12のところがばってんで13は使用しないので12をみたいため
-        if(_Cube[_borad_Height - 2,3] != null || _Cube[_borad_Height - 2, 4] != null)
+        if(_sphere[_borad_Height - 2,3] != null || _sphere[_borad_Height - 2, 4] != null)
         {
             //Debug.Log("Game Over");
             return true;

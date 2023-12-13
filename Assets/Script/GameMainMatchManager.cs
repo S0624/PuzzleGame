@@ -13,13 +13,21 @@ public class GameMainMatchManager : MonoBehaviour
     private GameObject _gameOverTex = null;
     private GameObject _allClearTex = null;
     // オブジェクトの取得.
+    public ColorSeedCreate _seed;
+    public TestColorManager[] _colormanager;
     public TestController _testController;
     public TestMove _leftMove;
     public TestMove _rightMove;
     // Start is called before the first frame update
     void Start()
     {
-
+        _seed.InitColor();
+        foreach (var col in _colormanager)
+        {
+            col.SetColorSeed(_seed);
+            col.InitObjectName();
+            col.ColorRandam();
+        }
     }
 
     // Update is called once per frame
