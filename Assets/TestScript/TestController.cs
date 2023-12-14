@@ -12,26 +12,27 @@ public class TestController : MonoBehaviour
     private const int _borad_Height = 13;
 
     [SerializeField] private GameObject _prefabSphere = default;
+    [SerializeField] private GameObject _disturbanceSphere = default;
 
     private int[,] _board = new int[_borad_Height, _borad_Width];
     private GameObject[,] _sphere = new GameObject[_borad_Height, _borad_Width];
 
     private int[,] _eraseBoard = new int[_borad_Height, _borad_Width];
     private Vector2Int[] _sphereDirection = new Vector2Int[(int)Direction.max];
-    private bool _isTestEraseFlag = false;
+    private bool _isEraseNowFlag = false;
     private bool _isEraseFlag = false;
 
     // 点滅周期[s]
     //[SerializeField] private float _cycle = 1;
 
-    private double _time = 0.9f;
+    private double _totaTime = 0.9f;
 
     private int flashcount = 0;
 
     // 点滅中かどうか
     private bool _isFlashAnimation;
 
-    float test = 0.1f;
+    float _timeCount = 0.1f;
 
     // スコアのカウント用
     private int _score = 10;
@@ -87,9 +88,58 @@ public class TestController : MonoBehaviour
         {
             for (int x = 0; x < _borad_Width; x++)
             {
-                IsSetSphere(new Vector2Int(x, y), Random.Range(1, (int)ColorType.PuyoMax));
+                IsNormalSphere(new Vector2Int(x, y), Random.Range(1, (int)ColorType.PuyoMax));
             }
         }
+    }
+    // テスト用でおじゃまを降らせる処理.
+    public void DisturbanceFall()
+    {
+        // 下から詰めるけどランダムに降らせたい.
+        // そんでたぶんこのままだと大変なことになる気がする.
+        int fall = 1;
+        if (fall >= _borad_Width)
+        {
+            BlockObstruction(fall / _borad_Width);
+        }
+        // ランダムにフィールド上すべてに生成する
+        int remainder = fall % _borad_Width;
+        for(int i = 0; i < remainder; i++)
+        {
+            int rand = Random.Range(0, _borad_Width);
+            int indexY = SearchDown(rand);
+            IsDisturbanceSphere(new Vector2Int(rand, indexY));
+        }
+    }
+    // 6個塊で以上落すときの処理
+    private void BlockObstruction(int block)
+    {
+        // ランダムにフィールド上すべてに生成する
+        for (int x = 0; x < _borad_Width; x++)
+        {
+            int indexY = SearchDown(x);
+            for (int y = indexY; y < block + indexY; y++)
+            {
+                IsDisturbanceSphere(new Vector2Int(x, y));
+            }
+        }
+    }
+    // 一番下から置ける場所を探す処理.
+    private int SearchDown(int indexX)
+    {
+        for (int y = 0; y < _borad_Height; y++)
+        {
+            // 下におじゃまがあったら次の場所を探してもらう.
+            if (_board[y, indexX] != 0)
+            {
+                continue;
+            }
+            else
+            {
+                return y;
+            }
+        }
+        return 0;
     }
     // 範囲外じゃないかの判定
     public bool IsValidated(Vector2Int pos)
@@ -111,9 +161,8 @@ public class TestController : MonoBehaviour
         return 0 == _board[pos.y, pos.x];
     }
     // フィールド内にセットする
-    public bool IsSetSphere(Vector2Int pos, int val)
+    public bool IsNormalSphere(Vector2Int pos, int val)
     {
-
         if (!IsCanSetSphere(pos)) return false;
 
         // 色番号をセット.
@@ -122,6 +171,23 @@ public class TestController : MonoBehaviour
 
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
         _sphere[pos.y, pos.x] = Instantiate(_prefabSphere, world_position, Quaternion.identity, transform);
+        _sphere[pos.y, pos.x].GetComponent<Test>().SetColorType((ColorType)val);
+
+        // 設置したよ
+        _isInstallaion = true;
+        return true;
+    }
+    public bool IsDisturbanceSphere(Vector2Int pos)
+    {
+        int val = (int)ColorType.hindrance;
+        if (!IsCanSetSphere(pos)) return false;
+
+        // 色番号をセット.
+        _board[pos.y, pos.x] = val;
+        // もし中身が入っていたらエラー表記を出
+
+        Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
+        _sphere[pos.y, pos.x] = Instantiate(_disturbanceSphere, world_position, Quaternion.identity, transform);
         _sphere[pos.y, pos.x].GetComponent<Test>().SetColorType((ColorType)val);
 
         // 設置したよ
@@ -241,7 +307,7 @@ public class TestController : MonoBehaviour
         FrashField(_eraseBoard, isFrash);
         //}
 
-        if (_isTestEraseFlag)
+        if (_isEraseNowFlag)
         {
             return true;
         }
@@ -303,9 +369,16 @@ public class TestController : MonoBehaviour
         {
             return false;
         }
-        //同じ色の場合
-        tempField[y,x] = 1;        //同じ色がつながっている
-
+        // おじゃまだった場合2をいれる.
+        if (color == ColorType.hindrance)
+        {
+            tempField[y, x] = 2;
+        }
+        else
+        {
+            //同じ色の場合
+            tempField[y, x] = 1;        //同じ色がつながっている
+        }
         for (int dir = 0; dir < (int)Direction.max; dir++)
         {
             int indexX = x + _sphereDirection[dir].x;
@@ -351,6 +424,11 @@ public class TestController : MonoBehaviour
                 if (tempField[y, x] == 1)
                 {
                     _eraseBoard[y, x] = 1;
+                }
+                // おじゃまのデータを入れる.
+                else if (_board[y, x] == (int)ColorType.hindrance)
+                {
+                    _eraseBoard[y, x] = 2;
                 }
             }
         }
@@ -409,10 +487,10 @@ public class TestController : MonoBehaviour
         // 内部時刻を経過させる
         if (_isFlashAnimation)
         {
-            _time += test;
+            _totaTime += _timeCount;
         }
 
-        var alpha = _time;
+        var alpha = _totaTime;
 
         for (int x = 0; x < _borad_Width; x++)
         {
@@ -420,7 +498,7 @@ public class TestController : MonoBehaviour
             {
                 if (tempField[y, x] == 1)
                 {
-                    _isTestEraseFlag = true;
+                    _isEraseNowFlag = true;
                      //点滅？処理.
                     _sphere[y, x].GetComponent<Test>().ChangeColor((float)alpha);
                 }
@@ -428,7 +506,7 @@ public class TestController : MonoBehaviour
         }
         if (alpha < 0 || alpha > 1)
         {
-            test *= -1;
+            _timeCount *= -1;
         }
         // HACK なんか気持ち悪い処理になってる なんか、なんかちがう
         if (alpha >= 1.0f)
@@ -441,24 +519,23 @@ public class TestController : MonoBehaviour
             _isEraseFlag = true;
             flashcount = 0;
             _isFlashAnimation = false;
-            _time = 0.8f;
-            test *= -1;
+            _totaTime = 0.8f;
+            _timeCount *= -1;
         }
         if (_isEraseFlag)
         {
-            // 連鎖カウント.
-            EraseField(tempField);
+            EraseSphere(tempField);
             _isEraseFlag = false;
         }
         else if (!_isFlashAnimation)
         {
-            _isTestEraseFlag = false;
+            _isEraseNowFlag = false;
             //_chainCount = 0;
         }
 
     }
     // キューブを消す処理
-    private void EraseField(int[,] tempField)
+    private void EraseSphere(int[,] tempField)
     {
         int fallDown = 0;
         for (int x = 0; x < _borad_Width; x++)
@@ -475,34 +552,81 @@ public class TestController : MonoBehaviour
                     tempField[y, x] = 0;
                     fallDown++;
                     _eraseCount++;
+                    EraseDisturbance(x, y, tempField);
                 }
             }
             FallDownField(x, fallDown);
         }
         _chainCount++;
-        //_isTestEraseFlag = false;
     }
+    private void EraseDisturbance(int x, int y, int[,] tempField)
+    {
+        // てすと実装
+        Vector2Int[] _sphereDirection = new Vector2Int[4];
+        _sphereDirection[(int)Direction.Down] = new Vector2Int(0, -1);
+        _sphereDirection[(int)Direction.Left] = new Vector2Int(-1, 0);
+        _sphereDirection[(int)Direction.Up] = new Vector2Int(0, 1);
+        _sphereDirection[(int)Direction.Right] = new Vector2Int(1, 0);
+        // きえるぷよのタテヨコ方向におじゃまがあったら消す処理.
+        for (int i = 0; i < _sphereDirection.Length; i++)
+        {
+            int dirX = x + _sphereDirection[i].x;
+            int dirY = y + _sphereDirection[i].y;
+            if (dirX >= 0 && dirX < _borad_Width && dirY >= 0 && dirY < _borad_Height)
+            {
+                if (tempField[dirY, dirX] == 2)
+                {
+                    Destroy(_sphere[dirY, dirX]);
+                    _sphere[dirY, dirX] = null;
+                    _board[dirY, dirX] = 0;
+                }
+            }
+        }
+    }
+    // 消えた時に落とす処理.
     private void FallDownField(int x ,int falldown)
     {
         // 落す処理(配列の情報をずらす(現在のフィールドにあるキューブを落す))
-        for (int y = 0; y < _borad_Height - falldown; y++)
+        int hight = 0;
+        for (int y = 0; y < _borad_Height - 1; y++)
         {
             if (_board[y, x] == 0)
             {
-                _sphere[y, x] = _sphere[y + falldown, x];
-                _sphere[y + falldown, x] = null;
-                //Debug.Log(_board[y + drapFall, x]);
-                _board[y, x] = _board[y + falldown, x];
-                _board[y + falldown, x] = 0;
-                //_Cube[y, x] = _Cube[0,0];
+                _sphere[y, x] = _sphere[y + 1, x];
+                _sphere[y + 1, x] = null;
+                _board[y, x] = _board[y + 1, x];
+                _board[y + 1, x] = 0;
             }
         }
+        for (int y = 0; y < _borad_Height - 1; y++)
+        {
+            if (_board[y, x] != 0)
+            {
+                    hight = y;
+            }
+        }
+        if(FallCheck(x , hight))
+        {
+            FallDownField(x, 0);
+        }
+    }
+    // すべて落したかの確認.
+    private bool FallCheck(int x,int indexY)
+    {
+        for (int y = 0; y < indexY; y++)
+        {
+            if (_board[y, x] == 0)
+            {
+                return true;
+            }
+        }
+        return false;
     }
     // キューブが落下中かどうか
     // HACK 落下中だと移動できなくしたいんだけどこまったことになってる
     private bool IsSphereFallDown(int x, int y)
     {
-        if (_isTestEraseFlag)
+        if (_isEraseNowFlag)
         {
             if (_sphere[y, x] != null && _sphere[y, x].GetComponent<Test>().IsMoveSphere())
             {
@@ -628,7 +752,7 @@ public class TestController : MonoBehaviour
         {
             _bonus += 32;
         }
-        Debug.Log((_score * _eraseCount) * (_bonus) / 70);
+        //Debug.Log("消した数: " + _score * _eraseCount + "連鎖ボーナス: " + _bonus + "お邪魔数 :" +  (_score * _eraseCount) * (_bonus) / 70);
         _prevChainCount = _chainCount;
     }
     public void SetScore()

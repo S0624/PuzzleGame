@@ -209,7 +209,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 201810780}
         m_TargetAssemblyTypeName: TestController, Assembly-CSharp
-        m_MethodName: Generate
+        m_MethodName: DisturbanceFall
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -308,6 +308,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prefabSphere: {fileID: 1292105871287533337, guid: bc1d4beb5597583429343c6e90335901, type: 3}
+  _disturbanceSphere: {fileID: 1292105871287533337, guid: 912407e55cf32dc46b92678da6f78ae5, type: 3}
 --- !u!1 &141703361
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,6 +657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _prefabSphere: {fileID: 1292105871287533337, guid: bc1d4beb5597583429343c6e90335901, type: 3}
+  _disturbanceSphere: {fileID: 1292105871287533337, guid: 912407e55cf32dc46b92678da6f78ae5, type: 3}
 --- !u!4 &201810781
 Transform:
   m_ObjectHideFlags: 0
@@ -4209,6 +4211,8 @@ MonoBehaviour:
   GameOverImg: {fileID: 56472850064453421, guid: 5f416759abc01c74a9c2e2f94903a5e9, type: 3}
   AllClearImg: {fileID: 8784868718936140701, guid: e21f11f254dd3b549801279d68a2cfb1, type: 3}
   Canvas: {fileID: 811552422}
+  _seed: {fileID: 0}
+  _colormanager: {fileID: 0}
   _testController: {fileID: 201810780}
   _move: {fileID: 653497630}
 --- !u!4 &1654032359

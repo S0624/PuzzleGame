@@ -276,7 +276,7 @@ public class TestMove : MonoBehaviour
                 pos = _fieldObject.SteepDescent(pos, _direction);
                 _colorNum = _colorManager.GetComponent<TestColorManager>().GetColorNumber(child.name,childcount);
                 //Debug.Log(child.position + "wa"+ child.name +"  " + pos.y + " " + _colorNum);
-                _fieldObject.IsSetSphere(pos, _colorNum);
+                _fieldObject.IsNormalSphere(pos, _colorNum);
                 childcount++;
             }
             //_fieldObject.GetComponent<TestController>().IsFieldUpdate();
