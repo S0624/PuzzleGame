@@ -30,15 +30,16 @@ public class GameMainManager : MonoBehaviour
     void Update()
     {
         // キューブの回転処理.
-        _move.RotaUpdate();
+        _move.SphereUpdate();
         // テスト用 ゲームオーバーになったら画像を表示
         GenereteGameOver();
         GenereteAllClear();
+        _move.SphereReGenerete(_testController.IsChain(),_testController);
     }
     void FixedUpdate()
     {
         // キューブの移動処理.
-        _move.MoveUpdate();
+        _move.FreeFallUpdate();
     }
     // テスト用 ゲームオーバーになったら画像を表示
     private void GenereteGameOver()

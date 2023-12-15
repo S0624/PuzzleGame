@@ -29,7 +29,8 @@ public class TestMove : MonoBehaviour
     private int _colorNum;
     // 移動用のスコア
     private int _moveScore = 0;
-
+    // 再生成用のフラグ.
+    private bool _isReGenereteSpher = false;
     // どの向きに回転させるか（回転処理に使用）
     private Vector2Int[] _sphereDirection = new Vector2Int[(int)Direction.max];
     // 何回ボタンを押されたかを図るために使用する変数
@@ -56,8 +57,8 @@ public class TestMove : MonoBehaviour
         _sphereDirection[(int)Direction.Right] = new Vector2Int(1, 0);
     }
 
-    // 移動したときの処理.
-    public void RotaUpdate()
+    // 移動や回転したときの処理.
+    public void SphereUpdate()
     {
         // キーの入力情報取得
         _inputManager.GetInputPlayerPadNum(_playerIndex);
@@ -70,47 +71,25 @@ public class TestMove : MonoBehaviour
             if (!_fieldObject.IsFieldUpdate())
             {
                 MoveState();
+                RotationState();
             }
-            // HACK 雑に回転処理を実装(お試し)
-            // 右回り
-            if (_inputManager.GetInputRotaDate(RotaState.right))
-            {
-                _direction++;
-                if (_direction >= 4)
-                {
-                    _direction = 0;
-                }
-                // HACK 回転処理 ﾋｨ.........
-                SphereRotation();
-            }
-            // 左まわり
-            else if (_inputManager.GetInputRotaDate(RotaState.left))
-            {
-                _direction--;
-                if (_direction < 0)
-                {
-                    _direction = 3;
-                }
-                // HACK 回転処理 ﾋｨ.........
-                SphereRotation();
-            }
-
-            // 本来はクイック移動はない
-            //#if true
-            Vector2 moveInput = _inputManager.GetInputMoveDate();
-            // 急降下で下に落とす(DEBUG機能).
-            if (moveInput.y > 0)
-            {
-                if (_inputManager.DGetInputWasPressData())
-                {
-                    Installation();
-                }
-            }
+            
+            //// 本来はクイック移動はない
+            ////#if true
+            //Vector2 moveInput = _inputManager.GetInputMoveDate();
+            //// 急降下で下に落とす(DEBUG機能).
+            //if (moveInput.y > 0)
+            //{
+            //    if (_inputManager.DGetInputWasPressData())
+            //    {
+            //        Installation();
+            //    }
+            //}
         }
         //#endif
     }
-    // 回転したときの処理.
-    public void MoveUpdate()
+    // 時間で落下したときの処理.
+    public void FreeFallUpdate()
     {
         _timer++;
         //// 下左右に動かす
@@ -147,7 +126,7 @@ public class TestMove : MonoBehaviour
             if (_timer > 60 * 1.2)
             {
                 //_cubePos.y--;
-                CSpherePos(0, -1);
+                SpherePos(0, -1);
                 _timer = 0;
             }
         }
@@ -193,7 +172,7 @@ public class TestMove : MonoBehaviour
                 {
                     //_cubePos.y--;
                     _timer = 0;
-                    CSpherePos(0, -1);
+                    SpherePos(0, -1);
                 }
                 else
                 {
@@ -224,7 +203,7 @@ public class TestMove : MonoBehaviour
                 if (!_fieldObject.IsNextSphereX(checkPos, 1))
                 {
                     //_cubePos.x++;
-                    CSpherePos(1, 0);
+                    SpherePos(1, 0);
                 }
                 _inputframe = 0;
             }
@@ -246,7 +225,7 @@ public class TestMove : MonoBehaviour
                 if (!_fieldObject.IsNextSphereX(checkPos, -1))
                 {
                     //_cubePos.x--;
-                    CSpherePos(-1, 0);
+                    SpherePos(-1, 0);
                 }
                 _inputframe = 0;
             }
@@ -279,22 +258,31 @@ public class TestMove : MonoBehaviour
                 _fieldObject.IsNormalSphere(pos, _colorNum);
                 childcount++;
             }
+            //_spherePos = new Vector2Int(3, -10);
+            // HACK 余りにも力業オブ力業.
+            this.transform.position = new Vector3(0,-10,0);
+            _isReGenereteSpher = true;
             //_fieldObject.GetComponent<TestController>().IsFieldUpdate();
-            SphereReGenerete();
+            //SphereReGenerete();
             //_fieldObject.GetComponent<TestController>().GetInstallation(false);
         }
     }
     // キューブの再生成.
-    private void SphereReGenerete()
+    public void SphereReGenerete(bool isChain,TestController controller)
+    ///private void SphereReGenerete()
     {
-        _spherePos = new Vector2Int(3, _borad_Height);
-        this.transform.position = _spherePostemp;
-        // 回転の角度をもとに戻してあげる.
-        _direction = 0;
-        SphereRotation();
-        // HACK うーん・・・とりあえず色替えはできてるけどバグが発生してるぅ
-        _colorManager.GetComponent<TestColorManager>().ColorChenge(this.gameObject.name);
-
+        if (isChain && _isReGenereteSpher)
+        {
+            controller.IsSetReset();
+            _spherePos = new Vector2Int(3, _borad_Height);
+            this.transform.position = _spherePostemp;
+            // 回転の角度をもとに戻してあげる.
+            _direction = 0;
+            SphereRotation();
+            // HACK うーん・・・とりあえず色替えはできてるけどバグが発生してるぅ
+            _colorManager.GetComponent<TestColorManager>().ColorChenge(this.gameObject.name);
+            _isReGenereteSpher = false;
+        }
     }
 
     // ゲームオーバーだったら消す.(テスト)
@@ -306,7 +294,7 @@ public class TestMove : MonoBehaviour
         }
     }
 
-    private void CSpherePos(int x = 0, int y = 0)
+    private void SpherePos(int x = 0, int y = 0)
     {
         this.transform.position = transform.position + new Vector3(x, y, 0);
         _spherePos.x += x;
@@ -320,6 +308,33 @@ public class TestMove : MonoBehaviour
             return true;
         }
         return false;
+    }
+    private void RotationState()
+    {
+        // HACK 雑に回転処理を実装(お試し)
+        // 右回り
+        if (_inputManager.GetInputRotaDate(RotaState.right))
+        {
+            _direction++;
+            if (_direction >= 4)
+            {
+                _direction = 0;
+            }
+            // HACK 回転処理 ﾋｨ.........
+            SphereRotation();
+        }
+        // 左まわり
+        else if (_inputManager.GetInputRotaDate(RotaState.left))
+        {
+            _direction--;
+            if (_direction < 0)
+            {
+                _direction = 3;
+            }
+            // HACK 回転処理 ﾋｨ.........
+            SphereRotation();
+        }
+
     }
     // 回転処理.
     private void SphereRotation()
@@ -342,7 +357,7 @@ public class TestMove : MonoBehaviour
             //Debug.Log(child.name + pos);
             checkPos = _fieldObject.MoveRotaCheck(pos, _sphereDirection[_direction]);
             //_cubePos += checkPos;
-            CSpherePos(checkPos.x, checkPos.y);
+            SpherePos(checkPos.x, checkPos.y);
         }
     }
     // 仮実装

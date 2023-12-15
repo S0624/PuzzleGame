@@ -41,10 +41,15 @@ public class TestController : MonoBehaviour
     // 連鎖カウント
     private int _chainCount = 0;
     private int _prevChainCount = 0;
-    private int _bonus = 2;
+    private int _bonus = 0;
+    // 設置が終わったかどうかのフラグ.
+    private bool _isSetEnd = false;
+    // 妨害用のスフィアの数.
+    private int _obstacleCount = 0;
 
     // 設置したかのフラグ.
     private bool _isInstallaion = false;
+    private bool _isSetSphere = false;
     // HACK テスト用のフラグ(処理が終わったよ、のフラグ)
     private bool _isProcess = false;
 
@@ -52,6 +57,7 @@ public class TestController : MonoBehaviour
     private bool _isClearAll = false;
     // フィールドの処理のフラグ
     private bool _isField = false;
+
     // ボードの中を全消しする(クリアする).
     private void ClearAll()
     {
@@ -175,6 +181,7 @@ public class TestController : MonoBehaviour
 
         // 設置したよ
         _isInstallaion = true;
+        _isSetSphere = true;
         return true;
     }
     public bool IsDisturbanceSphere(Vector2Int pos)
@@ -192,6 +199,7 @@ public class TestController : MonoBehaviour
 
         // 設置したよ
         _isInstallaion = true;
+        _isSetSphere = true;
         return true;
     }
     // Y軸(下方向)におけるかどうかのチェック
@@ -302,10 +310,7 @@ public class TestController : MonoBehaviour
             }
         }
 
-        //if (_isInstallaion)
-        //{
         FrashField(_eraseBoard, isFrash);
-        //}
 
         if (_isEraseNowFlag)
         {
@@ -322,6 +327,56 @@ public class TestController : MonoBehaviour
             _bonus = 0;
         }
 
+        //if (!_isField)
+        //{
+        //    if (_prevChainCount > 0 && _prevChainCount > _chainCount)
+        //    {
+        //        Debug.Log("れんさあり");
+        //        _isSetEnd = true;
+        //    }
+
+        //}
+        //else if (_isSetSphere)
+        //{
+        //    Debug.Log("せっちのみ");
+        //    _isSetEnd = true;
+        //}
+        //else
+        //{
+        //    _isSetEnd = false;
+        //    Debug.Log("れんさなし");
+        //}
+        //Debug.Log("_isField:" + _isField);
+        //Debug.Log("_isSetSphere:" + _isSetSphere);
+        //Debug.Log("_isChainEnd:" + _isSetEnd);
+        //_isSetSphere = false;
+
+        if (!_isField)
+        {
+            // 連鎖が終わっている.
+            if (_prevChainCount > 0 && _prevChainCount > _chainCount)
+            {
+                //Debug.Log("れんさしてない");
+                _isSetEnd = true;
+            }
+            // 設置のみを行った.
+            else if (_isSetSphere)
+            {
+                //Debug.Log("!せっちのみ");
+                _isSetEnd = true;
+            }
+        }
+        else
+        {
+            // 連鎖中.
+            _isSetEnd = false;
+            //Debug.Log("れんさしてる");
+        }
+        //Debug.Log("_isField:" + _isField);
+        //Debug.Log("_isSetSphere:" + _isSetSphere);
+        //Debug.Log("_isChainEnd:" + _isSetEnd);
+        _isSetSphere = false;
+        //_isSetEnd = false;
     }
     public bool IsFieldUpdate()
     {
@@ -752,7 +807,11 @@ public class TestController : MonoBehaviour
         {
             _bonus += 32;
         }
-        //Debug.Log("消した数: " + _score * _eraseCount + "連鎖ボーナス: " + _bonus + "お邪魔数 :" +  (_score * _eraseCount) * (_bonus) / 70);
+        // お邪魔計算.
+        _obstacleCount = (_score * _eraseCount) * (_bonus) / 70;
+        //Debug.Log("連鎖数:" + _chainCount + "ボーナス:" + _bonus);
+        //Debug.Log(_obstacleCount);
+        //Debug.Log(_bonus);
         _prevChainCount = _chainCount;
     }
     public void SetScore()
@@ -763,6 +822,19 @@ public class TestController : MonoBehaviour
     public int SetChain()
     {
         return _chainCount;
+    }
+    public bool IsChain()
+    {
+        return _isSetEnd;
+    }
+    public void IsSetReset()
+    {
+        _isSetEnd = false;
+    }
+    // おじゃまの数の取得用.
+    public int GetObstacle()
+    {
+        return _obstacleCount;
     }
     // ゲームオーバーフラグ
     public bool IsGameOver()
@@ -775,18 +847,5 @@ public class TestController : MonoBehaviour
             return true;
         }
         return false;
-
     }
-
-    //// Start is called before the first frame update
-    //void Start()
-    //{
-
-    //}
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
 }
