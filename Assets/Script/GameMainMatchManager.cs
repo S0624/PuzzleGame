@@ -123,11 +123,15 @@ public class GameMainMatchManager : MonoBehaviour
         }
         else if (total > 0)
         {
+            _testController[1].SetObstacle(total);
             Debug.Log("右に" + total);
         }
         else
         {
+            _testController[0].SetObstacle(total);
             Debug.Log("左に" + total * -1);
         }
+        _obstacle[0] = 0;
+        _obstacle[1] = 0;
     }
 }

@@ -73,18 +73,18 @@ public class TestMove : MonoBehaviour
                 MoveState();
                 RotationState();
             }
-            
-            //// 本来はクイック移動はない
-            ////#if true
-            //Vector2 moveInput = _inputManager.GetInputMoveDate();
-            //// 急降下で下に落とす(DEBUG機能).
-            //if (moveInput.y > 0)
-            //{
-            //    if (_inputManager.DGetInputWasPressData())
-            //    {
-            //        Installation();
-            //    }
-            //}
+
+            // 本来はクイック移動はない
+            //#if true
+            Vector2 moveInput = _inputManager.GetInputMoveDate();
+            // 急降下で下に落とす(DEBUG機能).
+            if (moveInput.y > 0)
+            {
+                if (_inputManager.DGetInputWasPressData())
+                {
+                    Installation();
+                }
+            }
         }
         //#endif
     }
@@ -273,6 +273,8 @@ public class TestMove : MonoBehaviour
     {
         if (isChain && _isReGenereteSpher)
         {
+            // お邪魔を落とす.
+            controller.DisturbanceFall();
             controller.IsSetReset();
             _spherePos = new Vector2Int(3, _borad_Height);
             this.transform.position = _spherePostemp;

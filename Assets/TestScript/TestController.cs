@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 // コメントがないよ？
 
@@ -44,6 +46,8 @@ public class TestController : MonoBehaviour
     private int _bonus = 0;
     // 設置が終わったかどうかのフラグ.
     private bool _isSetEnd = false;
+    // 妨害用のスフィアのかず
+    private int  _obstacleNum;
     // 妨害用のスフィアの数.
     private int _obstacleCount = 0;
 
@@ -103,15 +107,18 @@ public class TestController : MonoBehaviour
     {
         // 下から詰めるけどランダムに降らせたい.
         // そんでたぶんこのままだと大変なことになる気がする.
-        int fall = 1;
-        if (fall >= _borad_Width)
+        //_obstacleNum = 1;
+        //if (!_isInstallaion) return;
+
+        if (_obstacleNum >= _borad_Width)
         {
-            BlockObstruction(fall / _borad_Width);
+            BlockObstruction(_obstacleNum / _borad_Width);
         }
         // ランダムにフィールド上すべてに生成する
-        int remainder = fall % _borad_Width;
+        int remainder = _obstacleNum % _borad_Width;
         for(int i = 0; i < remainder; i++)
         {
+            _obstacleNum--;
             int rand = Random.Range(0, _borad_Width);
             int indexY = SearchDown(rand);
             IsDisturbanceSphere(new Vector2Int(rand, indexY));
@@ -126,6 +133,7 @@ public class TestController : MonoBehaviour
             int indexY = SearchDown(x);
             for (int y = indexY; y < block + indexY; y++)
             {
+                _obstacleNum--;
                 IsDisturbanceSphere(new Vector2Int(x, y));
             }
         }
@@ -813,6 +821,14 @@ public class TestController : MonoBehaviour
         //Debug.Log(_obstacleCount);
         //Debug.Log(_bonus);
         _prevChainCount = _chainCount;
+    }
+    public void SetObstacle(int num)
+    {
+        _obstacleNum= num;
+    }
+    public int GetTotalObstacle()
+    {
+        return _obstacleNum;
     }
     public void SetScore()
     {
