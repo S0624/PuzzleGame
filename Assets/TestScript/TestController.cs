@@ -328,6 +328,7 @@ public class TestController : MonoBehaviour
     }
     private void Update()
     {
+        Debug.Log("あ" + _isInstallaion);
         _isField = IsCheckField();
         if (!_isField)
         {
@@ -335,29 +336,6 @@ public class TestController : MonoBehaviour
             _bonus = 0;
         }
 
-        //if (!_isField)
-        //{
-        //    if (_prevChainCount > 0 && _prevChainCount > _chainCount)
-        //    {
-        //        Debug.Log("れんさあり");
-        //        _isSetEnd = true;
-        //    }
-
-        //}
-        //else if (_isSetSphere)
-        //{
-        //    Debug.Log("せっちのみ");
-        //    _isSetEnd = true;
-        //}
-        //else
-        //{
-        //    _isSetEnd = false;
-        //    Debug.Log("れんさなし");
-        //}
-        //Debug.Log("_isField:" + _isField);
-        //Debug.Log("_isSetSphere:" + _isSetSphere);
-        //Debug.Log("_isChainEnd:" + _isSetEnd);
-        //_isSetSphere = false;
 
         if (!_isField)
         {
@@ -384,13 +362,19 @@ public class TestController : MonoBehaviour
         //Debug.Log("_isSetSphere:" + _isSetSphere);
         //Debug.Log("_isChainEnd:" + _isSetEnd);
         _isSetSphere = false;
+        //_isInstallaion = false;
+
         //_isSetEnd = false;
     }
     public bool IsFieldUpdate()
     {
         return _isField;
     }
-
+    public bool IsInstallaion()
+    {
+        //Debug.Log(_isInstallaion);
+        return _isInstallaion;
+    }
     public void GetInstallation(bool flag)
     {
         _isInstallaion = flag;

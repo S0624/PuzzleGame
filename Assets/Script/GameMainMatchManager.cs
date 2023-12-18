@@ -7,22 +7,35 @@ public class GameMainMatchManager : MonoBehaviour
     // 画像をいれる
     [Header("表示させる画像たち")]
     [SerializeField] private GameObject GameOverImg;
+    [SerializeField] private Transform[] _gameImgPos;
     [SerializeField] private GameObject AllClearImg;
     // Canvasを入れるよう
     [SerializeField] private GameObject Canvas;
     private GameObject _gameOverTex = null;
-    private GameObject _allClearTex = null;
+    private GameObject[] _allClearTex = new GameObject[2];
     // オブジェクトの取得.
     public ColorSeedCreate _seed;
     public TestColorManager[] _colormanager;
     public TestController[] _testController;
     public TestMove[] _moveSphere;
-    int[] _obstacle = new int[2];
-
+    public TestText[] _testText;
+    // お邪魔スフィアの管理用の変数.
+    private int[] _obstacle = new int[2];
+    private int[] _testadd = new int[2];
+    private int _obstacleCount = 0;
+    private int _obstacleMax = 30;
+    // 計算のフラグ.
+    private bool _calculation = false;
+    // ゲームオーバーかどうかのフラグを取得する.
+    private bool _isGameOver = false;
     //public TestMove _rightMove;
     // Start is called before the first frame update
     void Start()
     {
+        for(int i = 0; i < _allClearTex.Length; i++)
+        {
+            _allClearTex[i] = null;
+        }
         _seed.InitColor();
         foreach (var col in _colormanager)
         {
@@ -35,6 +48,11 @@ public class GameMainMatchManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // テスト用 ゲームオーバーになったら画像を表示
+        GenereteGameOver();
+        GenereteAllClear();
+        // ゲームオーバーになったら処理を止めるよ.
+        if (_isGameOver) return;
         // スフィアの回転処理.
         foreach (var move in _moveSphere)
         {
@@ -44,14 +62,13 @@ public class GameMainMatchManager : MonoBehaviour
         {
             _moveSphere[i].SphereReGenerete(_testController[i].IsChain(), _testController[i]);
         }
-        // テスト用 ゲームオーバーになったら画像を表示
-        GenereteGameOver();
-        GenereteAllClear();
         // お邪魔計算.
         ObstacleCalculation();
     }
     void FixedUpdate()
     {
+        // ゲームオーバーになったら処理を止めるよ.
+        if (_isGameOver) return;
         // キューブの移動処理.
         foreach (var move in _moveSphere)
         {
@@ -63,12 +80,13 @@ public class GameMainMatchManager : MonoBehaviour
     {
         if (_gameOverTex == null)
         {
-            foreach (var controller in _testController)
+            for (int i = 0; i < _testController.Length; i++)
             {
-                if (controller.IsGameOver())
+                if (_testController[i].IsGameOver())
                 {
+                    _isGameOver = true;
                     _gameOverTex = Instantiate(GameOverImg);
-                    _gameOverTex.transform.SetParent(Canvas.transform, false);
+                    _gameOverTex.transform.SetParent(_gameImgPos[i], false);
                 }
             }
         }
@@ -76,24 +94,22 @@ public class GameMainMatchManager : MonoBehaviour
     // テスト用 全消しになったら画像を表示
     private void GenereteAllClear()
     {
-        if (_allClearTex == null)
+        for (int i = 0; i < _testController.Length; i++)
         {
-            foreach (var controller in _testController)
+            if (_allClearTex[i] == null)
             {
-                if (controller.FieldAllClear())
+                if (_testController[i].FieldAllClear())
                 {
-                    _allClearTex = Instantiate(AllClearImg);
-                    _allClearTex.transform.SetParent(Canvas.transform, false);
+                Debug.Log("ぜんけし");
+                    _allClearTex[i] = Instantiate(AllClearImg);
+                    _allClearTex[i].transform.SetParent(_gameImgPos[i], false);
                 }
             }
-        }
-        else
-        {
-            foreach (var controller in _testController)
+            else
             {
-                if (!controller.FieldAllClear())
+                if (!_testController[i].FieldAllClear())
                 {
-                    Destroy(_allClearTex);
+                    Destroy(_allClearTex[i]);
                 }
             }
         }
@@ -101,37 +117,106 @@ public class GameMainMatchManager : MonoBehaviour
     // 邪魔スフィアの計算(相殺処理)
     private void ObstacleCalculation()
     {
+        // お互いの連鎖が終わった時に落とす.
+
         int[] add = new int[2];
         int total = 0;
         for (int i = 0; i < _testController.Length; i++)
         {
             // とりあえず値を取得するよ.
-            add[i] = _testController[i].GetObstacle();
+            _testadd[i] = _testController[i].GetObstacle();
             // 今持っている数値が大きかったら代入するよ
-            if(_obstacle[i] < add[i])
+            if (_obstacle[i] < _testadd[i])
             {
-                _obstacle[i] = add[i];
+                _obstacle[i] = _testadd[i];
             }
-            _testController[i].IsFieldUpdate();
         }
         // 計算するよ
-        /// 減らしていく処理はまだ、つまりまだこれは計算だけなの
-        total = _obstacle[0] - _obstacle[1];
-        if(total == 0)
+        // 減らしていく処理はまだ、つまりまだこれは計算だけなの
+        if (_calculation)
+        {
+            total = (_obstacle[0] - _obstacle[1]);
+        }
+        else
+        {
+            total = (_obstacle[0] - _obstacle[1]) + _obstacleCount;
+        }
+        //Debug.Log(_obstacleCount + "T:" + total);
+        // 最大数は30にしたいので30より多い数を送らないようにする.
+        if (total > _obstacleMax)
+        {
+            _obstacleCount = total - _obstacleMax;
+            total = _obstacleMax;
+            _calculation = true;
+        }
+        else if (total < -_obstacleMax)
+        {
+            _obstacleCount = total + _obstacleMax;
+            //_obstacleCount *= -1;
+            total = -_obstacleMax;
+            _calculation = true;
+        }
+        else
+        {
+            _obstacleCount = 0;
+        }
+#if true
+        TestObsText(total);
+#endif
+        //Debug.Log(_testController[0].IsInstallaion());
+        if (total == 0)
         {
             Debug.Log("均衡中...");
         }
         else if (total > 0)
         {
-            _testController[1].SetObstacle(total);
-            Debug.Log("右に" + total);
+            Debug.Log(_testController[1].IsInstallaion());
+            if (!_testController[0].IsFieldUpdate() && _testController[1].IsInstallaion())
+            {
+                _testController[1].SetObstacle(total);
+                _testController[1].GetInstallation(false);
+                //Debug.Log("右に" + total + "と" + _obstacleCount);
+            }
+            else
+            {
+                return;
+            }
         }
         else
         {
-            _testController[0].SetObstacle(total);
-            Debug.Log("左に" + total * -1);
+            if (!_testController[1].IsFieldUpdate() && _testController[0].IsInstallaion())
+            {
+                _testController[0].SetObstacle(total * -1);
+                _testController[0].GetInstallation(false);
+                //Debug.Log("左に" + total * -1 + "と" + _obstacleCount);
+            }
+            else
+            {
+                return;
+            }
         }
         _obstacle[0] = 0;
         _obstacle[1] = 0;
+        _testadd[0] = 0;
+        _testadd[1] = 0;
+        _calculation = false;
+    }
+    // テキスト用
+    private void TestObsText(int total)
+    {
+        if (total < 0 || _obstacleCount < 0)
+        {
+            _testText[0].SetObstacleCount((total + _obstacleCount) * -1);
+        }
+        else if (total > 0 || _obstacleCount > 0)
+        {
+            _testText[1].SetObstacleCount(total + _obstacleCount);
+        }
+        else
+        {
+            _testText[0].SetObstacleCount(0);
+            _testText[1].SetObstacleCount(0);
+        }
+    
     }
 }
