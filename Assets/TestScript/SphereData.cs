@@ -16,7 +16,7 @@ using UnityEngine;
 
 // これはアタッチされていなかったらアタッチするという関数.
 //[RequireComponent(typeof(Renderer))]
-public class Test : MonoBehaviour
+public class SphereData : MonoBehaviour
 {
     // 実行時に値を取得する読み取り専用の変数を生成
     public static readonly Color[] color_table = new Color[] {

@@ -5,7 +5,7 @@ using TMPro;
 public class TestChain : MonoBehaviour
 {
     // 仮実装用
-    public TestController _testController;
+    public FieldData _testController;
     // テキストではなくテキストメッシュプロを使用している.
     private TextMeshProUGUI _chainText;
     // スコアを入れる用の変数.

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 // HACK テスト用の移動実装
 
-public class TestMove : MonoBehaviour
+public class SphereMove : MonoBehaviour
 {
     // スクリプトの取得.
     [SerializeField] private InputState _inputManager;
@@ -9,7 +9,7 @@ public class TestMove : MonoBehaviour
     [SerializeField] private int _playerIndex;
 
     // フィールドの情報を受け取るための変数
-    public TestController _fieldObject; 
+    public FieldData _fieldObject; 
     // 色の情報を受け取るための変数
     public TestColorManager _colorManager;
     // 移動速度.
@@ -186,6 +186,7 @@ public class TestMove : MonoBehaviour
         // 右.
         if (moveInput.x > 0)
         {
+            Debug.Log("右やで");
             if (SphereMoveState())
             {
                 Vector2Int checkPos = new Vector2Int(0, 0);
@@ -194,7 +195,7 @@ public class TestMove : MonoBehaviour
                 {
                     // 子オブジェクトに対する処理をここに書く
                     Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, 0) + _spherePos;
-                    if (checkPos.x < pos.x)
+                    if (checkPos.x <= pos.x)
                     {
                         checkPos = pos;
                     }
@@ -204,6 +205,7 @@ public class TestMove : MonoBehaviour
                 {
                     //_cubePos.x++;
                     SpherePos(1, 0);
+                    Debug.Log("右の移動したよ") ;
                 }
                 _inputframe = 0;
             }
@@ -211,6 +213,7 @@ public class TestMove : MonoBehaviour
         // 左.
         else if (moveInput.x < 0)
         {
+            Debug.Log("左やで");
             if (SphereMoveState())
             {
                 Vector2Int checkPos = new Vector2Int(7, 0);
@@ -226,6 +229,7 @@ public class TestMove : MonoBehaviour
                 {
                     //_cubePos.x--;
                     SpherePos(-1, 0);
+                    Debug.Log("左の移動したよ") ;
                 }
                 _inputframe = 0;
             }
@@ -268,7 +272,7 @@ public class TestMove : MonoBehaviour
         }
     }
     // キューブの再生成.
-    public void SphereReGenerete(bool isChain,TestController controller)
+    public void SphereReGenerete(bool isChain,FieldData controller)
     ///private void SphereReGenerete()
     {
         if (isChain && _isReGenereteSpher)

@@ -6,7 +6,7 @@ using UnityEngine.Analytics;
 
 // コメントがないよ？
 
-public class TestController : MonoBehaviour
+public class FieldData : MonoBehaviour
 {
     // ボードの横の最大値(6 * 13).
     private const int _borad_Width = 6;
@@ -185,7 +185,7 @@ public class TestController : MonoBehaviour
 
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
         _sphere[pos.y, pos.x] = Instantiate(_prefabSphere, world_position, Quaternion.identity, transform);
-        _sphere[pos.y, pos.x].GetComponent<Test>().SetColorType((ColorType)val);
+        _sphere[pos.y, pos.x].GetComponent<SphereData>().SetColorType((ColorType)val);
 
         // 設置したよ
         _isInstallaion = true;
@@ -203,7 +203,7 @@ public class TestController : MonoBehaviour
 
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
         _sphere[pos.y, pos.x] = Instantiate(_disturbanceSphere, world_position, Quaternion.identity, transform);
-        _sphere[pos.y, pos.x].GetComponent<Test>().SetColorType((ColorType)val);
+        _sphere[pos.y, pos.x].GetComponent<SphereData>().SetColorType((ColorType)val);
 
         // 設置したよ
         _isInstallaion = true;
@@ -227,13 +227,16 @@ public class TestController : MonoBehaviour
     // X軸(左右方向)におけるかどうかのチェック
     public bool IsNextSphereX(Vector2Int pos, int add)
     {
+            //Debug.Log("X" + (pos.x + add) + "Y :" + pos.y);
         // 範囲外じゃないかどうか
         if (pos.x + add < 0 || pos.x + add > _borad_Width - 1)
         {
+            //Debug.Log("範囲外やで");
             return true;
         }
         if (_sphere[pos.y, pos.x + add] != null)
         {
+            //Debug.Log("??");
             return true;
         }
         return false;
@@ -303,7 +306,7 @@ public class TestController : MonoBehaviour
                     continue;
                 }
                 // カラーの番号を取得
-                sphereColor = _sphere[y, x].GetComponent<Test>().GetColorType();
+                sphereColor = _sphere[y, x].GetComponent<SphereData>().GetColorType();
                 // 消えるかどうかの判定
                 IsRecursionCheckField(tempBorad, x, y, sphereColor);
                 // 消せる個数をチェックする
@@ -328,7 +331,6 @@ public class TestController : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log("あ" + _isInstallaion);
         _isField = IsCheckField();
         if (!_isField)
         {
@@ -404,7 +406,7 @@ public class TestController : MonoBehaviour
 
         if(_sphere[y, x] == null) return false;
         //指定した位置に指定された色が置かれているかチェックをする
-        if (_sphere[y, x].GetComponent<Test>().GetColorType() == colorType) return true;
+        if (_sphere[y, x].GetComponent<SphereData>().GetColorType() == colorType) return true;
 
         return false;
     }
@@ -547,7 +549,7 @@ public class TestController : MonoBehaviour
                 {
                     _isEraseNowFlag = true;
                      //点滅？処理.
-                    _sphere[y, x].GetComponent<Test>().ChangeColor((float)alpha);
+                    _sphere[y, x].GetComponent<SphereData>().ChangeColor((float)alpha);
                 }
             }
         }
@@ -675,7 +677,7 @@ public class TestController : MonoBehaviour
     {
         if (_isEraseNowFlag)
         {
-            if (_sphere[y, x] != null && _sphere[y, x].GetComponent<Test>().IsMoveSphere())
+            if (_sphere[y, x] != null && _sphere[y, x].GetComponent<SphereData>().IsMoveSphere())
             {
                 //Debug.Log("とおったよHey");
                 //_isTestEraseFlag = false;

@@ -8,14 +8,14 @@ public class LoadSceneManager : MonoBehaviour
     //  読み込むシーン
     [SerializeField] private string _scene;
     // ボタンの処理をするための変数.
-    private TestInputManager _input;
+    private InputManager _input;
     // 仮取得
     //public GameObject _field;
-    public TestController _controller;
+    public FieldData _controller;
     // Start is called before the first frame update
     void Start()
     {
-        _input = new TestInputManager();
+        _input = new InputManager();
         _input.Enable();
         //if (GameObject.Find("Field"))
         //{ 

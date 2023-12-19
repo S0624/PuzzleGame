@@ -5,8 +5,8 @@ using TMPro;
 public class ScoreManager : MonoBehaviour
 {
     // 仮実装用
-    public TestController _testController;
-    public TestMove _testMove;
+    public FieldData _testController;
+    public SphereMove _testMove;
     // テキストではなくテキストメッシュプロを使用している.
     private TextMeshProUGUI _scoreText;
     // スコアを入れる用の変数.

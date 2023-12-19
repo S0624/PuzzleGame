@@ -16,8 +16,8 @@ public class GameMainMatchManager : MonoBehaviour
     // オブジェクトの取得.
     public ColorSeedCreate _seed;
     public TestColorManager[] _colormanager;
-    public TestController[] _testController;
-    public TestMove[] _moveSphere;
+    public FieldData[] _testController;
+    public SphereMove[] _moveSphere;
     public TestText[] _testText;
     // お邪魔スフィアの管理用の変数.
     private int[] _obstacle = new int[2];
@@ -170,7 +170,7 @@ public class GameMainMatchManager : MonoBehaviour
         }
         else if (total > 0)
         {
-            Debug.Log(_testController[1].IsInstallaion());
+            //Debug.Log(_testController[1].IsInstallaion());
             if (!_testController[0].IsFieldUpdate() && _testController[1].IsInstallaion())
             {
                 _testController[1].SetObstacle(total);

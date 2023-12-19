@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 public class InputState : MonoBehaviour
 {
-    private TestInputManager[] _testControl;
+    private InputManager[] _inputManager;
     private int _index = 0;
     private Vector2[] _move;
     // ボタンの処理が行われているかどうかの変数
@@ -14,16 +14,17 @@ public class InputState : MonoBehaviour
     private bool [] _fallDown = new bool[2];
     void Start()
     {
-        _testControl = Gamepad.all.Select(pad =>
+        // ゲームパッドの取得.
+        _inputManager = Gamepad.all.Select(pad =>
         {
-            var control = new TestInputManager();
+            var control = new InputManager();
             control.devices = new UnityEngine.InputSystem.Utilities.ReadOnlyArray<InputDevice>(new[] { pad });
             control.Enable();
             return control;
         }).ToArray();
-        _move = new Vector2[_testControl.Length];
-        _isPress = new bool[_testControl.Length];
-        _rota = new bool[_testControl.Length,(int)RotaState.max];
+        _move = new Vector2[_inputManager.Length];
+        _isPress = new bool[_inputManager.Length];
+        _rota = new bool[_inputManager.Length,(int)RotaState.max];
     }
 
 
@@ -36,7 +37,7 @@ public class InputState : MonoBehaviour
     {
         // 何番のパッドの処理を行ったか
         int index = 0;
-        foreach (var control in _testControl)
+        foreach (var control in _inputManager)
         {
             // 移動量の取得.
             var move = control.Piece.Move.ReadValue<Vector2>();
@@ -48,13 +49,13 @@ public class InputState : MonoBehaviour
             RotationStateUpdate(control, index);
 
             // デバック用
-            _fallDown [index] = _testControl[_index].Piece.Move.WasPressedThisFrame();
+            _fallDown [index] = _inputManager[_index].Piece.Move.WasPressedThisFrame();
             ++index;
         }
         return Vector2.zero;
     }
     // 回転の状態のUpdate処理.
-    private void RotationStateUpdate(TestInputManager control,int index)
+    private void RotationStateUpdate(InputManager control,int index)
     {
         // 右.
         if(control.Piece.RotationRight.WasPerformedThisFrame())
