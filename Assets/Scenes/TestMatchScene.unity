@@ -712,8 +712,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 876f482fecd2e8b489802fe217d2f8bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefabSphere: {fileID: 1292105871287533337, guid: bc1d4beb5597583429343c6e90335901, type: 3}
-  _disturbanceSphere: {fileID: 1292105871287533337, guid: 912407e55cf32dc46b92678da6f78ae5, type: 3}
+  _prefabSphere: {fileID: 1292105871287533337, guid: 357072c04f365204d9bb7a4bc8df3ae0, type: 3}
+  _disturbanceSphere: {fileID: 1292105871287533337, guid: 389ff6177fb072a46adb5311aa3bb536, type: 3}
+  _popEffect: {fileID: 0}
 --- !u!1 &141703361
 GameObject:
   m_ObjectHideFlags: 0
@@ -1061,8 +1062,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 876f482fecd2e8b489802fe217d2f8bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefabSphere: {fileID: 1292105871287533337, guid: bc1d4beb5597583429343c6e90335901, type: 3}
-  _disturbanceSphere: {fileID: 1292105871287533337, guid: 912407e55cf32dc46b92678da6f78ae5, type: 3}
+  _prefabSphere: {fileID: 1292105871287533337, guid: 357072c04f365204d9bb7a4bc8df3ae0, type: 3}
+  _disturbanceSphere: {fileID: 1292105871287533337, guid: 389ff6177fb072a46adb5311aa3bb536, type: 3}
+  _popEffect: {fileID: 0}
 --- !u!4 &201810781
 Transform:
   m_ObjectHideFlags: 0
@@ -5524,10 +5526,10 @@ MonoBehaviour:
   AllClearImg: {fileID: 8784868718936140701, guid: e21f11f254dd3b549801279d68a2cfb1, type: 3}
   Canvas: {fileID: 811552422}
   _seed: {fileID: 2092515530}
-  _colormanager:
+  _colorManager:
   - {fileID: 1383005755}
   - {fileID: 1424830379}
-  _testController:
+  _fieldData:
   - {fileID: 201810780}
   - {fileID: 119861353}
   _moveSphere:

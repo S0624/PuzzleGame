@@ -186,7 +186,6 @@ public class SphereMove : MonoBehaviour
         // 右.
         if (moveInput.x > 0)
         {
-            Debug.Log("右やで");
             if (SphereMoveState())
             {
                 Vector2Int checkPos = new Vector2Int(0, 0);
@@ -205,7 +204,6 @@ public class SphereMove : MonoBehaviour
                 {
                     //_cubePos.x++;
                     SpherePos(1, 0);
-                    Debug.Log("右の移動したよ") ;
                 }
                 _inputframe = 0;
             }
@@ -213,7 +211,6 @@ public class SphereMove : MonoBehaviour
         // 左.
         else if (moveInput.x < 0)
         {
-            Debug.Log("左やで");
             if (SphereMoveState())
             {
                 Vector2Int checkPos = new Vector2Int(7, 0);
@@ -229,7 +226,6 @@ public class SphereMove : MonoBehaviour
                 {
                     //_cubePos.x--;
                     SpherePos(-1, 0);
-                    Debug.Log("左の移動したよ") ;
                 }
                 _inputframe = 0;
             }

@@ -17,6 +17,8 @@ public class GameMainManager : MonoBehaviour
     public TestColorManager _colormanager;
     public FieldData _testController;
     public SphereMove _move;
+    // ゲームオーバーかどうかのフラグを取得する.
+    private bool _isGameOver = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,15 +31,19 @@ public class GameMainManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // キューブの回転処理.
-        _move.SphereUpdate();
         // テスト用 ゲームオーバーになったら画像を表示
         GenereteGameOver();
         GenereteAllClear();
+        // ゲームオーバーになったら処理を止めるよ.
+        if (_isGameOver) return;
+        // キューブの回転処理.
+        _move.SphereUpdate();
         _move.SphereReGenerete(_testController.IsChain(),_testController);
     }
     void FixedUpdate()
     {
+        // ゲームオーバーになったら処理を止めるよ.
+        if (_isGameOver) return;
         // キューブの移動処理.
         _move.FreeFallUpdate();
     }
@@ -48,6 +54,7 @@ public class GameMainManager : MonoBehaviour
         {
             if (_testController.IsGameOver())
             {
+                _isGameOver = true;
                 _gameOverTex = Instantiate(GameOverImg);
                 _gameOverTex.transform.SetParent(Canvas.transform, false);
             }

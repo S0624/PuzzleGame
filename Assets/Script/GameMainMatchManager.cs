@@ -15,13 +15,13 @@ public class GameMainMatchManager : MonoBehaviour
     private GameObject[] _allClearTex = new GameObject[2];
     // オブジェクトの取得.
     public ColorSeedCreate _seed;
-    public TestColorManager[] _colormanager;
-    public FieldData[] _testController;
+    public TestColorManager[] _colorManager;
+    public FieldData[] _fieldData;
     public SphereMove[] _moveSphere;
     public TestText[] _testText;
     // お邪魔スフィアの管理用の変数.
     private int[] _obstacle = new int[2];
-    private int[] _testadd = new int[2];
+    private int[] _obstacleAdd = new int[2];
     private int _obstacleCount = 0;
     private int _obstacleMax = 30;
     // 計算のフラグ.
@@ -37,7 +37,7 @@ public class GameMainMatchManager : MonoBehaviour
             _allClearTex[i] = null;
         }
         _seed.InitColor();
-        foreach (var col in _colormanager)
+        foreach (var col in _colorManager)
         {
             col.SetColorSeed(_seed);
             col.InitObjectName();
@@ -60,7 +60,7 @@ public class GameMainMatchManager : MonoBehaviour
         }
         for (int i = 0; i < _moveSphere.Length; i++)
         {
-            _moveSphere[i].SphereReGenerete(_testController[i].IsChain(), _testController[i]);
+            _moveSphere[i].SphereReGenerete(_fieldData[i].IsChain(), _fieldData[i]);
         }
         // お邪魔計算.
         ObstacleCalculation();
@@ -80,9 +80,9 @@ public class GameMainMatchManager : MonoBehaviour
     {
         if (_gameOverTex == null)
         {
-            for (int i = 0; i < _testController.Length; i++)
+            for (int i = 0; i < _fieldData.Length; i++)
             {
-                if (_testController[i].IsGameOver())
+                if (_fieldData[i].IsGameOver())
                 {
                     _isGameOver = true;
                     _gameOverTex = Instantiate(GameOverImg);
@@ -94,11 +94,11 @@ public class GameMainMatchManager : MonoBehaviour
     // テスト用 全消しになったら画像を表示
     private void GenereteAllClear()
     {
-        for (int i = 0; i < _testController.Length; i++)
+        for (int i = 0; i < _fieldData.Length; i++)
         {
             if (_allClearTex[i] == null)
             {
-                if (_testController[i].FieldAllClear())
+                if (_fieldData[i].FieldAllClear())
                 {
                 Debug.Log("ぜんけし");
                     _allClearTex[i] = Instantiate(AllClearImg);
@@ -107,7 +107,7 @@ public class GameMainMatchManager : MonoBehaviour
             }
             else
             {
-                if (!_testController[i].FieldAllClear())
+                if (!_fieldData[i].FieldAllClear())
                 {
                     Destroy(_allClearTex[i]);
                 }
@@ -121,14 +121,14 @@ public class GameMainMatchManager : MonoBehaviour
 
         int[] add = new int[2];
         int total = 0;
-        for (int i = 0; i < _testController.Length; i++)
+        for (int i = 0; i < _fieldData.Length; i++)
         {
             // とりあえず値を取得するよ.
-            _testadd[i] = _testController[i].GetObstacle();
+            _obstacleAdd[i] = _fieldData[i].GetObstacle();
             // 今持っている数値が大きかったら代入するよ
-            if (_obstacle[i] < _testadd[i])
+            if (_obstacle[i] < _obstacleAdd[i])
             {
-                _obstacle[i] = _testadd[i];
+                _obstacle[i] = _obstacleAdd[i];
             }
         }
         // 計算するよ
@@ -171,10 +171,10 @@ public class GameMainMatchManager : MonoBehaviour
         else if (total > 0)
         {
             //Debug.Log(_testController[1].IsInstallaion());
-            if (!_testController[0].IsFieldUpdate() && _testController[1].IsInstallaion())
+            if (!_fieldData[0].IsFieldUpdate() && _fieldData[1].IsInstallaion())
             {
-                _testController[1].SetObstacle(total);
-                _testController[1].GetInstallation(false);
+                _fieldData[1].SetObstacle(total);
+                _fieldData[1].GetInstallation(false);
                 //Debug.Log("右に" + total + "と" + _obstacleCount);
             }
             else
@@ -184,10 +184,10 @@ public class GameMainMatchManager : MonoBehaviour
         }
         else
         {
-            if (!_testController[1].IsFieldUpdate() && _testController[0].IsInstallaion())
+            if (!_fieldData[1].IsFieldUpdate() && _fieldData[0].IsInstallaion())
             {
-                _testController[0].SetObstacle(total * -1);
-                _testController[0].GetInstallation(false);
+                _fieldData[0].SetObstacle(total * -1);
+                _fieldData[0].GetInstallation(false);
                 //Debug.Log("左に" + total * -1 + "と" + _obstacleCount);
             }
             else
@@ -197,8 +197,8 @@ public class GameMainMatchManager : MonoBehaviour
         }
         _obstacle[0] = 0;
         _obstacle[1] = 0;
-        _testadd[0] = 0;
-        _testadd[1] = 0;
+        _obstacleAdd[0] = 0;
+        _obstacleAdd[1] = 0;
         _calculation = false;
     }
     // テキスト用

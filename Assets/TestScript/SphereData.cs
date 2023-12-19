@@ -18,23 +18,24 @@ using UnityEngine;
 //[RequireComponent(typeof(Renderer))]
 public class SphereData : MonoBehaviour
 {
-    // 実行時に値を取得する読み取り専用の変数を生成
-    public static readonly Color[] color_table = new Color[] {
-        Color.white,        // 緑.
-        Color.green,        // 緑.
-        Color.red,          // 赤.
-        Color.yellow,       // 黄色.
-        Color.blue,         // 青.
-        Color.magenta,      // 紫.
-        Color.gray,         // 仮でグレーを入れる
+    //// 実行時に値を取得する読み取り専用の変数を生成
+    //public static readonly Color[] color_table = new Color[] {
+    //    Color.white,        // 緑.
+    //    Color.green,        // 緑.
+    //    Color.red,          // 赤.
+    //    Color.yellow,       // 黄色.
+    //    Color.blue,         // 青.
+    //    Color.magenta,      // 紫.
+    //    Color.gray,         // 仮でグレーを入れる
 
-        Color.gray,         // おじゃま(グレー)
-    };
+    //    Color.gray,         // おじゃま(グレー)
+    //};
 
     [SerializeField] private SpriteRenderer my_renderer = default!;// 自分自身のマテリアルを登録しておく(GetComponentをなくす).
     //[SerializeField] private Renderer my_renderer = default!;// 自分自身のマテリアルを登録しておく(GetComponentをなくす).
     private ColorType _type = ColorType.PuyoMax;
     private Rigidbody _rigidbody;
+    private ColorTable _colorTable;
 
     private void Start()
     {
@@ -45,8 +46,10 @@ public class SphereData : MonoBehaviour
     {
         _type = type;
 
-        my_renderer.material.color = color_table[(int)_type];
+        _colorTable = GameObject.Find("ColorManager").GetComponent<ColorTable>();
+        my_renderer.material.color = _colorTable.GetColor((int)_type);
     }
+
     public ColorType GetColorType()
     {
         return _type;

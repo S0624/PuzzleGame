@@ -15,6 +15,7 @@ public class FieldData : MonoBehaviour
 
     [SerializeField] private GameObject _prefabSphere = default;
     [SerializeField] private GameObject _disturbanceSphere = default;
+    [SerializeField] private GameObject _popEffect = default;
 
     private int[,] _board = new int[_borad_Height, _borad_Width];
     private GameObject[,] _sphere = new GameObject[_borad_Height, _borad_Width];
@@ -23,6 +24,11 @@ public class FieldData : MonoBehaviour
     private Vector2Int[] _sphereDirection = new Vector2Int[(int)Direction.max];
     private bool _isEraseNowFlag = false;
     private bool _isEraseFlag = false;
+    // 色をいじるために使用.
+    private ParticleSystem _popParticle;
+    private GameObject _effect;
+    // カラーの取得.
+    public ColorTable _colorTable;
 
     // 点滅周期[s]
     //[SerializeField] private float _cycle = 1;
@@ -47,7 +53,7 @@ public class FieldData : MonoBehaviour
     // 設置が終わったかどうかのフラグ.
     private bool _isSetEnd = false;
     // 妨害用のスフィアのかず
-    private int  _obstacleNum;
+    private int _obstacleNum;
     // 妨害用のスフィアの数.
     private int _obstacleCount = 0;
 
@@ -86,6 +92,7 @@ public class FieldData : MonoBehaviour
         _sphereDirection[(int)Direction.Left] = new Vector2Int(-1, 0);
         _sphereDirection[(int)Direction.Up] = new Vector2Int(0, 1);
         _sphereDirection[(int)Direction.Down] = new Vector2Int(0, -1);
+
     }
     // 生成する.
     private void Generate()
@@ -116,7 +123,7 @@ public class FieldData : MonoBehaviour
         }
         // ランダムにフィールド上すべてに生成する
         int remainder = _obstacleNum % _borad_Width;
-        for(int i = 0; i < remainder; i++)
+        for (int i = 0; i < remainder; i++)
         {
             _obstacleNum--;
             int rand = Random.Range(0, _borad_Width);
@@ -197,16 +204,17 @@ public class FieldData : MonoBehaviour
         int val = (int)ColorType.hindrance;
         if (!IsCanSetSphere(pos)) return false;
 
+        _isInstallaion = true;
         // 色番号をセット.
         _board[pos.y, pos.x] = val;
         // もし中身が入っていたらエラー表記を出
 
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
+        world_position.y += _borad_Height;
         _sphere[pos.y, pos.x] = Instantiate(_disturbanceSphere, world_position, Quaternion.identity, transform);
         _sphere[pos.y, pos.x].GetComponent<SphereData>().SetColorType((ColorType)val);
 
         // 設置したよ
-        _isInstallaion = true;
         _isSetSphere = true;
         return true;
     }
@@ -227,7 +235,7 @@ public class FieldData : MonoBehaviour
     // X軸(左右方向)におけるかどうかのチェック
     public bool IsNextSphereX(Vector2Int pos, int add)
     {
-            //Debug.Log("X" + (pos.x + add) + "Y :" + pos.y);
+        //Debug.Log("X" + (pos.x + add) + "Y :" + pos.y);
         // 範囲外じゃないかどうか
         if (pos.x + add < 0 || pos.x + add > _borad_Width - 1)
         {
@@ -258,7 +266,7 @@ public class FieldData : MonoBehaviour
     public bool FieldAllClear()
     {
         // 中身が入っているかのフラグ
-        bool isEmpty  = true;
+        bool isEmpty = true;
         isEmpty = _isInstallaion;
         for (int y = 0; y < _borad_Height; y++)
         {
@@ -272,21 +280,21 @@ public class FieldData : MonoBehaviour
                 }
             }
             // 中身が入っていたらfor文を抜ける.
-            if(!isEmpty)
+            if (!isEmpty)
             {
                 break;
             }
         }
         return isEmpty;
-    } 
+    }
 
-    
+
     public bool IsCheckField()
     {
         int eraseCount = 0;
         ColorType sphereColor;
         int[,] tempBorad = new int[_borad_Height, _borad_Width];
-        bool isFrash = false; 
+        bool isFrash = false;
         // 仮で保存する変数を初期化する
         EraseBoardClearAll();
         for (int y = 0; y < _borad_Height; y++)
@@ -360,6 +368,9 @@ public class FieldData : MonoBehaviour
             _isSetEnd = false;
             //Debug.Log("れんさしてる");
         }
+        // テスト用だよ.
+        TestMoveSphere();
+        
         //Debug.Log("_isField:" + _isField);
         //Debug.Log("_isSetSphere:" + _isSetSphere);
         //Debug.Log("_isChainEnd:" + _isSetEnd);
@@ -368,6 +379,23 @@ public class FieldData : MonoBehaviour
 
         //_isSetEnd = false;
     }
+    // testuto 邪魔落下中は動きを止めたい
+    private void TestMoveSphere()
+    {
+        for (int y = 0; y < _borad_Height; y++)
+        {
+            for (int x = 0; x < _borad_Width; x++)
+            {
+                //if (_board[y, x] == (int)ColorType.hindrance)
+                if (_board[y, x] == (int)ColorType.hindrance && _sphere[y, x].GetComponent<SphereData>().IsMoveSphere())
+                {
+                    // デバック文表示してるよ
+                    Debug.Log("はろー");
+                }
+            }
+        }
+    }
+
     public bool IsFieldUpdate()
     {
         return _isField;
@@ -596,6 +624,8 @@ public class FieldData : MonoBehaviour
                 {
                     // こわす(消す)処理.
                     if (_sphere[y, x] != null) Destroy(_sphere[y, x]);
+                    // 消したときの演出.
+                    EraseEffect(x, y);
                     _sphere[y, x] = null;
                     _board[y, x] = 0;
                     tempField[y, x] = 0;
@@ -608,6 +638,15 @@ public class FieldData : MonoBehaviour
         }
         _chainCount++;
     }
+    // 消すときのエフェクト表示.
+    private void EraseEffect(int posX,int posY)
+    {
+        Vector3 pos = transform.position + new Vector3(posX, posY, 0.0f);
+        _effect = Instantiate(_popEffect, pos, Quaternion.identity, transform);
+        ParticleSystem.MainModule effect = _effect.GetComponent<ParticleSystem>().main;
+        effect.startColor = _colorTable.GetColor(_board[posY,posX]);
+    }
+    // おじゃまスフィアの消去処理.
     private void EraseDisturbance(int x, int y, int[,] tempField)
     {
         // てすと実装

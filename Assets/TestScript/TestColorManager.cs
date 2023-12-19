@@ -7,19 +7,19 @@ using UnityEngine;
 public class TestColorManager : MonoBehaviour
 {
     private ColorSeedCreate _seed;
-    // HACK なんかいい処理ないんですか別ファイルで全く同じの使ってる
-    // 実行時に値を取得する読み取り専用の変数を生成
-     static readonly Color[] color_table = new Color[] {
-        Color.white,        // 白.
-        Color.green,        // 緑.
-        Color.red,          // 赤.
-        Color.yellow,       // 黄色.
-        Color.blue,         // 青.
-        Color.magenta,      // 紫.
-        Color.gray,         // 仮でグレーを入れる
+    //// HACK なんかいい処理ないんですか別ファイルで全く同じの使ってる
+    //// 実行時に値を取得する読み取り専用の変数を生成
+    // static readonly Color[] color_table = new Color[] {
+    //    Color.white,        // 白.
+    //    Color.green,        // 緑.
+    //    Color.red,          // 赤.
+    //    Color.yellow,       // 黄色.
+    //    Color.blue,         // 青.
+    //    Color.magenta,      // 紫.
+    //    Color.gray,         // 仮でグレーを入れる
 
-        Color.gray,         // おじゃま(グレー)
-    };
+    //    Color.gray,         // おじゃま(グレー)
+    //};
 
     // HACK マジックナンバー推しなんかってレベルのマジックナンバーがいるんですけど・・・
     [SerializeField] private GameObject _nowSphere;
@@ -30,6 +30,8 @@ public class TestColorManager : MonoBehaviour
 
     private string[] _colorNameData = new string[6];
 
+    // カラーの取得.
+    public ColorTable _colorTable;
     // テスト用なのでけす
     int _seedCount = 0;
     // 色の番号
@@ -64,8 +66,8 @@ public class TestColorManager : MonoBehaviour
         int i = 0;
         foreach (var sphere in _sphereColor)
         {           
-            sphere.transform.GetChild(0).GetComponent<Renderer>().material.color = color_table[_seed.SetColorNum(i, Direction.Up)];
-            sphere.transform.GetChild(1).GetComponent<Renderer>().material.color = color_table[_seed.SetColorNum(i, Direction.Down)];
+            sphere.transform.GetChild(0).GetComponent<Renderer>().material.color = _colorTable.GetColor(_seed.SetColorNum(i, Direction.Up));
+            sphere.transform.GetChild(1).GetComponent<Renderer>().material.color = _colorTable.GetColor(_seed.SetColorNum(i, Direction.Down));
             i++;
         }
     }
@@ -80,8 +82,8 @@ public class TestColorManager : MonoBehaviour
             // 入れ替えの処理.
             for (int i = 0; i < _sphereColor.Length; i++)
             {
-                _sphereColor[i].transform.GetChild(0).GetComponent<Renderer>().material.color = color_table[_seed.SetColorNum(ArrayNum(i), Direction.Up)];
-                _sphereColor[i].transform.GetChild(1).GetComponent<Renderer>().material.color = color_table[_seed.SetColorNum(ArrayNum(i), Direction.Down)];
+                _sphereColor[i].transform.GetChild(0).GetComponent<Renderer>().material.color = _colorTable.GetColor(_seed.SetColorNum(ArrayNum(i), Direction.Up));
+                _sphereColor[i].transform.GetChild(1).GetComponent<Renderer>().material.color = _colorTable.GetColor(_seed.SetColorNum(ArrayNum(i), Direction.Down));
             }
         }
     }
