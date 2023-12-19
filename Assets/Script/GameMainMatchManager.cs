@@ -60,7 +60,11 @@ public class GameMainMatchManager : MonoBehaviour
         }
         for (int i = 0; i < _moveSphere.Length; i++)
         {
-            _moveSphere[i].SphereReGenerete(_fieldData[i].IsChain(), _fieldData[i]);
+            // 動いてなかったら生成.
+            if (!_fieldData[i].TestMoveObstacleSphere())
+            {
+                _moveSphere[i].SphereReGenerete(_fieldData[i].IsChain(), _fieldData[i]);
+            }
         }
         // お邪魔計算.
         ObstacleCalculation();

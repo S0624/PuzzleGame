@@ -368,8 +368,6 @@ public class FieldData : MonoBehaviour
             _isSetEnd = false;
             //Debug.Log("れんさしてる");
         }
-        // テスト用だよ.
-        TestMoveSphere();
         
         //Debug.Log("_isField:" + _isField);
         //Debug.Log("_isSetSphere:" + _isSetSphere);
@@ -380,7 +378,7 @@ public class FieldData : MonoBehaviour
         //_isSetEnd = false;
     }
     // testuto 邪魔落下中は動きを止めたい
-    private void TestMoveSphere()
+    public bool TestMoveObstacleSphere()
     {
         for (int y = 0; y < _borad_Height; y++)
         {
@@ -390,10 +388,12 @@ public class FieldData : MonoBehaviour
                 if (_board[y, x] == (int)ColorType.hindrance && _sphere[y, x].GetComponent<SphereData>().IsMoveSphere())
                 {
                     // デバック文表示してるよ
-                    Debug.Log("はろー");
+                    Debug.Log("落下途中やで");
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     public bool IsFieldUpdate()

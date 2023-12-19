@@ -714,7 +714,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefabSphere: {fileID: 1292105871287533337, guid: 357072c04f365204d9bb7a4bc8df3ae0, type: 3}
   _disturbanceSphere: {fileID: 1292105871287533337, guid: 389ff6177fb072a46adb5311aa3bb536, type: 3}
-  _popEffect: {fileID: 0}
+  _popEffect: {fileID: 1833123592526364050, guid: 1c9cf0233ed89e74cb8bb362e89dee4a, type: 3}
+  _colorTable: {fileID: 2092515531}
 --- !u!1 &141703361
 GameObject:
   m_ObjectHideFlags: 0
@@ -1064,7 +1065,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefabSphere: {fileID: 1292105871287533337, guid: 357072c04f365204d9bb7a4bc8df3ae0, type: 3}
   _disturbanceSphere: {fileID: 1292105871287533337, guid: 389ff6177fb072a46adb5311aa3bb536, type: 3}
-  _popEffect: {fileID: 0}
+  _popEffect: {fileID: 1833123592526364050, guid: 1c9cf0233ed89e74cb8bb362e89dee4a, type: 3}
+  _colorTable: {fileID: 2092515531}
 --- !u!4 &201810781
 Transform:
   m_ObjectHideFlags: 0
@@ -4440,6 +4442,7 @@ MonoBehaviour:
   _nowSphere: {fileID: 653497628}
   _nextSphere: {fileID: 513328986}
   _nextSecondSphere: {fileID: 180859538}
+  _colorTable: {fileID: 2092515531}
 --- !u!1 &1403403783
 GameObject:
   m_ObjectHideFlags: 0
@@ -4622,6 +4625,7 @@ MonoBehaviour:
   _nowSphere: {fileID: 1379091266}
   _nextSphere: {fileID: 1517807286}
   _nextSecondSphere: {fileID: 1723909162}
+  _colorTable: {fileID: 2092515531}
 --- !u!4 &1424830380
 Transform:
   m_ObjectHideFlags: 0
@@ -4889,7 +4893,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1517807286}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.068594, y: 11.539999, z: 0.10396767}
+  m_LocalPosition: {x: -2.77, y: 11.539999, z: 0.10396767}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5711,7 +5715,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1723909162}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.988594, y: 9.4, z: 0.10396767}
+  m_LocalPosition: {x: -3.54, y: 9.4, z: 0.10396767}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6360,6 +6364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2092515528}
   - component: {fileID: 2092515530}
+  - component: {fileID: 2092515531}
   m_Layer: 0
   m_Name: ColorManager
   m_TagString: Untagged
@@ -6394,6 +6399,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 375d2b9feb0b1fe429a241e8a547b33e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2092515531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2092515526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 251fa8aa92deb074b98a5115a40c5482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2112224755
