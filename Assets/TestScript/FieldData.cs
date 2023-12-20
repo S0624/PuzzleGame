@@ -378,24 +378,31 @@ public class FieldData : MonoBehaviour
         //_isSetEnd = false;
     }
     // testuto 邪魔落下中は動きを止めたい
-    public bool TestMoveObstacleSphere()
+    public bool MoveObstacleSphere()
     {
         for (int y = 0; y < _borad_Height; y++)
         {
             for (int x = 0; x < _borad_Width; x++)
             {
-                //if (_board[y, x] == (int)ColorType.hindrance)
-                if (_board[y, x] == (int)ColorType.hindrance && _sphere[y, x].GetComponent<SphereData>().IsMoveSphere())
+                if (_board[y, x] == (int)ColorType.hindrance && MoveCheck(x,y))
                 {
                     // デバック文表示してるよ
-                    Debug.Log("落下途中やで");
+                    //Debug.Log("落下途中やで");
                     return true;
                 }
             }
         }
         return false;
     }
-
+    private bool MoveCheck(int x,int y)
+    {
+        if (_sphere[y, x] != null)
+        {
+            bool move = _sphere[y, x].GetComponent<SphereData>().IsMoveSphere();
+            return move;
+        }
+        return false;
+    }
     public bool IsFieldUpdate()
     {
         return _isField;
@@ -810,7 +817,6 @@ public class FieldData : MonoBehaviour
         //    //Debug.Log("こんにちわ、最大値より大きいわよ");
         //    return 1;
         //}
-
         // なにもなければ0でいいわよ
         return rotaPos;
     }

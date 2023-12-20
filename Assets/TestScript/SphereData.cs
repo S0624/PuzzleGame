@@ -70,8 +70,10 @@ public class SphereData : MonoBehaviour
     }
     public bool IsMoveSphere()
     {
+        // HACK ?
+        _rigidbody = GetComponent<Rigidbody>();
         // オブジェクトが動いていないかどうか
-        if(!_rigidbody.IsSleeping())
+        if (!_rigidbody.IsSleeping())
         {
             return true;
         }

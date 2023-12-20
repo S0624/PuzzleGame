@@ -38,7 +38,7 @@ public class GameMainManager : MonoBehaviour
         if (_isGameOver) return;
         // キューブの回転処理.
         _move.SphereUpdate();
-        _move.SphereReGenerete(_testController.IsChain(),_testController);
+        _move.InstallationProcess(_testController.IsChain(),_testController);
     }
     void FixedUpdate()
     {

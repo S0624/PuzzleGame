@@ -61,9 +61,9 @@ public class GameMainMatchManager : MonoBehaviour
         for (int i = 0; i < _moveSphere.Length; i++)
         {
             // 動いてなかったら生成.
-            if (!_fieldData[i].TestMoveObstacleSphere())
+            if (!_fieldData[i].MoveObstacleSphere())
             {
-                _moveSphere[i].SphereReGenerete(_fieldData[i].IsChain(), _fieldData[i]);
+                _moveSphere[i].InstallationProcess(_fieldData[i].IsChain(), _fieldData[i]);
             }
         }
         // お邪魔計算.
@@ -170,7 +170,7 @@ public class GameMainMatchManager : MonoBehaviour
         //Debug.Log(_testController[0].IsInstallaion());
         if (total == 0)
         {
-            Debug.Log("均衡中...");
+            //Debug.Log("均衡中...");
         }
         else if (total > 0)
         {
@@ -191,6 +191,7 @@ public class GameMainMatchManager : MonoBehaviour
             if (!_fieldData[1].IsFieldUpdate() && _fieldData[0].IsInstallaion())
             {
                 _fieldData[0].SetObstacle(total * -1);
+                Debug.Log("おくるよ");
                 _fieldData[0].GetInstallation(false);
                 //Debug.Log("左に" + total * -1 + "と" + _obstacleCount);
             }

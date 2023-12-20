@@ -1,26 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 // HACK仮でシーンをつなげてるスクリプト（仮なのであとでちゃんとフラグ受け取る）
 public class LoadSceneManager : MonoBehaviour
 {
     //  読み込むシーン
-    [SerializeField] private string _scene;
+    [SerializeField] private string[] _nextScene;
+    [SerializeField] private string _prevScene;
     // ボタンの処理をするための変数.
     private InputManager _input;
     // 仮取得
     //public GameObject _field;
-    public FieldData _controller;
+    public FieldData[] _controller;
+    // セレクトシーンのみで使用.
+    public SelectScene _select;
     // Start is called before the first frame update
     void Start()
     {
         _input = new InputManager();
         _input.Enable();
-        //if (GameObject.Find("Field"))
-        //{ 
-        //    _controller = GameObject.Find("Field").GetComponent<TestController>();
-        //} 
     }
 
     // Update is called once per frame
@@ -30,22 +27,42 @@ public class LoadSceneManager : MonoBehaviour
         // それ以外はしかるべき時に押したらシーンが移動します
         if (Input.GetKeyDown(KeyCode.Space)|| TestInput())
         {
-            // SampleSceneに切り替える
-            SceneManager.LoadSceneAsync(_scene);
+            if (_select == null)
+            {
+                // Sceneを切り替える
+                SceneManager.LoadSceneAsync(_nextScene[0]);
+            }
+            else
+            {
+                // Sceneを切り替える
+                SceneManager.LoadSceneAsync(_nextScene[_select.SelectNum()]);
+            }
+            
+        }
+        // 前のシーンの情報がなかったら処理を飛ばす.
+        if (_prevScene == "") return;
+        // 戻るボタンを押したら一個前のシーンに戻る
+        if(Input.GetKeyUp(KeyCode.KeypadEnter)|| _input.UI.Cancel.WasPerformedThisFrame())
+        {
+            SceneManager.LoadSceneAsync(_prevScene);
+
         }
     }
     private bool TestInput()
     {
-        if (_controller != null)
+        foreach (var controller in _controller)
         {
-            if (_controller.IsGameOver() && _input.UI.Submit.WasPerformedThisFrame())
+            if (controller != null)
+            {
+                if (controller.IsGameOver() && _input.UI.Submit.WasPerformedThisFrame())
+                {
+                    return true;
+                }
+            }
+            else if (_input.UI.Submit.WasPerformedThisFrame())
             {
                 return true;
             }
-        }
-        else if(_input.UI.Submit.WasPerformedThisFrame())
-        {
-            return true;
         }
         return false;
     }

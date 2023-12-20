@@ -17,7 +17,7 @@ public class SphereMove : MonoBehaviour
     //private float currentSpeed;
     // 移動情報
     // HACK たすけて！！！！！
-    private const int _borad_Height = 13 - 1;
+    private const int _borad_Height = 13 - 2;
     private Vector2Int _spherePos = new Vector2Int(3, _borad_Height);
     // 仮で戻す位置を覚えておく変数
     private Vector3 _spherePostemp;
@@ -95,7 +95,7 @@ public class SphereMove : MonoBehaviour
         //// 下左右に動かす
 
         // 下にキューブがあったら進まないようにしたい
-        bool isTestMove = false;
+        bool isSphereMove = false;
         Vector2Int checkPos = new Vector2Int(0, _borad_Height);
 
         foreach (Transform child in this.transform)
@@ -108,16 +108,15 @@ public class SphereMove : MonoBehaviour
                 checkPos = pos;
             }
             checkPos = new Vector2Int(checkPos.x, checkPos.y - (int)this.transform.position.y) + _spherePos;
-
-            isTestMove = _fieldObject.IsNextSphereY(checkPos, 0);
-            if (isTestMove)
+            isSphereMove = _fieldObject.IsNextSphereY(checkPos, 0);
+            if (isSphereMove)
             {
                 break;
             }
         }
         if (!_fieldObject.IsFieldUpdate())
         {
-            if (_timer > 60 * 1.2 && isTestMove)
+            if (_timer > 60 * 1.2 && isSphereMove)
             {
                 Installation();
             }
@@ -237,7 +236,9 @@ public class SphereMove : MonoBehaviour
     {
         if (!_fieldObject.IsGameOver())
         {
+            // 子オブジェクトの番号を取得する用に使用
             int childcount = 0;
+            // スコアを初期化する.
             _moveScore = 0;
             //_fieldObject.GetComponent<TestController>().GetInstallation(true);
             foreach (Transform child in this.transform)
@@ -261,32 +262,38 @@ public class SphereMove : MonoBehaviour
             //_spherePos = new Vector2Int(3, -10);
             // HACK 余りにも力業オブ力業.
             this.transform.position = new Vector3(0,-10,0);
+            // 再生成のフラグを立てる.
             _isReGenereteSpher = true;
-            //_fieldObject.GetComponent<TestController>().IsFieldUpdate();
-            //SphereReGenerete();
-            //_fieldObject.GetComponent<TestController>().GetInstallation(false);
         }
     }
-    // キューブの再生成.
-    public void SphereReGenerete(bool isChain,FieldData controller)
+    // スフィアを設置したときの処理.
+    public void InstallationProcess(bool isChain,FieldData controller)
     ///private void SphereReGenerete()
     {
         if (isChain && _isReGenereteSpher)
         {
             // お邪魔を落とす.
             controller.DisturbanceFall();
+            // お邪魔が落下中だったら次のスフィアを生成しない.
+            if (controller.MoveObstacleSphere()) return;
+
             controller.IsSetReset();
-            _spherePos = new Vector2Int(3, _borad_Height);
-            this.transform.position = _spherePostemp;
-            // 回転の角度をもとに戻してあげる.
-            _direction = 0;
-            SphereRotation();
-            // HACK うーん・・・とりあえず色替えはできてるけどバグが発生してるぅ
-            _colorManager.GetComponent<TestColorManager>().ColorChenge(this.gameObject.name);
-            _isReGenereteSpher = false;
+            // スフィアを再生成する.
+            SphereReGenerete();
         }
     }
-
+    // スフィアの再生成.
+    private void SphereReGenerete()
+    {
+        _spherePos = new Vector2Int(3, _borad_Height);
+        this.transform.position = _spherePostemp;
+        // 回転の角度をもとに戻してあげる.
+        _direction = 0;
+        SphereRotation();
+        // HACK うーん・・・とりあえず色替えはできてるけどバグが発生してるぅ
+        _colorManager.GetComponent<TestColorManager>().ColorChenge(this.gameObject.name);
+        _isReGenereteSpher = false;
+    }
     // ゲームオーバーだったら消す.(テスト)
     private void SphereDestory()
     {
