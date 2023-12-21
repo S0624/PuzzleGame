@@ -34,6 +34,8 @@ public class LoadSceneManager : MonoBehaviour
             }
             else
             {
+                // ネットワークは準備中なので押せないようにするよ
+                if (_select.SelectNum() == 2) return;
                 // Sceneを切り替える
                 SceneManager.LoadSceneAsync(_nextScene[_select.SelectNum()]);
             }
