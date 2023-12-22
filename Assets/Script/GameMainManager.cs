@@ -15,8 +15,10 @@ public class GameMainManager : MonoBehaviour
     // オブジェクトの取得.
     public ColorSeedCreate _seed;
     public TestColorManager _colormanager;
-    public FieldData _testController;
+    public FieldData _field;
     public SphereMove _move;
+    public PauseController _pause;
+    public LoadSceneManager _scene;
     // ゲームオーバーかどうかのフラグを取得する.
     private bool _isGameOver = false;
     // Start is called before the first frame update
@@ -29,19 +31,34 @@ public class GameMainManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        // テスト用 ゲームオーバーになったら画像を表示
-        GenereteGameOver();
-        GenereteAllClear();
-        // ゲームオーバーになったら処理を止めるよ.
-        if (_isGameOver) return;
-        // キューブの回転処理.
-        _move.SphereUpdate();
-        _move.InstallationProcess(_testController.IsChain(),_testController);
+        // ポーズ画面を開いていたら処理を止める.
+        //if (_pause.IsPause()) return;
+        if (!_pause.IsPause())
+        {
+            // テスト用 ゲームオーバーになったら画像を表示
+            GenereteGameOver();
+            GenereteAllClear();
+            // ゲームオーバーになったら処理を止めるよ.
+            if (_isGameOver) return;
+            // キューブの回転処理.
+            _move.SphereUpdate();
+            _move.InstallationProcess(_field.IsSetSphere(), _field);
+            // フィールドの更新処理.
+            _field.FieldUpdate();
+        }
+        // pauseの更新処理.
+        _pause.PauseUpdate();
+        if(_pause.IsSelectPush())
+        {
+            _scene.PauseTransitionScene();
+        }
     }
     void FixedUpdate()
     {
+        // ポーズ画面を開いていたら処理を止める.
+        if (_pause.IsPause()) return;
         // ゲームオーバーになったら処理を止めるよ.
         if (_isGameOver) return;
         // キューブの移動処理.
@@ -52,7 +69,7 @@ public class GameMainManager : MonoBehaviour
     {
         if (_gameOverTex == null)
         {
-            if (_testController.IsGameOver())
+            if (_field.IsGameOver())
             {
                 _isGameOver = true;
                 _gameOverTex = Instantiate(GameOverImg);
@@ -65,7 +82,7 @@ public class GameMainManager : MonoBehaviour
     {
         if (_allClearTex == null)
         {
-            if (_testController.FieldAllClear())
+            if (_field.FieldAllClear())
             {
                 _allClearTex = Instantiate(AllClearImg);
                 _allClearTex.transform.SetParent(Canvas.transform, false);
@@ -73,7 +90,7 @@ public class GameMainManager : MonoBehaviour
         }
         else
         {
-            if (!_testController.FieldAllClear())
+            if (!_field.FieldAllClear())
             {
                 Destroy(_allClearTex);
             }

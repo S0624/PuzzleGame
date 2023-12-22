@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameMainMatchManager : MonoBehaviour
 {
@@ -19,6 +17,8 @@ public class GameMainMatchManager : MonoBehaviour
     public FieldData[] _fieldData;
     public SphereMove[] _moveSphere;
     public TestText[] _testText;
+    public PauseController _pause;
+    public LoadSceneManager _scene;
     // お邪魔スフィアの管理用の変数.
     private int[] _obstacle = new int[2];
     private int[] _obstacleAdd = new int[2];
@@ -32,7 +32,7 @@ public class GameMainMatchManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        for(int i = 0; i < _allClearTex.Length; i++)
+        for (int i = 0; i < _allClearTex.Length; i++)
         {
             _allClearTex[i] = null;
         }
@@ -48,35 +48,61 @@ public class GameMainMatchManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // テスト用 ゲームオーバーになったら画像を表示
-        GenereteGameOver();
-        GenereteAllClear();
-        // ゲームオーバーになったら処理を止めるよ.
-        if (_isGameOver) return;
-        // スフィアの回転処理.
-        foreach (var move in _moveSphere)
+        // ポーズ画面を開いていたら処理を止める.
+        if (!_pause.IsPause())
         {
-            move.SphereUpdate();
-        }
-        for (int i = 0; i < _moveSphere.Length; i++)
-        {
-            // 動いてなかったら生成.
-            if (!_fieldData[i].MoveObstacleSphere())
+            // テスト用 ゲームオーバーになったら画像を表示
+            GenereteGameOver();
+            GenereteAllClear();
+            // ゲームオーバーになったら処理を止めるよ.
+            if (_isGameOver) return;
+            // スフィアの回転処理.
+            // キューブの移動処理.
+            for (int i = 0; i < _moveSphere.Length; i++)
             {
-                _moveSphere[i].InstallationProcess(_fieldData[i].IsChain(), _fieldData[i]);
+                // セットしていなかったらうごかせる.
+                if (!_fieldData[i].IsSetSphere())
+                {
+                    _moveSphere[i].SphereUpdate();
+                }
             }
+            for (int i = 0; i < _moveSphere.Length; i++)
+            {
+                // 動いてなかったら生成.
+                if (!_fieldData[i].MoveObstacleSphere())
+                {
+                    _moveSphere[i].InstallationProcess(_fieldData[i].IsSetSphere(), _fieldData[i]);
+                }
+            }
+            foreach (var field in _fieldData)
+            {
+                // フィールドの更新処理.
+                field.FieldUpdate();
+            }
+            // お邪魔計算.
+            ObstacleCalculation();
         }
-        // お邪魔計算.
-        ObstacleCalculation();
+        // pauseの更新処理.
+        _pause.PauseUpdate();
+        if (_pause.IsSelectPush())
+        {
+            _scene.PauseTransitionScene();
+        }
     }
     void FixedUpdate()
     {
+        // ポーズ画面を開いていたら処理を止める.
+        if (_pause.IsPause()) return;
         // ゲームオーバーになったら処理を止めるよ.
         if (_isGameOver) return;
         // キューブの移動処理.
-        foreach (var move in _moveSphere)
+        for (int i = 0; i < _moveSphere.Length; i++)
         {
-            move.FreeFallUpdate();
+            // セットしていなかったらうごかせる.
+            if (!_fieldData[i].IsSetSphere())
+            {
+                _moveSphere[i].FreeFallUpdate();
+            }
         }
     }
     // テスト用 ゲームオーバーになったら画像を表示
@@ -104,7 +130,7 @@ public class GameMainMatchManager : MonoBehaviour
             {
                 if (_fieldData[i].FieldAllClear())
                 {
-                Debug.Log("ぜんけし");
+                    Debug.Log("ぜんけし");
                     _allClearTex[i] = Instantiate(AllClearImg);
                     _allClearTex[i].transform.SetParent(_gameImgPos[i], false);
                 }
@@ -222,6 +248,6 @@ public class GameMainMatchManager : MonoBehaviour
             _testText[0].SetObstacleCount(0);
             _testText[1].SetObstacleCount(0);
         }
-    
+
     }
 }

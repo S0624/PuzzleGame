@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
-using UnityEngine.Analytics;
+﻿using UnityEngine;
 
 // コメントがないよ？
 
@@ -197,6 +193,7 @@ public class FieldData : MonoBehaviour
         // 設置したよ
         _isInstallaion = true;
         _isSetSphere = true;
+
         return true;
     }
     public bool IsDisturbanceSphere(Vector2Int pos)
@@ -226,6 +223,11 @@ public class FieldData : MonoBehaviour
         {
             return true;
         }
+        // 範囲外じゃないかチェックする.
+        if(pos.y < 0 || pos.y > _borad_Height)
+        {
+            return false;
+        }
         if (_sphere[pos.y - 1, pos.x + add] != null)
         {
             return true;
@@ -241,6 +243,12 @@ public class FieldData : MonoBehaviour
         {
             //Debug.Log("範囲外やで");
             return true;
+        }
+        // 範囲外じゃないかチェックする.
+        if (pos.x < 0 || pos.x > _borad_Width)
+        {
+            Debug.Log("範囲外");
+            return false;
         }
         if (_sphere[pos.y, pos.x + add] != null)
         {
@@ -339,6 +347,10 @@ public class FieldData : MonoBehaviour
     }
     private void Update()
     {
+        
+    }
+    public void FieldUpdate()
+    {
         _isField = IsCheckField();
         if (!_isField)
         {
@@ -368,14 +380,9 @@ public class FieldData : MonoBehaviour
             _isSetEnd = false;
             //Debug.Log("れんさしてる");
         }
-        
-        //Debug.Log("_isField:" + _isField);
-        //Debug.Log("_isSetSphere:" + _isSetSphere);
-        //Debug.Log("_isChainEnd:" + _isSetEnd);
-        _isSetSphere = false;
-        //_isInstallaion = false;
 
-        //_isSetEnd = false;
+        // 初期化する.
+        _isSetSphere = false;
     }
     // testuto 邪魔落下中は動きを止めたい
     public bool MoveObstacleSphere()
@@ -870,7 +877,7 @@ public class FieldData : MonoBehaviour
     {
         return _chainCount;
     }
-    public bool IsChain()
+    public bool IsSetSphere()
     {
         return _isSetEnd;
     }

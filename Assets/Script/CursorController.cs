@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class SelectScene : MonoBehaviour
+public class CursorController : MonoBehaviour
 {
-    // ボタンの処理をするための変数.
-    private InputManager _input;
+    // 方向の指定
+    [Header("方向の指定")] public bool _isVertical;
     // オブジェクトの位置の取得.
     public RectTransform _selecCursorImg;
     public RectTransform[] _selectModeImg;
+    // ボタンの処理をするための変数.
+    private InputManager _input;
     private Vector3 _imgPos;
     private int _selectNum = 0;
     // 一瞬だけ押したかどうか.
@@ -29,17 +31,19 @@ public class SelectScene : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         // 入力情報の取得.
         _isNowAction =_input.UI.CursorMove;
         Vector2 moveInput = _input.UI.CursorMove.ReadValue<Vector2>();
+        // 選択した方向の入力値を返す.
+        var dir = InputDirection(moveInput);
         // 左右の入力検知.
-        if (moveInput.x > 0 && _isNowAction.WasPressedThisFrame())
+        if (dir > 0 && _isNowAction.WasPressedThisFrame())
         {
             _selectNum++;
         }
-        else if (moveInput.x < 0 && _isNowAction.WasPressedThisFrame())
+        else if (dir < 0 && _isNowAction.WasPressedThisFrame())
         {
             _selectNum--;
         }
@@ -60,5 +64,19 @@ public class SelectScene : MonoBehaviour
     public int SelectNum()
     {
         return _selectNum;
+    }
+    // 選択した方向の入力値を返す.
+    private float InputDirection(Vector2 input)
+    {
+        //縦にチェックが入っていたらy方向を返す.
+        if(_isVertical)
+        {
+            return input.y;
+        }
+        // そうじゃなかったら横に移動なのでxを返す.
+        else
+        {
+            return input.x;
+        }
     }
 }
