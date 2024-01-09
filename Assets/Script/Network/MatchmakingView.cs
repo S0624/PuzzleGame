@@ -1,67 +1,138 @@
-using Photon.Pun;
+ï»¿using Photon.Pun;
 using Photon.Realtime;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MatchmakingView : MonoBehaviourPunCallbacks
 {
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒãƒ¼ãƒ ã®å–å¾—
+    public InputField _playerNameInputField = default;
+    // passwordã®å–å¾—
+    public InputField _passwordInputField = default;
+    public int _passwordLenght = 6;
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ‡ãƒ¼ã‚¿ã‚’ç®¡ç†ã™ã‚‹ãƒ•ãƒ©ã‚°
+    private bool _isPass = false;
+    private bool _isName = false;
     [SerializeField]
-    private InputField passwordInputField = default;
-    [SerializeField]
-    private Button joinRoomButton = default;
+    private Button _joinRoomButton = default;
+    // ãƒ«ãƒ¼ãƒ ã®ç®¡ç†ã«ä½¿ç”¨
+    private RoomDataList _roomList = new RoomDataList();
+    private RoomButton _roomButton = new RoomButton();
+    //private List<RoomButton> _roomDataList = new List<RoomButton>();
 
-    private CanvasGroup canvasGroup;
+    private CanvasGroup _canvasGroup;
 
     private void Start()
     {
-        canvasGroup = GetComponent<CanvasGroup>();
-        // ƒ}ƒXƒ^[ƒT[ƒo[‚ÉÚ‘±‚·‚é‚Ü‚Å‚ÍA“ü—Í‚Å‚«‚È‚¢‚æ‚¤‚É‚·‚é
-        canvasGroup.interactable = false;
+        _canvasGroup = GetComponent<CanvasGroup>();
+        // ãƒã‚¹ã‚¿ãƒ¼ã‚µãƒ¼ãƒãƒ¼ã«æ¥ç¶šã™ã‚‹ã¾ã§ã¯ã€å…¥åŠ›ã§ããªã„ã‚ˆã†ã«ã™ã‚‹
+        _canvasGroup.interactable = false;
 
-        // ƒpƒXƒ[ƒh‚ğ“ü—Í‚·‚é‘O‚ÍAƒ‹[ƒ€Q‰Áƒ{ƒ^ƒ“‚ğ‰Ÿ‚¹‚È‚¢‚æ‚¤‚É‚·‚é
-        joinRoomButton.interactable = false;
+        // ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å…¥åŠ›ã™ã‚‹å‰ã¯ã€ãƒ«ãƒ¼ãƒ å‚åŠ ãƒœã‚¿ãƒ³ã‚’æŠ¼ã›ãªã„ã‚ˆã†ã«ã™ã‚‹
+        _joinRoomButton.interactable = false;
 
-        passwordInputField.onValueChanged.AddListener(OnPasswordInputFieldValueChanged);
-        joinRoomButton.onClick.AddListener(OnJoinRoomButtonClick);
+        _playerNameInputField.onValueChanged.AddListener(OnPlayerNameInputFieldValueChanged);
+        _passwordInputField.onValueChanged.AddListener(OnPasswordInputFieldValueChanged);
+        _joinRoomButton.onClick.AddListener(OnJoinRoomButtonClick);
     }
 
     public override void OnConnectedToMaster()
     {
-        // ƒ}ƒXƒ^[ƒT[ƒo[‚ÉÚ‘±‚µ‚½‚çA“ü—Í‚Å‚«‚é‚æ‚¤‚É‚·‚é
-        canvasGroup.interactable = true;
+        // ãƒã‚¹ã‚¿ãƒ¼ã‚µãƒ¼ãƒãƒ¼ã«æ¥ç¶šã—ãŸã‚‰ã€å…¥åŠ›ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
+        _canvasGroup.interactable = true;
     }
-
+    public override void OnRoomListUpdate(List<RoomInfo> changedRoomList)
+    {
+        _roomList.Update(changedRoomList);
+        // å…¨ã¦ã®ãƒ«ãƒ¼ãƒ å‚åŠ ãƒœã‚¿ãƒ³ã®è¡¨ç¤ºã‚’æ›´æ–°ã™ã‚‹
+        //foreach (var roomButton in _roomDataList)
+        {
+            if (_roomList.TryGetRoomInfo(_roomButton._roomName, out var roomInfo))
+            {
+                _roomButton.SetPlayerCount(roomInfo.PlayerCount);
+            }
+            else
+            {
+                _roomButton.SetPlayerCount(0);
+            }
+        Debug.Log(roomInfo.PlayerCount);
+        }
+    }
+    // ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒå¿…è¦ãªæƒ…å ±ã‚’æ‰“ã¡çµ‚ã‚ã£ã¦ã„ã‚‹ã‹ã©ã†ã‹.
+    private void OnPlayerNameInputFieldValueChanged(string value)
+    {
+        // ä½•ã‹ã—ã‚‰åå‰ã‚’å…¥åŠ›ã—ãŸæ™‚ã®ã¿ã€ãƒ«ãƒ¼ãƒ å‚åŠ ãƒœã‚¿ãƒ³ã‚’æŠ¼ã›ã‚‹ã‚ˆã†ã«ã™ã‚‹
+        if ((value.Length > 0))
+        {
+            _isName = true;
+        }
+        else
+        {
+            _isName = false;
+        }
+        RoomButtonPush();
+    }
     private void OnPasswordInputFieldValueChanged(string value)
     {
-        // ƒpƒXƒ[ƒh‚ğ6Œ…“ü—Í‚µ‚½‚Ì‚İAƒ‹[ƒ€Q‰Áƒ{ƒ^ƒ“‚ğ‰Ÿ‚¹‚é‚æ‚¤‚É‚·‚é
-        joinRoomButton.interactable = (value.Length == 6);
+        // ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’6æ¡å…¥åŠ›ã—ãŸæ™‚ã®ã¿ã€ãƒ«ãƒ¼ãƒ å‚åŠ ãƒœã‚¿ãƒ³ã‚’æŠ¼ã›ã‚‹ã‚ˆã†ã«ã™ã‚‹
+        if ((value.Length == _passwordLenght))
+        {
+            _isPass = true;
+        }
+        else
+        {
+            _isPass = false;
+        }
+        RoomButtonPush();
+    }
+    // ãƒœã‚¿ãƒ³ãŒæŠ¼ã›ã‚‹ã‹ã®å‡¦ç†
+    private void RoomButtonPush()
+    {
+        bool isPush = false;
+        //foreach (var roomButton in _roomDataList)
+        {
+            //if (roomButton.IsRoomPeopleMax() && _isName && _isPass)
+            if (!_roomButton.IsRoomPeopleMax() &&  _isName && _isPass)
+            {
+                isPush = true;
+            } 
+            else
+            {
+                isPush = false;
+            }
+        }
+        _joinRoomButton.interactable = isPush;
+        // åå‰ã‚’è¨˜æ†¶ã•ã›ã‚‹
+        PhotonNetwork.NickName = _playerNameInputField.text;
     }
 
     private void OnJoinRoomButtonClick()
     {
-        // ƒ‹[ƒ€Q‰Áˆ—’†‚ÍA“ü—Í‚Å‚«‚È‚¢‚æ‚¤‚É‚·‚é
-        canvasGroup.interactable = false;
+        // ãƒ«ãƒ¼ãƒ å‚åŠ å‡¦ç†ä¸­ã¯ã€å…¥åŠ›ã§ããªã„ã‚ˆã†ã«ã™ã‚‹
+        _canvasGroup.interactable = false;
 
-        // ƒ‹[ƒ€‚ğ”ñŒöŠJ‚Éİ’è‚·‚éiV‹K‚Åƒ‹[ƒ€‚ğì¬‚·‚éê‡j
+        // ãƒ«ãƒ¼ãƒ ã‚’éå…¬é–‹ã«è¨­å®šã™ã‚‹ï¼ˆæ–°è¦ã§ãƒ«ãƒ¼ãƒ ã‚’ä½œæˆã™ã‚‹å ´åˆï¼‰
         var roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = 2;
         roomOptions.IsVisible = false;
 
-        // ƒpƒXƒ[ƒh‚Æ“¯‚¶–¼‘O‚Ìƒ‹[ƒ€‚ÉQ‰Á‚·‚éiƒ‹[ƒ€‚ª‘¶İ‚µ‚È‚¯‚ê‚Îì¬‚µ‚Ä‚©‚çQ‰Á‚·‚éj
-        PhotonNetwork.JoinOrCreateRoom(passwordInputField.text, roomOptions, TypedLobby.Default);
+        // ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã¨åŒã˜åå‰ã®ãƒ«ãƒ¼ãƒ ã«å‚åŠ ã™ã‚‹ï¼ˆãƒ«ãƒ¼ãƒ ãŒå­˜åœ¨ã—ãªã‘ã‚Œã°ä½œæˆã—ã¦ã‹ã‚‰å‚åŠ ã™ã‚‹ï¼‰
+        PhotonNetwork.JoinOrCreateRoom(_passwordInputField.text, roomOptions, TypedLobby.Default);
     }
 
     public override void OnJoinedRoom()
     {
-        // ƒ‹[ƒ€‚Ö‚ÌQ‰Á‚ª¬Œ÷‚µ‚½‚çAUI‚ğ”ñ•\¦‚É‚·‚é
+        // ãƒ«ãƒ¼ãƒ ã¸ã®å‚åŠ ãŒæˆåŠŸã—ãŸã‚‰ã€UIã‚’éè¡¨ç¤ºã«ã™ã‚‹
         gameObject.SetActive(false);
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
-        // ƒ‹[ƒ€‚Ö‚ÌQ‰Á‚ª¸”s‚µ‚½‚çAƒpƒXƒ[ƒh‚ğÄ‚Ñ“ü—Í‚Å‚«‚é‚æ‚¤‚É‚·‚é
-        passwordInputField.text = string.Empty;
-        canvasGroup.interactable = true;
+        // ãƒ«ãƒ¼ãƒ ã¸ã®å‚åŠ ãŒå¤±æ•—ã—ãŸã‚‰ã€ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’å†ã³å…¥åŠ›ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹
+        _playerNameInputField.text = string.Empty;
+        _passwordInputField.text = string.Empty;
+        _canvasGroup.interactable = true;
     }
 }
