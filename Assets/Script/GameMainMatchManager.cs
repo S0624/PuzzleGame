@@ -163,15 +163,18 @@ public class GameMainMatchManager : MonoBehaviour
         }
         // 計算するよ
         // 減らしていく処理はまだ、つまりまだこれは計算だけなの
+        Debug.Log("あぶれたひと" + _obstacleCount);
         if (_calculation)
         {
+            //Debug.Log("ここに通ってる");
             total = (_obstacle[0] - _obstacle[1]);
         }
         else
         {
+            Debug.Log("ここに通ってる");
             total = (_obstacle[0] - _obstacle[1]) + _obstacleCount;
+            _obstacleCount = 0;
         }
-        //Debug.Log(_obstacleCount + "T:" + total);
         // 最大数は30にしたいので30より多い数を送らないようにする.
         if (total > _obstacleMax)
         {
@@ -186,10 +189,11 @@ public class GameMainMatchManager : MonoBehaviour
             total = -_obstacleMax;
             _calculation = true;
         }
-        else
-        {
-            _obstacleCount = 0;
-        }
+        Debug.Log(total);
+        //else
+        //{
+        //    _obstacleCount = 0;
+        //}
 #if true
         TestObsText(total);
 #endif

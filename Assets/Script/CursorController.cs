@@ -16,6 +16,8 @@ public class CursorController : MonoBehaviour
     private int _selectNum = 0;
     // 一瞬だけ押したかどうか.
     private InputAction _isNowAction;
+    // 決定したかどうか
+    private bool _isDecision = false;
     // 最大値
     private int _selectMax = 0;
     // 最小値
@@ -38,6 +40,7 @@ public class CursorController : MonoBehaviour
         Vector2 moveInput = _input.UI.CursorMove.ReadValue<Vector2>();
         // 選択した方向の入力値を返す.
         var dir = InputDirection(moveInput);
+        if (_isDecision) return;
         // 左右の入力検知.
         if (dir > 0 && _isNowAction.WasPressedThisFrame())
         {
@@ -64,6 +67,11 @@ public class CursorController : MonoBehaviour
     public int SelectNum()
     {
         return _selectNum;
+    }
+    // 決定したかどうか
+    public void Decision(bool push)
+    {
+        _isDecision = push;
     }
     // 選択した方向の入力値を返す.
     private float InputDirection(Vector2 input)

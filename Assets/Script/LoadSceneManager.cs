@@ -14,11 +14,19 @@ public class LoadSceneManager : MonoBehaviour
     public FieldData[] _controller;
     // セレクトシーンのみで使用.
     public CursorController _select;
+    // ボタンを押したかのフラグ
+    private bool _buttonPush = false;
+    // フェードの取得.
+    private Fade _fade;
+    // フェードのフラグの取得.
+    private FadeManager _fadeManager;
     // Start is called before the first frame update
     void Start()
     {
         _input = new InputManager();
         _input.Enable();
+        _fade = GameObject.Find("FadeCanvas").GetComponent<Fade>();
+        _fadeManager = GameObject.Find("FadeManager").GetComponent<FadeManager>();
     }
 
     // Update is called once per frame
@@ -33,26 +41,39 @@ public class LoadSceneManager : MonoBehaviour
         // それ以外はしかるべき時に押したらシーンが移動します
         if (Input.GetKeyDown(KeyCode.Space) || ControllerInput())
         {
-            if (_select == null)
-            {
-                // Sceneを切り替える
-                SceneManager.LoadSceneAsync(_nextScene[0]);
-            }
-            else
-            {
-                // ネットワークは準備中なので押せないようにするよ
-                if (_select.SelectNum() == 2) return;
-                // Sceneを切り替える
-                SceneManager.LoadSceneAsync(_nextScene[_select.SelectNum()]);
-            }
-
+            _buttonPush = true;
+            _fadeManager._isFade = _buttonPush;
         }
+        if (_buttonPush)
+        {
+            SceneSwitching();
+        }
+        
+    }
+    // ボタンを押されたらシーンを切り替える処理
+    private void SceneSwitching()
+    {
+        if (_select == null)
+        {
+            // Sceneを切り替える
+            LoadScene(_nextScene[0]);
+        }
+        else
+        {
+            // ボタンを押したかどうかのフラグを渡す.
+            _select.Decision(_buttonPush);
+            // ネットワークは準備中なので押せないようにするよ
+            if (_select.SelectNum() == 2) return;
+            // Sceneを切り替える
+            LoadScene(_nextScene[_select.SelectNum()]);
+        }
+
         // 前のシーンの情報がなかったら処理を飛ばす.
         if (_prevScene == "") return;
         // 戻るボタンを押したら一個前のシーンに戻る
         if (Input.GetKeyUp(KeyCode.KeypadEnter) || _input.UI.Cancel.WasPerformedThisFrame())
         {
-            SceneManager.LoadSceneAsync(_prevScene);
+            LoadScene(_prevScene);
 
         }
     }
@@ -77,6 +98,15 @@ public class LoadSceneManager : MonoBehaviour
     // ポーズ画面からモードセレクトに戻るを押された場合の処理.
     public void PauseTransitionScene()
     {
-        SceneManager.LoadSceneAsync(_pauseScene);
+        _fadeManager._isFade = true;
+        LoadScene(_pauseScene);
+    }
+    // シーンをロードする
+    private void LoadScene(string scenename)
+    {
+        if (_fade.cutoutRange == 1.0f && _fadeManager._isFade)
+        {
+            SceneManager.LoadSceneAsync(scenename);
+        }
     }
 }
