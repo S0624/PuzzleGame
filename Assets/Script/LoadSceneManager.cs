@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 // HACK仮でシーンをつなげてるスクリプト（仮なのであとでちゃんとフラグ受け取る）
 public class LoadSceneManager : MonoBehaviour
@@ -20,13 +21,14 @@ public class LoadSceneManager : MonoBehaviour
     private Fade _fade;
     // フェードのフラグの取得.
     private FadeManager _fadeManager;
+
     // Start is called before the first frame update
     void Start()
     {
-        _input = new InputManager();
-        _input.Enable();
         _fade = GameObject.Find("FadeCanvas").GetComponent<Fade>();
         _fadeManager = GameObject.Find("FadeManager").GetComponent<FadeManager>();
+        _input = new InputManager();
+        _input.Enable();
     }
 
     // Update is called once per frame
@@ -62,8 +64,8 @@ public class LoadSceneManager : MonoBehaviour
         {
             // ボタンを押したかどうかのフラグを渡す.
             _select.Decision(_buttonPush);
-            // ネットワークは準備中なので押せないようにするよ
-            if (_select.SelectNum() == 2) return;
+            //// ネットワークは準備中なので押せないようにするよ
+            //if (_select.SelectNum() == 2) return;
             // Sceneを切り替える
             LoadScene(_nextScene[_select.SelectNum()]);
         }

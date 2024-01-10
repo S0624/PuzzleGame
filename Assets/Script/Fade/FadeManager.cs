@@ -1,20 +1,20 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class FadeManager : MonoBehaviour
 {
-    // ƒtƒF[ƒhƒLƒƒƒ“ƒoƒX‚Ìæ“¾.
+    // ãƒ•ã‚§ãƒ¼ãƒ‰ã‚­ãƒ£ãƒ³ãƒã‚¹ã®å–å¾—.
     [SerializeField] private Fade _fade;
-    // ƒtƒF[ƒh‚Ìƒtƒ‰ƒO.
+    // ãƒ•ã‚§ãƒ¼ãƒ‰ã®ãƒ•ãƒ©ã‚°.
     public bool _isFade = false;
 
-    private void FixedUpdate()
+    private void Update()
     {
-        // ‰Ÿ‚³‚ê‚Ä‚¢‚½‚çƒtƒF[ƒhƒCƒ“.
+        // æŠ¼ã•ã‚Œã¦ã„ãŸã‚‰ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³.
         if (_isFade)
         {
             _fade.FadeIn(1.0f);
         }
-        // ‰Ÿ‚³‚ê‚Ä‚¢‚È‚©‚Á‚½‚çƒtƒF[ƒhƒAƒEƒg.
+        // æŠ¼ã•ã‚Œã¦ã„ãªã‹ã£ãŸã‚‰ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆ.
         else
         {
             _fade.FadeOut(1.0f);

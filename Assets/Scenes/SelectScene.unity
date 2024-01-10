@@ -574,6 +574,7 @@ MonoBehaviour:
   _nextScene:
   - TestScene
   - TestMatchScene
+  - NetMatchWaitScene
   _prevScene: TitleScene
   _pauseScene: 
   _controller:
