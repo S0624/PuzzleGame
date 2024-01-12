@@ -14,7 +14,7 @@ public class RoomDataList : IEnumerable<RoomInfo>
         {
             if (!info.RemovedFromList)
             {
-                dictionary[info.Name] = info;
+                //dictionary[info.Name] = info;
             }
             else
             {
@@ -31,6 +31,9 @@ public class RoomDataList : IEnumerable<RoomInfo>
     // 指定したルーム名のルーム情報があれば取得する
     public bool TryGetRoomInfo(string roomName, out RoomInfo roomInfo)
     {
+        Debug.Log("OKOKOKO");
+        Debug.Log(roomName);
+        //roomName = "a";
         return dictionary.TryGetValue(roomName, out roomInfo);
     }
 
