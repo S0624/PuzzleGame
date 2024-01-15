@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviourPunCallbacks, IPunObservable
+public class UIManager : MonoBehaviourPunCallbacks//, IPunObservable
 {
     public Image _buttonImg = null;
     // ボタンの処理をするための変数.
@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviourPunCallbacks, IPunObservable
     public Sprite[] _changeSprite;
     // テキストの取得.
     public ParticipationRoom _participationRoom;
+
+    public PhotonView _view;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,25 +29,35 @@ public class UIManager : MonoBehaviourPunCallbacks, IPunObservable
     // Update is called once per frame
     private void Update()
     {
+        // 対象のキーを押した時の処理.
+        if (_input.UI.Submit.WasPerformedThisFrame() || Input.GetKeyDown("z"))
+        {
+            // ボタンのフラグを変える処理.
+            IsButtonFlagUpdate();
+            // 色を変える
+            if (_isDecisionButtonPush)
+            {
+                _buttonImg.color = Color.red;
+            }
+            else
+            {
+                _buttonImg.color = Color.white;
+            }
+        }
+        PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
         if (photonView.IsMine)
         {
-            // 対象のキーを押した時の処理.
-            if (_input.UI.Submit.WasPerformedThisFrame() || Input.GetKeyDown("z"))
-            {
-                // ボタンのフラグを変える処理.
-                IsButtonFlagUpdate();
-                // 色を変える
-                if (_isDecisionButtonPush)
-                {
-                    _buttonImg.color = Color.red;
-                }
-                else
-                {
-                    _buttonImg.color = Color.white;
-                }
-            }
-            SpeechDubbleUpdate();
+            //Debug.Log(LocalPlayer);
+            //SpeechDubbleUpdate();
+            PhotonEventOn();
+            //////////Test
+            //var players = PhotonNetwork.PlayerList;
+            //foreach (var player in players)
+            //{
+            //    Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
+            //}
         }
+
     }
     // ボタンのフラグを変える処理.
     private void IsButtonFlagUpdate()
@@ -59,10 +71,17 @@ public class UIManager : MonoBehaviourPunCallbacks, IPunObservable
             _isDecisionButtonPush = true;
         }
     }
+    // テスト実装
+    private void PhotonEventOn()
+    {
+        _view.RPC(nameof(SpeechDubbleUpdate), RpcTarget.All);
+    }
+
     // 吹き出しの画像のアップデート処理.
+    [PunRPC]
     private void SpeechDubbleUpdate()
     {
-        for(int i = 0; i < _speechDubble.Length; i++)
+        for (int i = 0; i < _speechDubble.Length; i++)
         {
             if (_participationRoom._nameText[i].text == "")
             {
@@ -70,30 +89,45 @@ public class UIManager : MonoBehaviourPunCallbacks, IPunObservable
             }
             else
             {
-                if(_isDecisionButtonPush)
-                {
-                    Debug.Log("とおってる？");
-                    _speechDubble[i].sprite = _changeSprite[2];
-                }
-                else
-                {
-                    Debug.Log("わかりません");
-                    _speechDubble[i].sprite = _changeSprite[1];
-                }
+                ChengeImg(i);
             }
         }
+        //Debug.Log(_participationRoom.photonView.Owner.NickName);
     }
-    void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    // 画像を変更する処理.
+    private void ChengeImg(int i)
     {
-        if (stream.IsWriting)
+        // リストの情報を取得
+        var players = PhotonNetwork.PlayerList;
+        // 吹き出しの画像の更新処理
+        if (players[i].GetButtonState())
         {
-            // 自身のアバターのスタミナを送信する
-            stream.SendNext(_isDecisionButtonPush);
+            Debug.Log("とおってる？");
+            _speechDubble[i].sprite = _changeSprite[2];
         }
         else
         {
-            // 他プレイヤーのアバターのスタミナを受信する
-            _isDecisionButtonPush = (bool)stream.ReceiveNext();
+            Debug.Log("わかりません");
+            _speechDubble[i].sprite = _changeSprite[1];
+        }
+
+        foreach (var player in players)
+        {
+            Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
         }
     }
+
+    //void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    //{
+    //    if (stream.IsWriting)
+    //    {
+    //        // 自身のアバターのスタミナを送信する
+    //        stream.SendNext(_isDecisionButtonPush);
+    //    }
+    //    else
+    //    {
+    //        // 他プレイヤーのアバターのスタミナを受信する
+    //        _isDecisionButtonPush = (bool)stream.ReceiveNext();
+    //    }
+    //}
 }

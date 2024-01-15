@@ -24,10 +24,6 @@ public class RoomButton : MonoBehaviour
 
     public void SetPlayerCount(int playerCount)
     {
-        Debug.Log(_roomName + "" + playerCount);
-        //label.text = $"{RoomName}\n{playerCount} / {MaxPlayers}";
-        //label.text = $"{RoomName}";
-
         // ルームが満員でない時のみ、ルーム参加ボタンを押せるようにする
         if(playerCount < _maxPlayer)
         {

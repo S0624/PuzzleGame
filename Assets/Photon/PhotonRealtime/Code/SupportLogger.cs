@@ -1,4 +1,4 @@
-// ----------------------------------------------------------------------------
+﻿// ----------------------------------------------------------------------------
 // <copyright file="SupportLogger.cs" company="Exit Games GmbH">
 //   Loadbalancing Framework for Photon - Copyright (C) 2018 Exit Games GmbH
 // </copyright>
@@ -384,7 +384,7 @@ namespace Photon.Realtime
 
         public void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
         {
-			Debug.Log(this.GetFormattedTimestamp() + " SupportLogger OnPlayerPropertiesUpdate(targetPlayer,changedProps).");
+			//Debug.Log(this.GetFormattedTimestamp() + " SupportLogger OnPlayerPropertiesUpdate(targetPlayer,changedProps).");
         }
 
         public void OnMasterClientSwitched(Player newMasterClient)

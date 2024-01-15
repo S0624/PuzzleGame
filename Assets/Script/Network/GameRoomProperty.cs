@@ -1,16 +1,20 @@
-using ExitGames.Client.Photon;
+﻿using ExitGames.Client.Photon;
 using Photon.Realtime;
+using UnityEngine;
 
 public static class GameRoomProperty
 {
-    private const string KeyStartTime = "StartTime";
+    // 時間
+    private const string _keyStartTime = "StartTime";
+    // ボタン
+    private const string _isBotton = "BottonState";
 
     private static readonly Hashtable propsToSet = new Hashtable();
 
-    // �Q�[���̊J�n�������ݒ肳��Ă���Ύ擾����
+    // ゲームの開始時刻が設定されていれば取得する
     public static bool TryGetStartTime(this Room room, out int timestamp)
     {
-        if (room.CustomProperties[KeyStartTime] is int value)
+        if (room.CustomProperties[_keyStartTime] is int value)
         {
             timestamp = value;
             return true;
@@ -22,11 +26,24 @@ public static class GameRoomProperty
         }
     }
 
-    // �Q�[���̊J�n������ݒ肷��
+    // ゲームの開始時刻を設定する
     public static void SetStartTime(this Room room, int timestamp)
     {
-        propsToSet[KeyStartTime] = timestamp;
+        propsToSet[_keyStartTime] = timestamp;
         room.SetCustomProperties(propsToSet);
+        propsToSet.Clear();
+    }
+    // プレイヤーのスコアを取得する
+    public static bool GetButtonState(this Player player)
+    {
+        return (bool)player.CustomProperties[_isBotton];
+    }
+    // ボタンを押したのかを取得する
+    public static void ButtonDown(this Player player,bool isState)
+    {
+        //propsToSet[_isBotton] = player.GetButtonState();
+        propsToSet[_isBotton] = isState;
+        player.SetCustomProperties(propsToSet);
         propsToSet.Clear();
     }
 }

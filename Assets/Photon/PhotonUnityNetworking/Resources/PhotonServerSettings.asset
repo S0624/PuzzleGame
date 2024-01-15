@@ -19,7 +19,7 @@ MonoBehaviour:
     AppIdVoice: 
     AppVersion: 1.0
     UseNameServer: 1
-    FixedRegion: jp
+    FixedRegion: 
     Server: 
     Port: 0
     ProxyServer: 
@@ -30,7 +30,7 @@ MonoBehaviour:
     NetworkLogging: 1
   DevRegion: jp
   PunLogging: 0
-  EnableSupportLogger: 1
+  EnableSupportLogger: 0
   RunInBackground: 1
   StartInOfflineMode: 0
   RpcList:
@@ -39,6 +39,8 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - PhotonEvent
+  - SpeechDubbleUpdate
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

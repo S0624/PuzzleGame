@@ -25,9 +25,6 @@ public class MatchmakingView : MonoBehaviourPunCallbacks
     // キャンバスの取得
     private CanvasGroup _canvasGroup;
 
-    // HACK テストテキストの更新
-    public TextMeshProUGUI _testText;
-
     //初期化処理
     private void Start()
     {
@@ -76,23 +73,22 @@ public class MatchmakingView : MonoBehaviourPunCallbacks
     {
         Debug.Log(changedRoomList);
         _roomList.Update(changedRoomList);
-        Debug.Log(changedRoomList.Count.ToString());
+        //Debug.Log(changedRoomList.Count.ToString());
         // 全てのルーム参加ボタンの表示を更新する
         foreach (var roomButton in _roomButton)
         {
             if (_roomList.TryGetRoomInfo(roomButton._roomName, out var roomInfo))
             {
-                Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                //Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                 roomButton.SetPlayerCount(roomInfo.PlayerCount);
             }
             else
             {
-                Debug.Log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+                //Debug.Log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
                 roomButton.SetPlayerCount(0);
             }
             //Debug.Log(roomInfo.PlayerCount);
         }
-        _testText.text = _roomButton.Count.ToString();
     }
     // プレイヤーが必要な情報を打ち終わっているかどうか.
     private void OnPlayerNameInputFieldValueChanged(string value)
@@ -153,7 +149,6 @@ public class MatchmakingView : MonoBehaviourPunCallbacks
         roomOptions.IsVisible = false;
 
         // パスワードと同じ名前のルームに参加する（ルームが存在しなければ作成してから参加する）
-        Debug.Log("aaaaaaaa");
         PhotonNetwork.JoinOrCreateRoom(_passwordInputField.text, roomOptions, TypedLobby.Default);
     }
 
