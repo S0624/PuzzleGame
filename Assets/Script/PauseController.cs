@@ -59,7 +59,7 @@ public class PauseController : MonoBehaviour
 				PauseClose();
 			}
 			// ゲームを中断しselect画面に戻る.
-			else
+			else if(selectNum == 1)
 			{
 				_isSelectScene = true;
 				// 閉じる.

@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class CursorController : MonoBehaviour
 {
     // 方向の指定
     [Header("方向の指定")] public bool _isVertical;
+    // 特定の方向だけを参照する.
+    [Header("特定の方向の指定")] public bool _isDirection;
     // オブジェクトの位置の取得.
     public RectTransform _selecCursorImg;
     public RectTransform[] _selectModeImg;
+    // オブジェクトのカラーの取得
+    public Image _image;
     // ボタンの処理をするための変数.
     private InputManager _input;
     private Vector3 _imgPos;
@@ -36,7 +41,7 @@ public class CursorController : MonoBehaviour
     private void Update()
     {
         // 入力情報の取得.
-        _isNowAction =_input.UI.CursorMove;
+        _isNowAction = _input.UI.CursorMove;
         Vector2 moveInput = _input.UI.CursorMove.ReadValue<Vector2>();
         // 選択した方向の入力値を返す.
         var dir = InputDirection(moveInput);
@@ -51,16 +56,23 @@ public class CursorController : MonoBehaviour
             _selectNum--;
         }
         // カーソルの移動制限
-        if(_selectNum < _selectMin)
+        if (_selectNum < _selectMin)
         {
             _selectNum = _selectMax;
         }
-        else if(_selectNum > _selectMax)
+        else if (_selectNum > _selectMax)
         {
             _selectNum = _selectMin;
         }
-        // 位置の更新.
-        _selecCursorImg.position = _selectModeImg[_selectNum].position;
+        if (_isDirection)
+        {
+            _selecCursorImg.position = new Vector3(_selecCursorImg.position.x, _selectModeImg[_selectNum].position.y, _selecCursorImg.position.z);
+        }
+        else
+        {
+            // 位置の更新.
+            _selecCursorImg.position = _selectModeImg[_selectNum].position;
+        }
     }
 
     // 選んでいる番号返す
@@ -68,7 +80,7 @@ public class CursorController : MonoBehaviour
     {
         return _selectNum;
     }
-    // 決定したかどうか
+    // ボタンを押したかどうか
     public void Decision(bool push)
     {
         _isDecision = push;
@@ -77,14 +89,26 @@ public class CursorController : MonoBehaviour
     private float InputDirection(Vector2 input)
     {
         //縦にチェックが入っていたらy方向を返す.
-        if(_isVertical)
+        if (_isVertical)
         {
-            return input.y;
+            return input.y * -1;
         }
         // そうじゃなかったら横に移動なのでxを返す.
         else
         {
             return input.x;
+        }
+    }
+    // 必要な時にカーソルのカラーを変える
+    public void ImageColorChenge(bool color)
+    {
+        if (color)
+        {
+            _image.color = Color.red;
+        }
+        else
+        {
+            _image.color = Color.white;
         }
     }
 }

@@ -18,6 +18,7 @@ public class GameMainManager : MonoBehaviour
     public FieldData _field;
     public SphereMove _move;
     public PauseController _pause;
+    public GameStartController _startCanvas;
     public LoadSceneManager _scene;
     // ゲームオーバーかどうかのフラグを取得する.
     private bool _isGameOver = false;
@@ -33,8 +34,13 @@ public class GameMainManager : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        // ゲームスタート画面の更新処理.
+        if (_startCanvas.IsStartCanvas())
+        {
+            _startCanvas.StartSettingUpdate();
+            return;
+        }
         // ポーズ画面を開いていたら処理を止める.
-        //if (_pause.IsPause()) return;
         if (!_pause.IsPause())
         {
             // テスト用 ゲームオーバーになったら画像を表示
@@ -50,13 +56,15 @@ public class GameMainManager : MonoBehaviour
         }
         // pauseの更新処理.
         _pause.PauseUpdate();
-        if(_pause.IsSelectPush())
+        if (_pause.IsSelectPush())
         {
             _scene.PauseTransitionScene();
         }
     }
     void FixedUpdate()
     {
+        // ゲームスタート画面の更新処理.
+        if (_startCanvas.IsStartCanvas())   return;
         // ポーズ画面を開いていたら処理を止める.
         if (_pause.IsPause()) return;
         // ゲームオーバーになったら処理を止めるよ.

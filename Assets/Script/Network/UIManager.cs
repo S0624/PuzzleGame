@@ -47,15 +47,7 @@ public class UIManager : MonoBehaviourPunCallbacks//, IPunObservable
         PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
         if (photonView.IsMine)
         {
-            //Debug.Log(LocalPlayer);
-            //SpeechDubbleUpdate();
             PhotonEventOn();
-            //////////Test
-            //var players = PhotonNetwork.PlayerList;
-            //foreach (var player in players)
-            //{
-            //    Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
-            //}
         }
 
     }
