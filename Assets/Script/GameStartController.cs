@@ -46,7 +46,7 @@ public class GameStartController : MonoBehaviour
 	{
 		_startUI.GetComponent<CursorController>().Decision(_isSetting);
 		_settingCanvas.StartSettingOpenUpdate();
-		if (_settingCanvas.IsStartCanvas()) return;
+		if (_settingCanvas.IsSettingCanvas()) return;
 
 		// pauseが開いていなかったら処理を飛ばす.
 		if (!_isStartCanvas) return;
@@ -70,7 +70,7 @@ public class GameStartController : MonoBehaviour
 				}
 			}
 		}
-		_isSetting = _settingCanvas.IsStartCanvas();
+		_isSetting = _settingCanvas.IsSettingCanvas();
 	}
 	// スタート画面を閉じる処理.
 	private void StartCanvasClose()

@@ -20,9 +20,26 @@ public class SoundManager : MonoBehaviour
     void Update()
     {
     }
+    // サウンドを鳴らす
     public void SoundPlay()
     {
         // 再生
         _audioSource.Play();
+    }
+    // サウンドを止める
+    public void SoundStop()
+    {
+        _audioSource.Stop();
+    }
+    // サウンドを変更する
+    public void SoundChenge(int soundnum)
+    {
+        SoundStop();
+        _audioSource.clip = _soundData[soundnum];
+        SoundPlay();
+    }
+    public void SoundBGMVolume(float vol)
+    {
+        _audioSource.volume = vol;
     }
 }

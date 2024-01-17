@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class CursorController : MonoBehaviour
 {
@@ -13,8 +12,6 @@ public class CursorController : MonoBehaviour
     // オブジェクトの位置の取得.
     public RectTransform _selecCursorImg;
     public RectTransform[] _selectModeImg;
-    // オブジェクトのカラーの取得
-    public Image _image;
     // ボタンの処理をするための変数.
     private InputManager _input;
     private Vector3 _imgPos;
@@ -99,16 +96,5 @@ public class CursorController : MonoBehaviour
             return input.x;
         }
     }
-    // 必要な時にカーソルのカラーを変える
-    public void ImageColorChenge(bool color)
-    {
-        if (color)
-        {
-            _image.color = Color.red;
-        }
-        else
-        {
-            _image.color = Color.white;
-        }
-    }
+
 }
