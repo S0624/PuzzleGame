@@ -14,7 +14,10 @@ public class SettingController : MonoBehaviour
 	private SettingManager _settingManager;
 	// サウンドマネージャーの取得
 	public SoundManager _soundManager;
+	// サウンド種類の最大値
 	private int _soundLength = 0;
+	// 背景の種類の最大値
+	private int _backImageMax = 0;
 	// カーソルが選んでいる番号を取得する
 	private int _cursorNum = 0;
 	// ボタンの処理をするための変数.
@@ -25,6 +28,8 @@ public class SettingController : MonoBehaviour
 	private bool _isInput = false;
 	// 選択した番号
 	private int _selectNum = 0;
+	private int _soundNum = 0;
+	private int _backNum = 0;
 	//public GameStartController _startCanvas;
 	private void Start()
 	{
@@ -60,6 +65,8 @@ public class SettingController : MonoBehaviour
 		if (_settingManager == null)
 		{
 			_settingManager = _settingUI.GetComponent<SettingManager>();
+			// 背景の最大の数を取得する
+			_backImageMax = _settingManager._backSprite.Length - 1;
 		}
 	}
 	// 開いているときの処理.
@@ -79,7 +86,8 @@ public class SettingController : MonoBehaviour
 		{
 			if (_cursorNum == 0)
 			{
-				MoveInput();
+				_soundNum = MoveInput(_soundNum,_soundLength);
+				_settingManager.SoundTextUpdate(_soundNum);
 				if (_input.UI.Submit.WasPerformedThisFrame())
 				{
 					SoundCheck();
@@ -92,7 +100,8 @@ public class SettingController : MonoBehaviour
 			}
 			else if (_cursorNum == 2)
 			{
-
+				_backNum = MoveInput(_backNum, _backImageMax);
+				_settingManager.ChengeBack(_backNum);
 			}
 		}
 
@@ -119,8 +128,9 @@ public class SettingController : MonoBehaviour
 		
 	}
 	// テスト実装
-	private void MoveInput()
+	private int MoveInput(int num, int max)
 	{
+		_selectNum = num;
 		var _isNowAction = _input.UI.CursorMove;
 		Vector2 moveInput = _input.UI.CursorMove.ReadValue<Vector2>();
 
@@ -135,13 +145,13 @@ public class SettingController : MonoBehaviour
 		}
 		if (_selectNum < 0)
 		{
-			_selectNum = _soundLength;
+			_selectNum = max;
 		}
-		else if (_selectNum > _soundLength)
+		else if (_selectNum > max)
 		{
 			_selectNum = 0;
 		}
-		_settingManager.SoundTextUpdate(_selectNum);
+		return _selectNum;
 	}
 	// 推したかどうかのチェックをする処理.
 	private void InputCheck()
