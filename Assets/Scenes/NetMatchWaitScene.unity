@@ -2147,7 +2147,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 718252157, guid: 72f29b5df8844fb4a85e60cb67458e56, type: 3}
       propertyPath: m_text
-      value: "00\u30CD\u30B31\u3042\u732B"
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 718252157, guid: 72f29b5df8844fb4a85e60cb67458e56, type: 3}
       propertyPath: m_fontAsset
@@ -2161,6 +2161,14 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1504560717, guid: 72f29b5df8844fb4a85e60cb67458e56, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 20772bc75a2586d448ddb84070856d6e, type: 2}
+    - target: {fileID: 1504560717, guid: 72f29b5df8844fb4a85e60cb67458e56, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 3699971126819447444, guid: 20772bc75a2586d448ddb84070856d6e, type: 2}
     - target: {fileID: 1959094510, guid: 72f29b5df8844fb4a85e60cb67458e56, type: 3}
       propertyPath: sceneViewId
       value: 3
