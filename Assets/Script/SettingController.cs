@@ -26,10 +26,13 @@ public class SettingController : MonoBehaviour
 	private bool _isSettingCanvas = false;
 	// 決定したかのフラグに使用
 	private bool _isInput = false;
+	private bool _isVolumeInput = false;
 	// 選択した番号
 	private int _selectNum = 0;
 	private int _soundNum = 0;
 	private int _backNum = 0;
+	private float _bgmVolume = 0;
+	private float _seVolume = 0;
 	//public GameStartController _startCanvas;
 	private void Start()
 	{
@@ -67,6 +70,11 @@ public class SettingController : MonoBehaviour
 			_settingManager = _settingUI.GetComponent<SettingManager>();
 			// 背景の最大の数を取得する
 			_backImageMax = _settingManager._backSprite.Length - 1;
+
+			_soundNum = MoveInput(_soundNum, _soundLength);
+			_settingManager.SoundTextUpdate(_soundNum);
+			_backNum = MoveInput(_backNum, _backImageMax);
+			_settingManager.ChengeBack(_backNum);
 		}
 	}
 	// 開いているときの処理.
@@ -96,7 +104,28 @@ public class SettingController : MonoBehaviour
 			// ゲームを中断しselect画面に戻る.
 			else if (_cursorNum == 1)
 			{
-				BGMVolumeChenge();
+				_settingManager.SubCursorDisplay(true);
+				if(_settingManager.SubCursorUpdate(_isVolumeInput))
+                {
+					if (_settingManager.SubCursorNum() == 0)
+					{
+						// BGMを変更させる
+						_bgmVolume = MoveInput((int)_bgmVolume, 10);
+					}
+					else if (_settingManager.SubCursorNum() == 1)
+					{
+						// BGMを変更させる
+						_seVolume = MoveInput((int)_seVolume, 10);
+					}
+					_settingManager.BGMVolumeChenge(_bgmVolume / 10);
+					_settingManager.SEVolumeChenge(_seVolume / 10);
+					BGMVolumeChenge();
+				}
+
+				if (_input.UI.Submit.WasPerformedThisFrame())
+				{
+					_isVolumeInput = true;
+				}
 			}
 			else if (_cursorNum == 2)
 			{
@@ -114,21 +143,29 @@ public class SettingController : MonoBehaviour
 				SettingCanvasClose();
 			}
 			else
-            {
+			{
 				InputCheck();
 			}
 
 		}
-		else if(_input.UI.Cancel.WasPerformedThisFrame())
-        {
-			_isInput = false;
-			_settingManager.ImageColorChenge(_isInput);
+		else if (_input.UI.Cancel.WasPerformedThisFrame())
+		{
+			if (_isVolumeInput)
+			{
+				_isVolumeInput = false;
+			}
+			else
+			{
+				_isInput = false;
+				_settingManager.ImageColorChenge(_isInput);
+				_settingManager.SubCursorDisplay();
+			}
 		}
 
 		
 	}
 	// テスト実装
-	private int MoveInput(int num, int max)
+	private int MoveInput(int num, int max, bool volFlag = false)
 	{
 		_selectNum = num;
 		var _isNowAction = _input.UI.CursorMove;
