@@ -6,7 +6,7 @@ public class SoundManager : MonoBehaviour
 {
     [Header("サウンドデータ")]
     public AudioClip[] _soundBGMData;
-    public AudioClip[] _sounSEData;
+    public AudioClip[] _soundSEData;
     public AudioSource _bgmSource;
     public AudioSource _seSource;
     //public AudioClip _audioSource;
@@ -55,11 +55,12 @@ public class SoundManager : MonoBehaviour
         _seSource.Stop();
     }
     // サウンドを変更する
-    public void SEChenge(int soundnum)
+    public void SEPlay(int soundnum)
     {
         SEStop();
-        _seSource.clip = _soundBGMData[soundnum];
+        _seSource.clip = _soundSEData[soundnum];
         SEPlay();
+        Debug.Log("なってる");
     }
     public void SoundSEVolume(float vol)
     {

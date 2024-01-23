@@ -7,9 +7,11 @@ public class GameMainMatchManager : MonoBehaviour
     [SerializeField] private GameObject GameOverImg;
     [SerializeField] private Transform[] _gameImgPos;
     [SerializeField] private GameObject AllClearImg;
+    [SerializeField] private GameObject GameWinImg;
     // Canvasを入れるよう
     [SerializeField] private GameObject Canvas;
-    private GameObject _gameOverTex = null;
+    private GameObject _gameOverImg = null;
+    private GameObject _gameWinImg = null;
     private GameObject[] _allClearTex = new GameObject[2];
     // オブジェクトの取得.
     public ColorSeedCreate _seed;
@@ -18,6 +20,7 @@ public class GameMainMatchManager : MonoBehaviour
     public SphereMove[] _moveSphere;
     public TestText[] _testText;
     public PauseController _pause;
+    public GameStartController _startCanvas;
     public LoadSceneManager _scene;
     // お邪魔スフィアの管理用の変数.
     private int[] _obstacle = new int[2];
@@ -48,12 +51,19 @@ public class GameMainMatchManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // ゲームスタート画面の更新処理.
+        if (_startCanvas.IsStartCanvas())
+        {
+            _startCanvas.StartSettingUpdate();
+            return;
+        }
         // ポーズ画面を開いていたら処理を止める.
         if (!_pause.IsPause())
         {
             // テスト用 ゲームオーバーになったら画像を表示
             GenereteGameOver();
             GenereteAllClear();
+            GenereteGameWin();
             // ゲームオーバーになったら処理を止めるよ.
             if (_isGameOver) return;
             // スフィアの回転処理.
@@ -91,6 +101,8 @@ public class GameMainMatchManager : MonoBehaviour
     }
     void FixedUpdate()
     {
+        // ゲームスタート画面の更新処理.
+        if (_startCanvas.IsStartCanvas()) return;
         // ポーズ画面を開いていたら処理を止める.
         if (_pause.IsPause()) return;
         // ゲームオーバーになったら処理を止めるよ.
@@ -108,15 +120,30 @@ public class GameMainMatchManager : MonoBehaviour
     // テスト用 ゲームオーバーになったら画像を表示
     private void GenereteGameOver()
     {
-        if (_gameOverTex == null)
+        if (_gameOverImg == null)
         {
             for (int i = 0; i < _fieldData.Length; i++)
             {
                 if (_fieldData[i].IsGameOver())
                 {
                     _isGameOver = true;
-                    _gameOverTex = Instantiate(GameOverImg);
-                    _gameOverTex.transform.SetParent(_gameImgPos[i], false);
+                    _gameOverImg = Instantiate(GameOverImg);
+                    _gameOverImg.transform.SetParent(_gameImgPos[i], false);
+                }
+            }
+        }
+    }
+    // テスト用 ゲームオーバーになってないほうにやったの画像を表示
+    private void GenereteGameWin()
+    {
+        if (_gameWinImg == null && _isGameOver)
+        {
+            for (int i = 0; i < _fieldData.Length; i++)
+            {
+                if (!_fieldData[i].IsGameOver())
+                {
+                    _gameWinImg = Instantiate(GameWinImg);
+                    _gameWinImg.transform.SetParent(_gameImgPos[i], false);
                 }
             }
         }

@@ -21,7 +21,8 @@ public class LoadSceneManager : MonoBehaviour
     private Fade _fade;
     // フェードのフラグの取得.
     private FadeManager _fadeManager;
-
+    // シーンが切り替わるときに音を鳴らすためのサウンドの取得
+    private SoundManager _soundManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,6 +30,7 @@ public class LoadSceneManager : MonoBehaviour
         _fadeManager = GameObject.Find("FadeManager").GetComponent<FadeManager>();
         _input = new InputManager();
         _input.Enable();
+        _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
 
     // Update is called once per frame
@@ -43,6 +45,8 @@ public class LoadSceneManager : MonoBehaviour
         // それ以外はしかるべき時に押したらシーンが移動します
         if (Input.GetKeyDown(KeyCode.Space) || ControllerInput())
         {
+            Debug.Log(_soundManager);
+            _soundManager.SEPlay(3);
             _buttonPush = true;
             _fadeManager._isFade = _buttonPush;
         }
@@ -58,6 +62,7 @@ public class LoadSceneManager : MonoBehaviour
         if (_select == null)
         {
             // Sceneを切り替える
+
             LoadScene(_nextScene[0]);
         }
         else
