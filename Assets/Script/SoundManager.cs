@@ -5,15 +5,15 @@ using UnityEngine;
 public class SoundManager : MonoBehaviour
 {
     [Header("サウンドデータ")]
-    public AudioClip[] _soundData;
-    private AudioSource _audioSource;
+    public AudioClip[] _soundBGMData;
+    public AudioClip[] _sounSEData;
+    public AudioSource _bgmSource;
+    public AudioSource _seSource;
     //public AudioClip _audioSource;
     // Start is called before the first frame update
     void Start()
     {
-        _audioSource = GetComponent<AudioSource>();
-        _audioSource.clip = _soundData[0];
-        SoundPlay();
+        BGMPlay();
     }
 
     // Update is called once per frame
@@ -21,25 +21,48 @@ public class SoundManager : MonoBehaviour
     {
     }
     // サウンドを鳴らす
-    public void SoundPlay()
+    public void BGMPlay()
     {
         // 再生
-        _audioSource.Play();
+        _bgmSource.Play();
     }
     // サウンドを止める
-    public void SoundStop()
+    public void BGMStop()
     {
-        _audioSource.Stop();
+        _bgmSource.Stop();
     }
     // サウンドを変更する
-    public void SoundChenge(int soundnum)
+    public void BGMChenge(int soundnum)
     {
-        SoundStop();
-        _audioSource.clip = _soundData[soundnum];
-        SoundPlay();
+        BGMStop();
+        _bgmSource.clip = _soundBGMData[soundnum];
+        BGMPlay();
     }
     public void SoundBGMVolume(float vol)
     {
-        _audioSource.volume = vol;
+        _bgmSource.volume = vol;
+    }
+
+    // SEを鳴らす
+    public void SEPlay()
+    {
+        // 再生
+        _seSource.Play();
+    }
+    // サウンドを止める
+    public void SEStop()
+    {
+        _seSource.Stop();
+    }
+    // サウンドを変更する
+    public void SEChenge(int soundnum)
+    {
+        SEStop();
+        _seSource.clip = _soundBGMData[soundnum];
+        SEPlay();
+    }
+    public void SoundSEVolume(float vol)
+    {
+        _seSource.volume = vol;
     }
 }

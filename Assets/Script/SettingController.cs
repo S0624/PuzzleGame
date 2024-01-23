@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 public class SettingController : MonoBehaviour
 {
+	private InputState _inputManager;
 	//　スタート時に表示するUIのプレハブ
 	public GameObject _settingPrefab;
 	//　スタート画面UIのインスタンス
@@ -22,6 +23,8 @@ public class SettingController : MonoBehaviour
 	private int _cursorNum = 0;
 	// ボタンの処理をするための変数.
 	private InputManager _input;
+	// 押し続けた時の処理
+	private int _inputframe = 0;
 	// スタート画面を開いているかどうか.
 	private bool _isSettingCanvas = false;
 	// 決定したかのフラグに使用
@@ -31,15 +34,16 @@ public class SettingController : MonoBehaviour
 	private int _selectNum = 0;
 	private int _soundNum = 0;
 	private int _backNum = 0;
-	private float _bgmVolume = 0;
-	private float _seVolume = 0;
+	private float _bgmVolume = 5;
+	private float _seVolume = 5;
 	//public GameStartController _startCanvas;
 	private void Start()
 	{
-		
+		_inputManager = GameObject.Find("InputManager").GetComponent<InputState>();
+        
 		_input = new InputManager();
-		_input.Enable();
-		_soundLength = _soundManager._soundData.Length - 1;
+        _input.Enable();
+        _soundLength = _soundManager._soundBGMData.Length - 1;
 	}
 
 	// スタート画面を開く処理.
@@ -71,8 +75,15 @@ public class SettingController : MonoBehaviour
 			// 背景の最大の数を取得する
 			_backImageMax = _settingManager._backSprite.Length - 1;
 
+			// サウンドのデータ取得
 			_soundNum = MoveInput(_soundNum, _soundLength);
 			_settingManager.SoundTextUpdate(_soundNum);
+
+			// BGMを変更させる
+			_bgmVolume = MoveInput((int)_bgmVolume, 10, true);
+			// SEを変更させる
+			_seVolume = MoveInput((int)_seVolume, 10, true);
+			// 背景のデータ取得
 			_backNum = MoveInput(_backNum, _backImageMax);
 			_settingManager.ChengeBack(_backNum);
 		}
@@ -80,6 +91,8 @@ public class SettingController : MonoBehaviour
 	// 開いているときの処理.
 	public void StartSettingOpenUpdate()
 	{
+		// キーの入力情報取得
+		_inputManager.GetInputPlayerPadNum();
 		// pauseが開いていなかったら処理を飛ばす.
 		if (!_isSettingCanvas) return;
 		CursorControllerData();
@@ -95,7 +108,7 @@ public class SettingController : MonoBehaviour
 			if (_cursorNum == 0)
 			{
 				_soundNum = MoveInput(_soundNum,_soundLength);
-				_settingManager.SoundTextUpdate(_soundNum);
+				
 				if (_input.UI.Submit.WasPerformedThisFrame())
 				{
 					SoundCheck();
@@ -110,16 +123,13 @@ public class SettingController : MonoBehaviour
 					if (_settingManager.SubCursorNum() == 0)
 					{
 						// BGMを変更させる
-						_bgmVolume = MoveInput((int)_bgmVolume, 10);
+						_bgmVolume = MoveInput((int)_bgmVolume, 10, true);
 					}
 					else if (_settingManager.SubCursorNum() == 1)
 					{
-						// BGMを変更させる
-						_seVolume = MoveInput((int)_seVolume, 10);
+						// SEを変更させる
+						_seVolume = MoveInput((int)_seVolume, 10,true);
 					}
-					_settingManager.BGMVolumeChenge(_bgmVolume / 10);
-					_settingManager.SEVolumeChenge(_seVolume / 10);
-					BGMVolumeChenge();
 				}
 
 				if (_input.UI.Submit.WasPerformedThisFrame())
@@ -130,9 +140,10 @@ public class SettingController : MonoBehaviour
 			else if (_cursorNum == 2)
 			{
 				_backNum = MoveInput(_backNum, _backImageMax);
-				_settingManager.ChengeBack(_backNum);
 			}
 		}
+		// 設定の更新
+		SettingDataUpdate();
 
 		// Aボタンを押したときの処理.
 		if (_input.UI.Submit.WasPerformedThisFrame())
@@ -164,49 +175,90 @@ public class SettingController : MonoBehaviour
 
 		
 	}
+	// 設定の更新
+	private void SettingDataUpdate()
+    {
+		_settingManager.SoundTextUpdate(_soundNum);
+		_settingManager.BGMVolumeChenge(_bgmVolume / 10);
+		_settingManager.SEVolumeChenge(_seVolume / 10);
+		BGMVolumeChenge();
+		_settingManager.ChengeBack(_backNum);
+	}
 	// テスト実装
 	private int MoveInput(int num, int max, bool volFlag = false)
 	{
 		_selectNum = num;
 		var _isNowAction = _input.UI.CursorMove;
-		Vector2 moveInput = _input.UI.CursorMove.ReadValue<Vector2>();
 
+		Vector2 moveInput = _inputManager.GetInputMoveDate();
+		if (_inputManager.IsMovePressed())
+		{
+			_inputframe++;
+		}
 		// 左右の入力検知.
-		if (moveInput.x > 0 && _isNowAction.WasPressedThisFrame())
+		if (moveInput.x > 0)
 		{
-			_selectNum++;
+			if (IsPressKey())
+			{
+				_selectNum++;
+				_inputframe = 0;
+			}
 		}
-		else if (moveInput.x < 0 && _isNowAction.WasPressedThisFrame())
+		else if (moveInput.x < 0)
 		{
-			_selectNum--;
+			if (IsPressKey())
+			{
+				_selectNum--;
+				_inputframe = 0;
+			}
 		}
-		if (_selectNum < 0)
+		if (volFlag)
 		{
-			_selectNum = max;
+			// ボリュームの時だけ戻すのではなく最大値以降大きくならないように
+			if (_selectNum < 0)
+			{
+				_selectNum = 0;
+			}
+			// ボリュームの時だけ戻すのではなく最小値以降小さくならないように
+			else if (_selectNum > max)
+			{
+				_selectNum = max;
+			}
 		}
-		else if (_selectNum > max)
+		else
 		{
-			_selectNum = 0;
+			if (_selectNum < 0)
+			{
+				_selectNum = max;
+			}
+			else if (_selectNum > max)
+			{
+				_selectNum = 0;
+			}
 		}
 		return _selectNum;
 	}
+	// キューブの移動状態.
+	private bool IsPressKey()
+	{
+		if (_inputframe > 10)
+		{
+			return true;
+		}
+		return false;
+	}
 	// 推したかどうかのチェックをする処理.
 	private void InputCheck()
-    {
-		//if (_isInput)
-		//{
-		//	_isInput = false;
-		//}
-		//else
-        {
-			_isInput = true;
-        }
+	{
+
+		_isInput = true;
 		_settingManager.ImageColorChenge(_isInput);
 	}
+
 	// サウンドをいじる(テスト実装)
 	private void SoundCheck()
     {
-		_soundManager.SoundChenge(_selectNum);
+		_soundManager.BGMChenge(_selectNum);
 	}
 	private void BGMVolumeChenge()
     {

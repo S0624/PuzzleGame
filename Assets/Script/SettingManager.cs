@@ -44,6 +44,7 @@ public class SettingManager : MonoBehaviour
     // サウンドの番号のテキストを変更する
     public void SoundTextUpdate(int text)
     {
+        text = text + 1;
         _soudText.text = text.ToString();
     }
     // サブカーソルを表示させるかどうか

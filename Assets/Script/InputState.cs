@@ -90,7 +90,7 @@ public class InputState : MonoBehaviour
         _rota[index,(int)state] = isRota;
     }
     // プレイヤーが触っているパッドの番号を取得する.
-    public void GetInputPlayerPadNum(int playerIndex)
+    public void GetInputPlayerPadNum(int playerIndex = 0)
     {
         _index = playerIndex;
     }
