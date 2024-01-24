@@ -24,7 +24,8 @@ public class CursorController : MonoBehaviour
     private int _selectMax = 0;
     // 最小値
     private int _selectMin = 0;
-
+    // シーンが切り替わるときに音を鳴らすためのサウンドの取得
+    private SoundManager _soundManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +33,7 @@ public class CursorController : MonoBehaviour
         _input = new InputManager();
         _input.Enable();
         _selectMax = _selectModeImg.Length - 1;
+        _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
 
     // Update is called once per frame
@@ -46,10 +48,12 @@ public class CursorController : MonoBehaviour
         // 左右の入力検知.
         if (dir > 0 && _isNowAction.WasPressedThisFrame())
         {
+            _soundManager.SEPlay(2);
             _selectNum++;
         }
         else if (dir < 0 && _isNowAction.WasPressedThisFrame())
         {
+            _soundManager.SEPlay(2);
             _selectNum--;
         }
         // カーソルの移動制限

@@ -45,7 +45,6 @@ public class LoadSceneManager : MonoBehaviour
         // それ以外はしかるべき時に押したらシーンが移動します
         if (Input.GetKeyDown(KeyCode.Space) || ControllerInput())
         {
-            Debug.Log(_soundManager);
             _soundManager.SEPlay(3);
             _buttonPush = true;
             _fadeManager._isFade = _buttonPush;

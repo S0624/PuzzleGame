@@ -148,6 +148,7 @@ public class SettingController : MonoBehaviour
 		// Aボタンを押したときの処理.
 		if (_input.UI.Submit.WasPerformedThisFrame())
 		{
+			_soundManager.SEPlay(0);
 			// ゲームに戻る.
 			if (_cursorNum == 3)
 			{
@@ -161,6 +162,7 @@ public class SettingController : MonoBehaviour
 		}
 		else if (_input.UI.Cancel.WasPerformedThisFrame())
 		{
+			_soundManager.SEPlay(5);
 			if (_isVolumeInput)
 			{
 				_isVolumeInput = false;
@@ -181,7 +183,7 @@ public class SettingController : MonoBehaviour
 		_settingManager.SoundTextUpdate(_soundNum);
 		_settingManager.BGMVolumeChenge(_bgmVolume / 10);
 		_settingManager.SEVolumeChenge(_seVolume / 10);
-		BGMVolumeChenge();
+		SoundVolumeChenge();
 		_settingManager.ChengeBack(_backNum);
 	}
 	// テスト実装
@@ -200,6 +202,7 @@ public class SettingController : MonoBehaviour
 		{
 			if (IsPressKey())
 			{
+				_soundManager.SEPlay(2);
 				_selectNum++;
 				_inputframe = 0;
 			}
@@ -208,6 +211,7 @@ public class SettingController : MonoBehaviour
 		{
 			if (IsPressKey())
 			{
+				_soundManager.SEPlay(2);
 				_selectNum--;
 				_inputframe = 0;
 			}
@@ -238,7 +242,7 @@ public class SettingController : MonoBehaviour
 		}
 		return _selectNum;
 	}
-	// キューブの移動状態.
+	//  キーの入力状態.
 	private bool IsPressKey()
 	{
 		if (_inputframe > 10)
@@ -250,7 +254,6 @@ public class SettingController : MonoBehaviour
 	// 推したかどうかのチェックをする処理.
 	private void InputCheck()
 	{
-
 		_isInput = true;
 		_settingManager.ImageColorChenge(_isInput);
 	}
@@ -260,9 +263,10 @@ public class SettingController : MonoBehaviour
     {
 		_soundManager.BGMChenge(_selectNum);
 	}
-	private void BGMVolumeChenge()
+	private void SoundVolumeChenge()
     {
 		_soundManager.SoundBGMVolume(_settingManager.BGMVolume());
+		_soundManager.SoundSEVolume(_settingManager.SEVolume());
 	}
 	// スタート画面を閉じる処理.
 	private void SettingCanvasClose()

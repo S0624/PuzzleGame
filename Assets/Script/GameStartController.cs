@@ -14,13 +14,15 @@ public class GameStartController : MonoBehaviour
 	private bool _isStartCanvas = false;
 	// 設定画面を押したかどうか.
 	private bool _isSetting = false;
-
+	// 音を鳴らすためのサウンドの取得
+	private SoundManager _soundManager;
 	public SettingController _settingCanvas;
 	private void Start()
 	{
 		_input = new InputManager();
 		_input.Enable();
 		StartSettingOpen();
+		_soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
 	}
 
 	// pauseの更新処理.
@@ -55,6 +57,7 @@ public class GameStartController : MonoBehaviour
 		// Aボタンを押したときの処理.
 		if (_input.UI.Submit.WasPerformedThisFrame())
 		{
+			_soundManager.SEPlay(0);
 			// ゲームに戻る.
 			if (selectNum == 0)
 			{

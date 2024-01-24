@@ -185,6 +185,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d301b0ac71805034ca9611b19dcbd829, type: 3}
   - {fileID: 8300000, guid: 9a0c086413eacd6409e18e46e55ce299, type: 3}
   - {fileID: 8300000, guid: 9ae12ffc2d8183f409350a2905fc4e2c, type: 3}
+  - {fileID: 8300000, guid: 0016dae8cf63c2d4699cf3a3c2a02671, type: 3}
   _bgmSource: {fileID: 3141465749802441004}
   _seSource: {fileID: 3141465751719368951}
 --- !u!1 &3141465751719368904
