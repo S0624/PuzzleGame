@@ -63,7 +63,8 @@ public class FieldData : MonoBehaviour
     private bool _isClearAll = false;
     // フィールドの処理のフラグ
     private bool _isField = false;
-
+    // サウンドの取得
+    private SoundManager _soundManager;
     // ボードの中を全消しする(クリアする).
     private void ClearAll()
     {
@@ -89,6 +90,7 @@ public class FieldData : MonoBehaviour
         _sphereDirection[(int)Direction.Up] = new Vector2Int(0, 1);
         _sphereDirection[(int)Direction.Down] = new Vector2Int(0, -1);
 
+        _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
     // 生成する.
     private void Generate()
@@ -636,6 +638,7 @@ public class FieldData : MonoBehaviour
             {
                 if (tempField[y, x] == 1)
                 {
+                    _soundManager.SEPlay(6);
                     // こわす(消す)処理.
                     if (_sphere[y, x] != null) Destroy(_sphere[y, x]);
                     // 消したときの演出.

@@ -35,7 +35,8 @@ public class SphereMove : MonoBehaviour
     private Vector2Int[] _sphereDirection = new Vector2Int[(int)Direction.max];
     // 何回ボタンを押されたかを図るために使用する変数
     private int _direction = 0;
-
+    // サウンドの取得
+    private SoundManager _soundManager;
     // Start is called before the first frame update
     // 初期化処理
     void Start()
@@ -55,6 +56,8 @@ public class SphereMove : MonoBehaviour
         _sphereDirection[(int)Direction.Left] = new Vector2Int(-1, 0);
         _sphereDirection[(int)Direction.Up] = new Vector2Int(0, 1);
         _sphereDirection[(int)Direction.Right] = new Vector2Int(1, 0);
+
+        _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
 
     // 移動や回転したときの処理.
@@ -201,6 +204,7 @@ public class SphereMove : MonoBehaviour
                 }
                 if (!_fieldObject.IsNextSphereX(checkPos, 1))
                 {
+                    _soundManager.SEPlay(4);
                     //_cubePos.x++;
                     SpherePos(1, 0);
                 }
@@ -223,6 +227,7 @@ public class SphereMove : MonoBehaviour
                 }
                 if (!_fieldObject.IsNextSphereX(checkPos, -1))
                 {
+                    _soundManager.SEPlay(4);
                     //_cubePos.x--;
                     SpherePos(-1, 0);
                 }
@@ -324,6 +329,8 @@ public class SphereMove : MonoBehaviour
         // 右回り
         if (_inputManager.GetInputRotaDate(RotaState.right))
         {
+            _soundManager.SEPlay(1);
+            
             _direction++;
             if (_direction >= 4)
             {
@@ -335,6 +342,7 @@ public class SphereMove : MonoBehaviour
         // 左まわり
         else if (_inputManager.GetInputRotaDate(RotaState.left))
         {
+            _soundManager.SEPlay(1);
             _direction--;
             if (_direction < 0)
             {
