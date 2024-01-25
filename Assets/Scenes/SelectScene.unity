@@ -1181,11 +1181,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isVertical: 0
   _isDirection: 0
-  _selecCursorImg: {fileID: 541979606}
+  _selecCursorImg: {fileID: 1743424699}
   _selectModeImg:
-  - {fileID: 149696228}
-  - {fileID: 418533751}
-  - {fileID: 65142381}
+  - {fileID: 634561540}
+  - {fileID: 554467030}
+  - {fileID: 2116324756}
 --- !u!1 &708297124
 GameObject:
   m_ObjectHideFlags: 0
@@ -2703,6 +2703,14 @@ PrefabInstance:
     - target: {fileID: 141186, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11486218, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11486218, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
+      propertyPath: cutoutRange
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22424616, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
       propertyPath: m_Pivot.x

@@ -93,7 +93,7 @@ public class GameMainManager : MonoBehaviour
             if (_field.FieldAllClear())
             {
                 _allClearTex = Instantiate(AllClearImg);
-                _allClearTex.transform.SetParent(Canvas.transform, false);
+                //_allClearTex.transform.SetParent(Canvas.transform, false);
             }
         }
         else

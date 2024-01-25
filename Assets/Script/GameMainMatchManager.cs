@@ -6,6 +6,7 @@ public class GameMainMatchManager : MonoBehaviour
     [Header("表示させる画像たち")]
     [SerializeField] private GameObject GameOverImg;
     [SerializeField] private Transform[] _gameImgPos;
+    [SerializeField] private GameObject[] _imgPos;
     [SerializeField] private GameObject AllClearImg;
     [SerializeField] private GameObject GameWinImg;
     // Canvasを入れるよう
@@ -158,8 +159,9 @@ public class GameMainMatchManager : MonoBehaviour
                 if (_fieldData[i].FieldAllClear())
                 {
                     Debug.Log("ぜんけし");
-                    _allClearTex[i] = Instantiate(AllClearImg);
-                    _allClearTex[i].transform.SetParent(_gameImgPos[i], false);
+                    _allClearTex[i] = Instantiate(AllClearImg, _imgPos[i].transform.position, Quaternion.identity);
+                    //_allClearTex[i] = Instantiate(AllClearImg, _imgPos[i].transform);
+                    //_allClearTex[i].transform.SetParent(_imgPos[i].transform, false);
                 }
             }
             else

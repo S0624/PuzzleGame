@@ -13,6 +13,7 @@ public class FieldData : MonoBehaviour
     [SerializeField] private GameObject _disturbanceSphere = default;
     [SerializeField] private GameObject _popEffect = default;
 
+
     private int[,] _board = new int[_borad_Height, _borad_Width];
     private GameObject[,] _sphere = new GameObject[_borad_Height, _borad_Width];
 
@@ -26,6 +27,7 @@ public class FieldData : MonoBehaviour
     // カラーの取得.
     public ColorTable _colorTable;
 
+    private Vector2 _erasePos;
     // 点滅周期[s]
     //[SerializeField] private float _cycle = 1;
 
@@ -638,6 +640,7 @@ public class FieldData : MonoBehaviour
             {
                 if (tempField[y, x] == 1)
                 {
+                    _erasePos = new Vector2(x, y);
                     _soundManager.SEPlay(6);
                     // こわす(消す)処理.
                     if (_sphere[y, x] != null) Destroy(_sphere[y, x]);
@@ -817,16 +820,6 @@ public class FieldData : MonoBehaviour
             rotaPos = -direction;
             return rotaPos;
         }
-        //if (_Cube[pos.y, pos.x + 1] != null)
-        //{
-        //    //Debug.Log("こんにちわ、0より小さいわよ");
-        //    return -1;
-        //}
-        //if (_Cube[pos.y, pos.x - 1] != null)
-        //{
-        //    //Debug.Log("こんにちわ、最大値より大きいわよ");
-        //    return 1;
-        //}
         // なにもなければ0でいいわよ
         return rotaPos;
     }
@@ -904,5 +897,10 @@ public class FieldData : MonoBehaviour
             return true;
         }
         return false;
+    }
+    public Vector2 ErasePos()
+    {
+        Vector3 world_position = transform.position + new Vector3(_erasePos.x, _erasePos.y, 0.0f);
+        return world_position;
     }
 }
