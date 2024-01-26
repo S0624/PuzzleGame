@@ -269,7 +269,7 @@ public class SettingController : MonoBehaviour
 		_soundManager.SoundSEVolume(_settingManager.SEVolume());
 	}
 	// スタート画面を閉じる処理.
-	private void SettingCanvasClose()
+	public void SettingCanvasClose()
 	{
 		// フラグの初期化.
 		_isSettingCanvas = false;

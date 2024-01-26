@@ -900,7 +900,23 @@ public class FieldData : MonoBehaviour
     }
     public Vector2 ErasePos()
     {
-        Vector3 world_position = transform.position + new Vector3(_erasePos.x, _erasePos.y, 0.0f);
+        Vector2 pos = _erasePos;
+        pos.x = RangeCheck((int)_erasePos.x,_borad_Width);
+        pos.y = RangeCheck((int)_erasePos.y,_borad_Height);
+
+        Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
         return world_position;
+    }
+    public int RangeCheck(int pos,int max)
+    {
+        if(pos < 2)
+        {
+            pos = 2;
+        }
+        else if(pos > max - 2)
+        {
+            pos = max - 2;
+        }
+        return pos;
     }
 }

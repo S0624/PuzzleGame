@@ -11,6 +11,9 @@ public class PauseController : MonoBehaviour
 	private bool _isPause = false;
 	// モードセレクトに戻るを押されたかどうか.
 	private bool _isSelectScene = false;
+	// 設定画面を押したかどうか.
+	private bool _isSetting = false;
+	public SettingController _settingCanvas;
 	private void Start()
 	{
 		_input = new InputManager();
@@ -39,6 +42,7 @@ public class PauseController : MonoBehaviour
 			// もう一回押したら閉じる.
 			else
 			{
+				_settingCanvas.SettingCanvasClose();
 				PauseClose();
 			}
 		}
@@ -48,6 +52,9 @@ public class PauseController : MonoBehaviour
 	{
 		// pauseが開いていなかったら処理を飛ばす.
 		if (!_isPause) return;
+		_pauseUI.GetComponent<CursorController>().Decision(_isSetting);
+		_settingCanvas.StartSettingOpenUpdate();
+		if (_settingCanvas.IsSettingCanvas()) return;
 		// えらんでいる番号を取得する.
 		var selectNum = _pauseUI.GetComponent<CursorController>().SelectNum();
 		// Aボタンを押したときの処理.
@@ -66,6 +73,15 @@ public class PauseController : MonoBehaviour
 				PauseClose();
 				//Debug.Log("しーんいこうするよ");
 			}
+			else
+            {
+				if (!_isSetting)
+				{
+					_settingCanvas.StartSettingOpen();
+					_isSetting = true;
+				}
+			}
+			_isSetting = _settingCanvas.IsSettingCanvas();
 		}
 	}
 	// ポーズ画面を閉じる処理.

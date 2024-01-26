@@ -10,7 +10,7 @@ public class SettingManager : MonoBehaviour
     public GameObject _subCursor;
     public Image _subCursorImage;
     public Image _backMinImge;
-    private Image _backImge;
+    private SpriteRenderer _backImge;
     // テキストの取得
     public Text _soudText = null;
     // サウンドのvolumeの取得
@@ -21,7 +21,7 @@ public class SettingManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _backImge = GameObject.Find("Back").GetComponent<Image>();
+        _backImge = GameObject.Find("BackImage").GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -93,6 +93,14 @@ public class SettingManager : MonoBehaviour
     // 背景を変更する.
     public void ChengeBack(int backnum)
     {
+        if(backnum != 0 && backnum != 1)
+        {
+            _backImge.transform.localScale = new Vector3(3, 3, 3);
+        }
+        else
+        {
+            _backImge.transform.localScale = new Vector3(2, 2, 2);
+        }
         _backMinImge.sprite = _backSprite[backnum];
         _backImge.sprite = _backSprite[backnum];
     }

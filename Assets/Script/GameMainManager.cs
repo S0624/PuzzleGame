@@ -6,10 +6,12 @@ public class GameMainManager : MonoBehaviour
 {
     // 画像をいれる
     [Header("表示させる画像たち")]
+    [SerializeField] private GameObject _GameStartImg;
     [SerializeField] private GameObject GameOverImg;
     [SerializeField] private GameObject AllClearImg;
     // Canvasを入れるよう
     [SerializeField] private GameObject Canvas;
+    private GameObject _gameStartText = null;
     private GameObject _gameOverTex = null;
     private GameObject _allClearTex = null;
     // オブジェクトの取得.
@@ -20,6 +22,7 @@ public class GameMainManager : MonoBehaviour
     public PauseController _pause;
     public GameStartController _startCanvas;
     public LoadSceneManager _scene;
+    public CreateFish _fish;
     // ゲームオーバーかどうかのフラグを取得する.
     private bool _isGameOver = false;
     // Start is called before the first frame update
@@ -40,12 +43,14 @@ public class GameMainManager : MonoBehaviour
             _startCanvas.StartSettingUpdate();
             return;
         }
+        GenereteGameStart();
         // ポーズ画面を開いていたら処理を止める.
         if (!_pause.IsPause())
         {
             // テスト用 ゲームオーバーになったら画像を表示
             GenereteGameOver();
             GenereteAllClear();
+            _fish.FishUpdate();
             // ゲームオーバーになったら処理を止めるよ.
             if (_isGameOver) return;
             // キューブの回転処理.
@@ -73,6 +78,17 @@ public class GameMainManager : MonoBehaviour
         _move.FreeFallUpdate();
     }
     // テスト用 ゲームオーバーになったら画像を表示
+    private void GenereteGameStart()
+    {
+        if (_gameStartText == null)
+        {
+            //if (_field.IsGameOver())
+            {
+                _gameStartText = Instantiate(_GameStartImg);
+            }
+            if (!_gameStartText.GetComponent<CountdowController>()._isGoText) return;
+        }
+    }
     private void GenereteGameOver()
     {
         if (_gameOverTex == null)
