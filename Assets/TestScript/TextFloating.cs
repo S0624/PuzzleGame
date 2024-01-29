@@ -4,15 +4,15 @@ using UnityEngine;
 // オブジェクトをふわふわさせる用のscript.
 public class TextFloating : MonoBehaviour
 {
-    private RectTransform _textTransform;
+    private Transform _textTransform;
     private float _startMyPos;
     //private float _myPos;
-    public int _limitPos;
+    public float _limitPos;
     public float _floatingPos = 0.5f;
     // Start is called before the first frame update
     void Start()
     {
-        _textTransform = GetComponent<RectTransform>();
+        _textTransform = GetComponent<Transform>();
         _startMyPos = _textTransform.position.y;
         //_myPos = _textTransform.position.y;
     }

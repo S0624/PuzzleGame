@@ -41,23 +41,24 @@ public class SphereMove : MonoBehaviour
     // 初期化処理
     void Start()
     {
-        //_colorManager = GameObject.Find("ColorManager");
-        //this.transform.position = transform.position + new Vector3(_cubePos.x, _cubePos.y, 0);
+        //SphereInit();
+
+        _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+    }
+    // キューブの初期化処理.
+    public void SphereInit()
+    {
         this.transform.position = Vector3.zero;
         // 自分のポジションから
         // これをしないといろんな位置に行ってしまうので、フィールドに合わせてキューブの位置を初期化する
-        this.transform.position = transform.position +transform.position + _fieldObject.fieldPos(_spherePos);
-        
-        //this.transform.position = new Vector3(_cubePos.x, _cubePos.y, 0);
+        this.transform.position = transform.position + transform.position + _fieldObject.fieldPos(_spherePos);
+
         _spherePostemp = this.transform.position;
 
-        //_testField.GetComponent<TestController>().IsSetCube(_testPos,0);
         _sphereDirection[(int)Direction.Down] = new Vector2Int(0, -1);
         _sphereDirection[(int)Direction.Left] = new Vector2Int(-1, 0);
         _sphereDirection[(int)Direction.Up] = new Vector2Int(0, 1);
         _sphereDirection[(int)Direction.Right] = new Vector2Int(1, 0);
-
-        _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
 
     // 移動や回転したときの処理.
@@ -70,7 +71,7 @@ public class SphereMove : MonoBehaviour
         // 下左右に動かす
         if (!_fieldObject.IsGameOver())
         {
-            // HACK こいつが悪さをしている
+            // フィールドの情報の更新処理.
             if (!_fieldObject.IsFieldUpdate())
             {
                 MoveState();

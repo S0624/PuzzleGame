@@ -23,6 +23,9 @@ public class GameMainManager : MonoBehaviour
     public GameStartController _startCanvas;
     public LoadSceneManager _scene;
     public CreateFish _fish;
+    // ゲームスタートの時のテキストを表示させたかどうかのフラグを取得する
+    private bool _isGameStartText = false;
+    private bool _isStartInit = false;
     // ゲームオーバーかどうかのフラグを取得する.
     private bool _isGameOver = false;
     // Start is called before the first frame update
@@ -43,7 +46,7 @@ public class GameMainManager : MonoBehaviour
             _startCanvas.StartSettingUpdate();
             return;
         }
-        GenereteGameStart();
+        if (GenereteGameStart()) return;
         // ポーズ画面を開いていたら処理を止める.
         if (!_pause.IsPause())
         {
@@ -70,6 +73,7 @@ public class GameMainManager : MonoBehaviour
     {
         // ゲームスタート画面の更新処理.
         if (_startCanvas.IsStartCanvas())   return;
+        if(GenereteGameStart()) return;
         // ポーズ画面を開いていたら処理を止める.
         if (_pause.IsPause()) return;
         // ゲームオーバーになったら処理を止めるよ.
@@ -77,17 +81,28 @@ public class GameMainManager : MonoBehaviour
         // キューブの移動処理.
         _move.FreeFallUpdate();
     }
-    // テスト用 ゲームオーバーになったら画像を表示
-    private void GenereteGameStart()
+    // ゲーム開始時に画像を表示
+    private bool GenereteGameStart()
     {
-        if (_gameStartText == null)
+        if (!_isGameStartText)
         {
-            //if (_field.IsGameOver())
-            {
-                _gameStartText = Instantiate(_GameStartImg);
-            }
-            if (!_gameStartText.GetComponent<CountdowController>()._isGoText) return;
+            _gameStartText = Instantiate(_GameStartImg);
+            _isGameStartText = true;
         }
+        if (_gameStartText)
+        {
+            return true;
+        }
+        else
+        {
+            if (!_isStartInit)
+            {
+                // 一回だけ初期化処理を行うよ
+                _move.SphereInit();
+                _isStartInit = true;
+            }
+        }
+        return false;
     }
     private void GenereteGameOver()
     {

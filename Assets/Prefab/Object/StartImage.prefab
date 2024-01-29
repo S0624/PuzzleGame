@@ -101,4 +101,3 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 7d1bdc9ab5d9c3345930d54b0a5eff5b, type: 3}
   - {fileID: 21300000, guid: 2c8f0121b31e15d4d8fe0031effc052f, type: 3}
   _renderer: {fileID: 1619330537628170839}
-  _isGoText: 0
