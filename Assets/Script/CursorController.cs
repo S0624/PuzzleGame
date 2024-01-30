@@ -48,12 +48,12 @@ public class CursorController : MonoBehaviour
         // 左右の入力検知.
         if (dir > 0 && _isNowAction.WasPressedThisFrame())
         {
-            _soundManager.SEPlay(2);
+            _soundManager.SEPlay(SoundSEData.Select);
             _selectNum++;
         }
         else if (dir < 0 && _isNowAction.WasPressedThisFrame())
         {
-            _soundManager.SEPlay(2);
+            _soundManager.SEPlay(SoundSEData.Select);
             _selectNum--;
         }
         // カーソルの移動制限

@@ -281,7 +281,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: f2763601e277fe34db4aec03c139f572, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1146405f5e68b6149829e3846ff3f769, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -362,6 +362,8 @@ MonoBehaviour:
   _controller:
   - {fileID: 0}
   _select: {fileID: 0}
+  _canvas: {fileID: 0}
+  _warning: {fileID: 0}
 --- !u!4 &309696738
 Transform:
   m_ObjectHideFlags: 0
@@ -722,6 +724,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3141465749802441004, guid: 8ae93063e7f4b6a4c9375647122220e0, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 38dbc40701903994faaccbb8d735e956, type: 3}
     - target: {fileID: 3141465749859245892, guid: 8ae93063e7f4b6a4c9375647122220e0, type: 3}
       propertyPath: m_RootOrder
       value: 7

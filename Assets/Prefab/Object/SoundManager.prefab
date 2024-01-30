@@ -188,6 +188,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 0016dae8cf63c2d4699cf3a3c2a02671, type: 3}
   - {fileID: 8300000, guid: dc2ad529043a7f74cacc25d2087e3c09, type: 3}
   - {fileID: 8300000, guid: e37a21d005e26884083f7acbe8f9f1dc, type: 3}
+  - {fileID: 8300000, guid: 7b39a9a950157f54d85f4f4446f08c12, type: 3}
+  - {fileID: 8300000, guid: cca9e9dfee42d0b4ebda10576a199b1e, type: 3}
+  - {fileID: 8300000, guid: b2c68ccb68e7bd345bf34966e8cf26a1, type: 3}
+  - {fileID: 8300000, guid: ff184077c2c83144cad41225c40331e7, type: 3}
   _bgmSource: {fileID: 3141465749802441004}
   _seSource: {fileID: 3141465751719368951}
 --- !u!1 &3141465751719368904

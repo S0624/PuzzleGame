@@ -162,7 +162,7 @@ public class SettingController : MonoBehaviour
 		}
 		else if (_input.UI.Cancel.WasPerformedThisFrame())
 		{
-			_soundManager.SEPlay(5);
+			_soundManager.SEPlay(SoundSEData.CancelSE);
 			if (_isVolumeInput)
 			{
 				_isVolumeInput = false;
@@ -202,7 +202,7 @@ public class SettingController : MonoBehaviour
 		{
 			if (IsPressKey())
 			{
-				_soundManager.SEPlay(2);
+				_soundManager.SEPlay(SoundSEData.Select);
 				_selectNum++;
 				_inputframe = 0;
 			}
@@ -211,7 +211,7 @@ public class SettingController : MonoBehaviour
 		{
 			if (IsPressKey())
 			{
-				_soundManager.SEPlay(2);
+				_soundManager.SEPlay(SoundSEData.Select);
 				_selectNum--;
 				_inputframe = 0;
 			}
@@ -260,8 +260,8 @@ public class SettingController : MonoBehaviour
 
 	// サウンドをいじる(テスト実装)
 	private void SoundCheck()
-    {
-		_soundManager.BGMChenge(_selectNum);
+    {			
+		_soundManager.BGMChenge((SoundBGMData)_selectNum);
 	}
 	private void SoundVolumeChenge()
     {

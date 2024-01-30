@@ -641,7 +641,7 @@ public class FieldData : MonoBehaviour
                 if (tempField[y, x] == 1)
                 {
                     _erasePos = new Vector2(x, y);
-                    _soundManager.SEPlay(6);
+                    _soundManager.SEPlay(SoundSEData.EraseSE);
                     // こわす(消す)処理.
                     if (_sphere[y, x] != null) Destroy(_sphere[y, x]);
                     // 消したときの演出.

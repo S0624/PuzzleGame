@@ -6,7 +6,7 @@ using UnityEngine.Analytics;
 
 // コメントがないよ？
 
-public class TestController : MonoBehaviour
+public class FieldController : MonoBehaviour
 {
     // ボードの横の最大値(6 * 13).
     private const int _borad_Width = 6;

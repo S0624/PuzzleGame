@@ -4,6 +4,7 @@ public class GameMainMatchManager : MonoBehaviour
 {
     // 画像をいれる
     [Header("表示させる画像たち")]
+    [SerializeField] private GameObject _GameStartImg;
     [SerializeField] private GameObject GameOverImg;
     [SerializeField] private Transform[] _gameImgPos;
     [SerializeField] private GameObject[] _imgPos;
@@ -11,6 +12,7 @@ public class GameMainMatchManager : MonoBehaviour
     [SerializeField] private GameObject GameWinImg;
     // Canvasを入れるよう
     [SerializeField] private GameObject Canvas;
+    private GameObject _gameStartText = null;
     private GameObject _gameOverImg = null;
     private GameObject _gameWinImg = null;
     private GameObject[] _allClearTex = new GameObject[2];
@@ -23,6 +25,10 @@ public class GameMainMatchManager : MonoBehaviour
     public PauseController _pause;
     public GameStartController _startCanvas;
     public LoadSceneManager _scene;
+    public CreateFish _fish;
+    // ゲームスタートの時のテキストを表示させたかどうかのフラグを取得する
+    private bool _isStartInit = false;
+    private bool _isGameStartText = false;
     // お邪魔スフィアの管理用の変数.
     private int[] _obstacle = new int[2];
     private int[] _obstacleAdd = new int[2];
@@ -32,7 +38,9 @@ public class GameMainMatchManager : MonoBehaviour
     private bool _calculation = false;
     // ゲームオーバーかどうかのフラグを取得する.
     private bool _isGameOver = false;
-    //public TestMove _rightMove;
+    // サウンドマネージャーの取得
+    private SoundManager _soundManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,6 +55,7 @@ public class GameMainMatchManager : MonoBehaviour
             col.InitObjectName();
             col.ColorRandam();
         }
+        _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
 
     // Update is called once per frame
@@ -58,12 +67,14 @@ public class GameMainMatchManager : MonoBehaviour
             _startCanvas.StartSettingUpdate();
             return;
         }
+        if (GenereteGameStart()) return;
         // ポーズ画面を開いていたら処理を止める.
         if (!_pause.IsPause())
         {
             // テスト用 ゲームオーバーになったら画像を表示
             GenereteGameOver();
             GenereteAllClear();
+            _fish.FishUpdate();
             GenereteGameWin();
             // ゲームオーバーになったら処理を止めるよ.
             if (_isGameOver) return;
@@ -104,6 +115,7 @@ public class GameMainMatchManager : MonoBehaviour
     {
         // ゲームスタート画面の更新処理.
         if (_startCanvas.IsStartCanvas()) return;
+        if (GenereteGameStart()) return;
         // ポーズ画面を開いていたら処理を止める.
         if (_pause.IsPause()) return;
         // ゲームオーバーになったら処理を止めるよ.
@@ -117,6 +129,32 @@ public class GameMainMatchManager : MonoBehaviour
                 _moveSphere[i].FreeFallUpdate();
             }
         }
+    }
+    // ゲーム開始時に画像を表示
+    private bool GenereteGameStart()
+    {
+        if (!_isGameStartText)
+        {
+            _gameStartText = Instantiate(_GameStartImg);
+            _isGameStartText = true;
+        }
+        if (_gameStartText)
+        {
+            return true;
+        }
+        else
+        {
+            if (!_isStartInit)
+            {
+                // 一回だけ初期化処理を行うよ
+                foreach (var move in _moveSphere)
+                {
+                    move.SphereInit();
+                }
+                _isStartInit = true;
+            }
+        }
+        return false;
     }
     // テスト用 ゲームオーバーになったら画像を表示
     private void GenereteGameOver()
@@ -158,6 +196,7 @@ public class GameMainMatchManager : MonoBehaviour
             {
                 if (_fieldData[i].FieldAllClear())
                 {
+                    _soundManager.SEPlay(SoundSEData.AllClear);
                     Debug.Log("ぜんけし");
                     _allClearTex[i] = Instantiate(AllClearImg, _imgPos[i].transform.position, Quaternion.identity);
                     //_allClearTex[i] = Instantiate(AllClearImg, _imgPos[i].transform);

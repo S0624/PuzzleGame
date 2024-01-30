@@ -205,7 +205,7 @@ public class SphereMove : MonoBehaviour
                 }
                 if (!_fieldObject.IsNextSphereX(checkPos, 1))
                 {
-                    _soundManager.SEPlay(4);
+                    _soundManager.SEPlay(SoundSEData.MoveSE);
                     //_cubePos.x++;
                     SpherePos(1, 0);
                 }
@@ -228,7 +228,7 @@ public class SphereMove : MonoBehaviour
                 }
                 if (!_fieldObject.IsNextSphereX(checkPos, -1))
                 {
-                    _soundManager.SEPlay(4);
+                    _soundManager.SEPlay(SoundSEData.MoveSE);
                     //_cubePos.x--;
                     SpherePos(-1, 0);
                 }
@@ -330,7 +330,7 @@ public class SphereMove : MonoBehaviour
         // 右回り
         if (_inputManager.GetInputRotaDate(RotaState.right))
         {
-            _soundManager.SEPlay(1);
+            _soundManager.SEPlay(SoundSEData.Rota);
             
             _direction++;
             if (_direction >= 4)
@@ -343,7 +343,7 @@ public class SphereMove : MonoBehaviour
         // 左まわり
         else if (_inputManager.GetInputRotaDate(RotaState.left))
         {
-            _soundManager.SEPlay(1);
+            _soundManager.SEPlay(SoundSEData.Rota);
             _direction--;
             if (_direction < 0)
             {

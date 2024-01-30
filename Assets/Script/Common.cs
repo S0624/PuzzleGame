@@ -33,6 +33,29 @@ public struct ColorArray
     public int downColor;
 }
 
+public enum SoundBGMData
+{
+    BGM,
+    BGM1,
+    BGM2,
+    TitleBGM,
+    SelectBGM,
+}
+public enum SoundSEData
+{
+    Push,
+    Rota,
+    Select,
+    TitlePushSE,
+    MoveSE,
+    CancelSE,
+    EraseSE,
+    Ready,
+    Go,
+    AllClear,
+    GameOver,
+}
+
 
 public class Common : MonoBehaviour
 {

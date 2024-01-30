@@ -32,11 +32,24 @@ public class SoundManager : MonoBehaviour
         _bgmSource.Stop();
     }
     // サウンドを変更する
-    public void BGMChenge(int soundnum)
+    public void BGMChenge(SoundBGMData soundnum)
     {
         BGMStop();
-        _bgmSource.clip = _soundBGMData[soundnum];
+        var bgm = BGMDataCheck(soundnum);
+        _bgmSource.clip = _soundBGMData[bgm];
         BGMPlay();
+    }
+    // SEデータのチェック
+    public int BGMDataCheck(SoundBGMData bgmnum)
+    {
+        for (int i = 0; i < _soundBGMData.Length; i++)
+        {
+            if (_soundBGMData[i].name == bgmnum.ToString())
+            {
+                return i;
+            }
+        }
+        return -1;
     }
     public void SoundBGMVolume(float vol)
     {
@@ -54,14 +67,28 @@ public class SoundManager : MonoBehaviour
     {
         _seSource.Stop();
     }
-    // サウンドを変更する
-    public void SEPlay(int soundnum)
+    // SEサウンドを鳴らす
+    public void SEPlay(SoundSEData soundnum)
     {
         SEStop();
-        _seSource.clip = _soundSEData[soundnum];
+        var se = SEDataCheck(soundnum);
+        _seSource.clip = _soundSEData[se];
         SEPlay();
         Debug.Log("なってる");
     }
+    // SEデータのチェック
+    public int SEDataCheck(SoundSEData senum)
+    {
+        for(int i = 0; i < _soundSEData.Length; i++)
+        {
+            if( _soundSEData[i].name == senum.ToString())
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     public void SoundSEVolume(float vol)
     {
         _seSource.volume = vol;

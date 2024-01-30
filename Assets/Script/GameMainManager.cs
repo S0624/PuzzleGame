@@ -28,6 +28,8 @@ public class GameMainManager : MonoBehaviour
     private bool _isStartInit = false;
     // ゲームオーバーかどうかのフラグを取得する.
     private bool _isGameOver = false;
+    // サウンドマネージャーの取得
+    private SoundManager _soundManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,6 +37,7 @@ public class GameMainManager : MonoBehaviour
         _colormanager.SetColorSeed(_seed);
         _colormanager.InitObjectName();
         _colormanager.ColorRandam();
+        _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
 
     // Update is called once per frame
@@ -110,6 +113,7 @@ public class GameMainManager : MonoBehaviour
         {
             if (_field.IsGameOver())
             {
+                _soundManager.SEPlay(SoundSEData.GameOver);
                 _isGameOver = true;
                 _gameOverTex = Instantiate(GameOverImg);
                 _gameOverTex.transform.SetParent(Canvas.transform, false);
@@ -123,6 +127,7 @@ public class GameMainManager : MonoBehaviour
         {
             if (_field.FieldAllClear())
             {
+                _soundManager.SEPlay(SoundSEData.AllClear);
                 _allClearTex = Instantiate(AllClearImg);
                 //_allClearTex.transform.SetParent(Canvas.transform, false);
             }

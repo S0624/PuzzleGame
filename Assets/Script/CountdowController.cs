@@ -20,6 +20,8 @@ public class CountdowController : MonoBehaviour
     private int _timerMax = 30;
     // HACK テスト実装 スケールの取得
     private bool _isScaleMin = false;
+    // サウンドマネージャーの取得
+    private SoundManager _soundManager;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +34,8 @@ public class CountdowController : MonoBehaviour
         //_gameObject.transform.DORotate(new Vector3(0, 180.0f, 0), 2.0f).SetEase(Ease.InOutQuad);
         //_gameObject.transform.DORotate(new Vector3(0, -10.0f, 0), 2.0f).SetEase(Ease.InOutQuad);
 
+        _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+        _soundManager.SEPlay(SoundSEData.Ready);
     }
 
     // Update is called once per frame
@@ -78,6 +82,7 @@ public class CountdowController : MonoBehaviour
     {
         if (_gameObject.transform.localScale.x == 0)
         {
+            _soundManager.SEPlay(SoundSEData.Go);
             // 画像の大きさをもとに戻す処理.
             _isScaleMin = true;
             // 画像の種類変更
