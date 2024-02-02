@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,18 +7,18 @@ using UnityEngine.UI;
 public class SettingManager : MonoBehaviour
 {
     // オブジェクトの取得
-    public Image _cursorImage;
-    public GameObject _subCursor;
-    public Image _subCursorImage;
+    //public Image _cursorImage;
+    // 背景の取得
     public Image _backMinImge;
     private SpriteRenderer _backImge;
     // テキストの取得
-    public Text _soudText = null;
+    public ImageTextUpdate _soundText;
     // サウンドのvolumeの取得
     [Header("ボリューム関係")]
     public Slider[] _soundVol;
     // 背景の取得
     public Sprite[] _backSprite;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,48 +29,27 @@ public class SettingManager : MonoBehaviour
     void Update()
     {
         //_backImge.sprite = "";
+
     }
-    // 必要な時にカーソルのカラーを変える
-    public void ImageColorChenge(bool color)
-    {
-        if (color)
-        {
-            _cursorImage.color = Color.red;
-        }
-        else
-        {
-            _cursorImage.color = Color.white;
-        }
-    }
+    //// 必要な時にカーソルのカラーを変える
+    //public void ImageColorChenge(bool color)
+    //{
+    //    if (color)
+    //    {
+    //        _cursorImage.color = Color.red;
+    //    }
+    //    else
+    //    {
+    //        _cursorImage.color = Color.white;
+    //    }
+    //}
     // サウンドの番号のテキストを変更する
-    public void SoundTextUpdate(int text)
+    public void SoundImageUpdate(int image)
     {
-        text = text + 1;
-        _soudText.text = text.ToString();
+        image = image + 1;
+        _soundText.UIImageUpdate(image);
     }
-    // サブカーソルを表示させるかどうか
-    public void SubCursorDisplay(bool active = false)
-    {
-        _subCursor.SetActive(active);
-    }
-    // サブカーソルの更新処理.
-    public bool SubCursorUpdate(bool color)
-    {
-        _subCursor.GetComponent<CursorController>().Decision(color);
-        if (color)
-        {
-            _subCursorImage.color = Color.red;
-        }
-        else
-        {
-            _subCursorImage.color = Color.white;
-        }
-        return color;
-    }
-    public int SubCursorNum()
-    {
-        return _subCursor.GetComponent<CursorController>().SelectNum();
-    }
+
     // 音量を変更する
     public void BGMVolumeChenge(float vol)
     {
@@ -93,6 +73,7 @@ public class SettingManager : MonoBehaviour
     // 背景を変更する.
     public void ChengeBack(int backnum)
     {
+        if (_backImge == null) return;
         if(backnum != 0 && backnum != 1)
         {
             _backImge.transform.localScale = new Vector3(3, 3, 3);

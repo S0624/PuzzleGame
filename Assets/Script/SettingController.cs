@@ -77,7 +77,7 @@ public class SettingController : MonoBehaviour
 
 			// サウンドのデータ取得
 			_soundNum = MoveInput(_soundNum, _soundLength);
-			_settingManager.SoundTextUpdate(_soundNum);
+			_settingManager.SoundImageUpdate(_soundNum);
 
 			// BGMを変更させる
 			_bgmVolume = MoveInput((int)_bgmVolume, 10, true);
@@ -103,12 +103,12 @@ public class SettingController : MonoBehaviour
 		_cursor.Decision(_isInput);
 		
 		// 開いたところのやつをいじるよ
-		if (_isInput)
+		//if (_isInput)
 		{
 			if (_cursorNum == 0)
 			{
-				_soundNum = MoveInput(_soundNum,_soundLength);
-				
+				_soundNum = MoveInput(_soundNum, _soundLength);
+
 				if (_input.UI.Submit.WasPerformedThisFrame())
 				{
 					SoundCheck();
@@ -117,27 +117,15 @@ public class SettingController : MonoBehaviour
 			// ゲームを中断しselect画面に戻る.
 			else if (_cursorNum == 1)
 			{
-				_settingManager.SubCursorDisplay(true);
-				if(_settingManager.SubCursorUpdate(_isVolumeInput))
-                {
-					if (_settingManager.SubCursorNum() == 0)
-					{
-						// BGMを変更させる
-						_bgmVolume = MoveInput((int)_bgmVolume, 10, true);
-					}
-					else if (_settingManager.SubCursorNum() == 1)
-					{
-						// SEを変更させる
-						_seVolume = MoveInput((int)_seVolume, 10,true);
-					}
-				}
-
-				if (_input.UI.Submit.WasPerformedThisFrame())
-				{
-					_isVolumeInput = true;
-				}
+				// BGMを変更させる
+				_bgmVolume = MoveInput((int)_bgmVolume, 10, true);
 			}
 			else if (_cursorNum == 2)
+			{
+				// SEを変更させる
+				_seVolume = MoveInput((int)_seVolume, 10, true);
+			}
+			else if (_cursorNum == 3)
 			{
 				_backNum = MoveInput(_backNum, _backImageMax);
 			}
@@ -150,7 +138,7 @@ public class SettingController : MonoBehaviour
 		{
 			_soundManager.SEPlay(0);
 			// ゲームに戻る.
-			if (_cursorNum == 3)
+			if (_cursorNum == 4)
 			{
 				SettingCanvasClose();
 			}
@@ -163,24 +151,16 @@ public class SettingController : MonoBehaviour
 		else if (_input.UI.Cancel.WasPerformedThisFrame())
 		{
 			_soundManager.SEPlay(SoundSEData.CancelSE);
-			if (_isVolumeInput)
-			{
-				_isVolumeInput = false;
-			}
-			else
-			{
-				_isInput = false;
-				_settingManager.ImageColorChenge(_isInput);
-				_settingManager.SubCursorDisplay();
-			}
-		}
 
+			_isInput = false;
+			//_settingManager.ImageColorChenge(_isInput);
+		}
 		
 	}
 	// 設定の更新
 	private void SettingDataUpdate()
     {
-		_settingManager.SoundTextUpdate(_soundNum);
+		_settingManager.SoundImageUpdate(_soundNum);
 		_settingManager.BGMVolumeChenge(_bgmVolume / 10);
 		_settingManager.SEVolumeChenge(_seVolume / 10);
 		SoundVolumeChenge();
@@ -190,7 +170,7 @@ public class SettingController : MonoBehaviour
 	private int MoveInput(int num, int max, bool volFlag = false)
 	{
 		_selectNum = num;
-		var _isNowAction = _input.UI.CursorMove;
+		var isNowAction = _input.UI.CursorMove;
 
 		Vector2 moveInput = _inputManager.GetInputMoveDate();
 		if (_inputManager.IsMovePressed())
@@ -255,7 +235,7 @@ public class SettingController : MonoBehaviour
 	private void InputCheck()
 	{
 		_isInput = true;
-		_settingManager.ImageColorChenge(_isInput);
+		//_settingManager.ImageColorChenge(_isInput);
 	}
 
 	// サウンドをいじる(テスト実装)

@@ -74,7 +74,6 @@ public class SoundManager : MonoBehaviour
         var se = SEDataCheck(soundnum);
         _seSource.clip = _soundSEData[se];
         SEPlay();
-        Debug.Log("なってる");
     }
     // SEデータのチェック
     public int SEDataCheck(SoundSEData senum)

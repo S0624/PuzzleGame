@@ -90,7 +90,7 @@ public class GameUIManager : MonoBehaviour
                 _chainText = Instantiate(_chainTextUI, new Vector3(_fieldController.ErasePos().x, _fieldController.ErasePos().y, _chainTextUI.transform.position.z), _chainTextUI.transform.rotation);
                 for (int i = 0; i < _chainImage.Length; i++)
                 {
-                    _chainText.GetComponent<ChainTextUpdate>().ChainImageUpdate(i, _numImage[GetDigit(_chain, i + 1)]);
+                    _chainText.GetComponent<ImageTextUpdate>().ChainImageUpdate(i, _numImage[GetDigit(_chain, i + 1)]);
                 }
             }
             _chainTimer++;

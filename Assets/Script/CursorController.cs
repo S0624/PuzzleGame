@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,11 +11,12 @@ public class CursorController : MonoBehaviour
     // 特定の方向だけを参照する.
     [Header("特定の方向の指定")] public bool _isDirection;
     // オブジェクトの位置の取得.
+    public GameObject _cursorObject;
+    private GameObject _cursor;
     public RectTransform _selecCursorImg;
     public RectTransform[] _selectModeImg;
     // ボタンの処理をするための変数.
     private InputManager _input;
-    private Vector3 _imgPos;
     private int _selectNum = 0;
     // 一瞬だけ押したかどうか.
     private InputAction _isNowAction;
@@ -26,19 +28,42 @@ public class CursorController : MonoBehaviour
     private int _selectMin = 0;
     // シーンが切り替わるときに音を鳴らすためのサウンドの取得
     private SoundManager _soundManager;
+
+    // 画像の大きさ
+    private Vector3 _defaultScale = new Vector3(0.4f, 0.4f,0.4f);
+    private Vector3 _minScale = Vector3.zero;
+    private Vector3 _addScale = new Vector3(0.0f, 0.015f, 0.0f);
     // Start is called before the first frame update
     void Start()
     {
-        _imgPos = _selecCursorImg.transform.position;
         _input = new InputManager();
         _input.Enable();
         _selectMax = _selectModeImg.Length - 1;
         _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
-    }
 
+    }
+    private void CursorAnim()
+    {
+        if (!_cursorObject) return;
+        if (!_selecCursorImg)
+        {
+            _selecCursorImg.transform.localScale = _defaultScale;
+        }
+        Debug.Log("カラス...?");
+        if(_selecCursorImg.transform.localScale.y > _defaultScale.y)
+        {
+            _addScale *= -1;
+        }
+        else if(_selecCursorImg.transform.localScale.y < _minScale.y)
+        {
+            _addScale *= -1;
+        }
+        _selecCursorImg.transform.localScale += _addScale;
+    }
     // Update is called once per frame
     private void Update()
     {
+        CursorAnim();
         // 入力情報の取得.
         _isNowAction = _input.UI.CursorMove;
         Vector2 moveInput = _input.UI.CursorMove.ReadValue<Vector2>();

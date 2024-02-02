@@ -18,17 +18,10 @@ public class LoadSceneManager : MonoBehaviour
     public FieldData[] _controller;
     // セレクトシーンのみで使用.
     public CursorController _select;
-    // 警告画像を出すためにキャンバスの取得
-    public Canvas _canvas;
-    // 警告画像の取得
-    public GameObject _warning;
-    private GameObject _warninigObject;
-    // 警告画像の表示時間
-    private int _warningDisplayTimer = 60;
-    // 表示の削除のフラグ
-    private bool _isDisplay = false;
+    public SelectSceneManager _selectManager;
     // ボタンを押したかのフラグ
     private bool _buttonPush = false;
+    private bool _isPrevFlag  = false;
     // フェードの取得.
     private Fade _fade;
     // フェードのフラグの取得.
@@ -42,13 +35,13 @@ public class LoadSceneManager : MonoBehaviour
         _fadeManager = GameObject.Find("FadeManager").GetComponent<FadeManager>();
         GetControllerInit();
         _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
-    }
+        if (_selectManager)
+        {
+            _selectManager.GetInputInit(_input);
+        }
 
-    // Update is called once per frame
-    void Update()
-    {
-        SceneUpdate();
     }
+    // コントローラーの更新
     private void GetControllerInit()
     {
         // ゲームパッドの取得.
@@ -60,13 +53,22 @@ public class LoadSceneManager : MonoBehaviour
             return control;
         }).ToArray();
     }
+
+    // Update is called once per frame
+    void Update()
+    {
+        SceneUpdate();
+    }
     // シーンのUpdate処理.
     private void SceneUpdate()
     {
-        DisplayUpdate();
-        DisplayDestory();
-        InputCheck();
-
+        // セレクトシーンにいるときのみ処理を行う
+        if (_selectManager)
+        {
+            // セレクトシーンの時のみ処理を行う更新処理
+            SelectSceneUpdate();
+            if (_selectManager.IsSettingUpdate()) return;
+        }
         // もし入力したキーがSpaceキーならば、強制的に処理を実行する
         // それ以外はしかるべき時に押したらシーンが移動します
         if (Input.GetKeyDown(KeyCode.Space) || ControllerInput())
@@ -74,7 +76,7 @@ public class LoadSceneManager : MonoBehaviour
             _soundManager.SEPlay(SoundSEData.TitlePushSE);
             if (_select != null && _select.SelectNum() == 1)
             {
-                if (ControllerCheck()) return;
+                if (_selectManager.ControllerCheck()) return;
             }
             _buttonPush = true;
             _fadeManager._isFade = _buttonPush;
@@ -83,7 +85,37 @@ public class LoadSceneManager : MonoBehaviour
         {
             SceneSwitching();
         }
+        // 前のシーンの情報がなかったら処理を飛ばす.
+        if (_prevScene == "") return;
+        // 戻るボタンを押したら一個前のシーンに戻る
+        if (Input.GetKeyUp(KeyCode.KeypadEnter) || _input[0].UI.Cancel.WasPerformedThisFrame())
+        {
+            _buttonPush = true;
+            _isPrevFlag = true;
+            _fadeManager._isFade = _buttonPush;
+        }
         
+    }
+    // セレクトシーンの更新処理
+    private void SelectSceneUpdate()
+    {
+        // 更新処理.
+        _selectManager.SelectSceneUpdate();
+        // コントローラーの数取得.
+        _selectManager.InputLength(_input.Length);
+        // 警告文が表示されているときの処理.
+        if (_selectManager.DisplayUpdate())
+        {
+            // コントローラーの接続が確認されたらフェードを行う
+            _buttonPush = _selectManager.DisplayUpdate();
+        }
+        // コントローラーの再取得処理
+        if (_selectManager._isReacquisition)
+        {
+            GetControllerInit();
+        }
+        // 警告文が表示されていたらフェードやカーソル移動を制限するために処理を飛ばす
+        if (_selectManager._warninigObject) return;
     }
     // ボタンを押されたらシーンを切り替える処理
     private void SceneSwitching()
@@ -93,6 +125,12 @@ public class LoadSceneManager : MonoBehaviour
             // Sceneを切り替える
 
             LoadScene(_nextScene[0]);
+        }
+        // 前に戻るを押された
+        else if(_isPrevFlag)
+        {
+            LoadScene(_prevScene);
+
         }
         else
         {
@@ -105,85 +143,8 @@ public class LoadSceneManager : MonoBehaviour
             LoadScene(_nextScene[_select.SelectNum()]);
         }
 
-        // 前のシーンの情報がなかったら処理を飛ばす.
-        if (_prevScene == "") return;
-        // 戻るボタンを押したら一個前のシーンに戻る
-        if (Input.GetKeyUp(KeyCode.KeypadEnter) || _input[0].UI.Cancel.WasPerformedThisFrame())
-        {
-            LoadScene(_prevScene);
 
-        }
     }
-    // コントローラーの数の取得
-    private bool ControllerCheck()
-    {
-        if (_input.Length < 2)
-        {
-            if (!_warninigObject)
-            {
-                _select.Decision(true);
-                _warninigObject = Instantiate(_warning);
-                _warninigObject.transform.SetParent(_canvas.transform, false);
-                _warninigObject.transform.DOScale(Vector3.one, 1.0f).SetEase(Ease.OutCirc);
-            }
-
-            return true;
-        }
-        return false;
-    }
-    private void DisplayUpdate()
-    {
-        if (_warninigObject)
-        {
-            if (_warninigObject.transform.localScale.x == 1.0f)
-            {
-                // 警告画像の削除
-                _warningDisplayTimer--;
-                if (_warningDisplayTimer < 0)
-                {
-                    // コントローラーの数の取得
-                    if (_input.Length >= 2)
-                    {
-                        _buttonPush = true;
-                        _fadeManager._isFade = _buttonPush;
-                    }
-
-                    GetControllerInit();
-                    _warningDisplayTimer = 60;
-
-                }
-            }
-            if (_input[0].UI.Cancel.WasPerformedThisFrame())
-            {
-                _isDisplay = true;
-            }
-        }
-    }
-    // 警告画像の削除処理
-    private void DisplayDestory()
-    {
-        if (_isDisplay)
-        {
-            _select.Decision(false);
-            _isDisplay = false;
-            Destroy(_warninigObject);
-        }
-    }
-    private void InputCheck()
-    {
-        if (_warninigObject)
-        {
-            if (_input.Length >= 2)
-            {
-                GameObject child = _warninigObject.transform.GetChild(2).gameObject;
-                var color = Color.white;
-                color.a = 255;
-                Debug.Log(color.a);
-                child.GetComponent<Image>().color = color;
-            }
-        }
-    }
-
     private bool ControllerInput()
     {
         foreach (var controller in _controller)

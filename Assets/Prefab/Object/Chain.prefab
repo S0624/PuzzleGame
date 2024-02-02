@@ -180,12 +180,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 5238711015502483086}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8d6a4640c3a24b4ca154d56e2d9a812, type: 3}
+  m_Script: {fileID: 11500000, guid: abec75cf5a50bea45be3fac1138fb51b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _chainImage:
+  _spriteImage:
   - {fileID: 9167049297486408508}
   - {fileID: 3692538055652258315}
+  _image: {fileID: 0}
+  _textImage:
+  - {fileID: 21300000, guid: c7a9bfac8a06e47449bacc2911316f27, type: 3}
+  - {fileID: 21300000, guid: b6e1633a77a4a2842b5ec8d2bec6501f, type: 3}
+  - {fileID: 21300000, guid: 1d4395695d523254a80aaf41d987ed73, type: 3}
+  - {fileID: 21300000, guid: 3921268aa3560e743829a3d418d6bb4b, type: 3}
+  - {fileID: 21300000, guid: b0e6354ccfef18546825f41c369f2f05, type: 3}
+  - {fileID: 21300000, guid: 657ba2a3755b6694c892c7bddad83538, type: 3}
+  - {fileID: 21300000, guid: 786fd7008c0aa274d869ea6f6350fad9, type: 3}
+  - {fileID: 21300000, guid: 1f263d9dc1a91514bbe260c1586c9b3e, type: 3}
+  - {fileID: 21300000, guid: e4cc43946a8cfa741a9b9b65713cab8c, type: 3}
+  - {fileID: 21300000, guid: 56404c1f48e6cf441a67b0b4afbf19ae, type: 3}
 --- !u!1 &7056628720471471656
 GameObject:
   m_ObjectHideFlags: 0
