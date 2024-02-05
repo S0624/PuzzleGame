@@ -31,6 +31,7 @@ public class LoadSceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Application.targetFrameRate = 60;
         _fade = GameObject.Find("FadeCanvas").GetComponent<Fade>();
         _fadeManager = GameObject.Find("FadeManager").GetComponent<FadeManager>();
         GetControllerInit();

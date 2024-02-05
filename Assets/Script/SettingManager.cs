@@ -6,13 +6,13 @@ using UnityEngine.UI;
 
 public class SettingManager : MonoBehaviour
 {
-    // オブジェクトの取得
-    //public Image _cursorImage;
     // 背景の取得
     public Image _backMinImge;
     private SpriteRenderer _backImge;
     // テキストの取得
     public ImageTextUpdate _soundText;
+    // select画面の設定画面
+    public bool _isSelectSetting = false;
     // サウンドのvolumeの取得
     [Header("ボリューム関係")]
     public Slider[] _soundVol;
@@ -31,18 +31,6 @@ public class SettingManager : MonoBehaviour
         //_backImge.sprite = "";
 
     }
-    //// 必要な時にカーソルのカラーを変える
-    //public void ImageColorChenge(bool color)
-    //{
-    //    if (color)
-    //    {
-    //        _cursorImage.color = Color.red;
-    //    }
-    //    else
-    //    {
-    //        _cursorImage.color = Color.white;
-    //    }
-    //}
     // サウンドの番号のテキストを変更する
     public void SoundImageUpdate(int image)
     {

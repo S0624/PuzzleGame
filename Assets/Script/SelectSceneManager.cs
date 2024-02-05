@@ -23,7 +23,8 @@ public class SelectSceneManager : MonoBehaviour
     public SettingController _setting;
     // 設定画面を開いているかどうか
     private　bool _isSetting = false;
-
+    // 前フレームのフラグ
+    private bool _isPrevFlag = false;
     // シーンが切り替わるときに音を鳴らすためのサウンドの取得
     private SoundManager _soundManager;
     // コントローラーの数取得
@@ -52,6 +53,7 @@ public class SelectSceneManager : MonoBehaviour
     // セッティング画面の更新処理
     public bool IsSettingUpdate()
     {
+        _isPrevFlag = _setting.IsSettingCanvas();
         _select.Decision(_isSetting);
         if (_input[0].UI.Pause.WasPerformedThisFrame())
         {
@@ -68,7 +70,10 @@ public class SelectSceneManager : MonoBehaviour
         _isSetting = _setting.IsSettingCanvas();
         if (_setting.IsSettingCanvas())
         {
-            //_select.Decision(_isSetting);
+            return true;
+        }
+        if (_setting.IsSettingCanvas() != _isPrevFlag)
+        {
             return true;
         }
         return false;

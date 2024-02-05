@@ -4444,8 +4444,7 @@ MonoBehaviour:
   - {fileID: 201810780}
   - {fileID: 119861353}
   _select: {fileID: 0}
-  _canvas: {fileID: 0}
-  _warning: {fileID: 0}
+  _selectManager: {fileID: 0}
 --- !u!114 &1654032361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4512,7 +4511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2797856b636ff84b9010c9e89091ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _settingPrefab: {fileID: 5879540223905490698, guid: 2f42b0b4cfb0c9344a4b0d5b74addfe0, type: 3}
+  _settingPrefab: {fileID: 8449951707519056007, guid: 12b7a9c252d3e3041accb563c1dc9dbe, type: 3}
   _soundManager: {fileID: 737876122}
 --- !u!114 &1654032364
 MonoBehaviour:

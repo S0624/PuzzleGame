@@ -236,6 +236,7 @@ public class GameMainMatchManager : MonoBehaviour
         {
             //Debug.Log("ここに通ってる");
             total = (_obstacle[0] - _obstacle[1]);
+            //_calculation = false;
         }
         else
         {
@@ -298,11 +299,14 @@ public class GameMainMatchManager : MonoBehaviour
                 return;
             }
         }
-        _obstacle[0] = 0;
-        _obstacle[1] = 0;
-        _obstacleAdd[0] = 0;
-        _obstacleAdd[1] = 0;
-        _calculation = false;
+        // 初期化
+        for (int i = 0; i < _fieldData.Length; i++)
+        {
+            // とりあえず値を取得するよ.
+            _obstacle[i] = 0;
+            _obstacleAdd[i] = 0;
+        }
+        //_calculation = false;
     }
     // テキスト用
     private void TestObsText(int total)

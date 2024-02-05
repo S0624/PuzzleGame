@@ -16,10 +16,13 @@ public class CursorController : MonoBehaviour
     public RectTransform _selecCursorImg;
     public RectTransform[] _selectModeImg;
     // ボタンの処理をするための変数.
+    private InputState _inputManager;
     private InputManager _input;
     private int _selectNum = 0;
     // 一瞬だけ押したかどうか.
     private InputAction _isNowAction;
+    // 押し続けた時の処理
+    private int _inputframe = 0;
     // 決定したかどうか
     private bool _isDecision = false;
     // 最大値
@@ -30,56 +33,58 @@ public class CursorController : MonoBehaviour
     private SoundManager _soundManager;
 
     // 画像の大きさ
-    private Vector3 _defaultScale = new Vector3(0.4f, 0.4f,0.4f);
+    private Vector3 _defaultScale = new Vector3(0.5f, 0.5f,0.5f);
     private Vector3 _minScale = Vector3.zero;
     private Vector3 _addScale = new Vector3(0.0f, 0.015f, 0.0f);
+    // カーソルを回転させる際に使用する
+    private int _timer = 0;
+    // 待つ時間
+    private int _maxTimer = 15;
+
     // Start is called before the first frame update
     void Start()
     {
         _input = new InputManager();
         _input.Enable();
         _selectMax = _selectModeImg.Length - 1;
+        _inputManager = GameObject.Find("InputManager").GetComponent<InputState>();
         _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
-
     }
-    private void CursorAnim()
-    {
-        if (!_cursorObject) return;
-        if (!_selecCursorImg)
-        {
-            _selecCursorImg.transform.localScale = _defaultScale;
-        }
-        Debug.Log("カラス...?");
-        if(_selecCursorImg.transform.localScale.y > _defaultScale.y)
-        {
-            _addScale *= -1;
-        }
-        else if(_selecCursorImg.transform.localScale.y < _minScale.y)
-        {
-            _addScale *= -1;
-        }
-        _selecCursorImg.transform.localScale += _addScale;
-    }
+    
     // Update is called once per frame
     private void Update()
     {
+        if (_isDecision) return;
+        // カーソルのアニメーション
         CursorAnim();
         // 入力情報の取得.
         _isNowAction = _input.UI.CursorMove;
-        Vector2 moveInput = _input.UI.CursorMove.ReadValue<Vector2>();
+        Vector2 moveInput = _inputManager.GetInputMoveDate();
+
         // 選択した方向の入力値を返す.
         var dir = InputDirection(moveInput);
-        if (_isDecision) return;
-        // 左右の入力検知.
-        if (dir > 0 && _isNowAction.WasPressedThisFrame())
+        if (_inputManager.IsMovePressed())
         {
-            _soundManager.SEPlay(SoundSEData.Select);
-            _selectNum++;
+            _inputframe++;
         }
-        else if (dir < 0 && _isNowAction.WasPressedThisFrame())
+        // 左右の入力検知.
+        if (dir > 0)
         {
-            _soundManager.SEPlay(SoundSEData.Select);
-            _selectNum--;
+            if (IsPressKey() || _isNowAction.WasPressedThisFrame())
+            {
+                _soundManager.SEPlay(SoundSEData.Select);
+                _selectNum++;
+                _inputframe = 0;
+            }
+        }
+        else if (dir < 0)
+        {
+            if (IsPressKey() || _isNowAction.WasPressedThisFrame())
+            {
+                _soundManager.SEPlay(SoundSEData.Select);
+                _selectNum--;
+                _inputframe = 0;
+            }
         }
         // カーソルの移動制限
         if (_selectNum < _selectMin)
@@ -100,7 +105,45 @@ public class CursorController : MonoBehaviour
             _selecCursorImg.position = _selectModeImg[_selectNum].position;
         }
     }
-
+    //  キーの入力状態.
+    private bool IsPressKey()
+    {
+        if (_inputframe > 15)
+        {
+            return true;
+        }
+        return false;
+    }
+    // カーソルのアニメーション(もどき)
+    private void CursorAnim()
+    {
+        if (!_cursorObject) return;
+        if (!_selecCursorImg)
+        {
+            _selecCursorImg.transform.localScale = _defaultScale;
+        }
+        if (_selecCursorImg.localScale.y >= _defaultScale.y)
+        {
+            if (!IsTimer()) return;
+            _addScale = new Vector3(0.0f, -0.015f, 0.0f); ;
+        }
+        else if (_selecCursorImg.localScale.y <= _minScale.y)
+        {
+            _addScale = new Vector3(0.0f, 0.015f, 0.0f); ;
+        }
+        _selecCursorImg.localScale += _addScale;
+    }
+    // カーソルがすぐ回転しないように少しだけ待つ処理
+    private bool IsTimer()
+    {
+        _timer++;
+        if (_timer > _maxTimer)
+        {
+            _timer = 0;
+            return true;
+        }
+        return false;
+    }
     // 選んでいる番号返す
     public int SelectNum()
     {

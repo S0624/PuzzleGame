@@ -401,6 +401,10 @@ PrefabInstance:
       propertyPath: RotationModule.y.minMaxState
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 198866036663756580, guid: d7689380619fd894c8508730e2bed11f, type: 3}
+      propertyPath: InitialModule.maxNumParticles
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 199556161374865258, guid: d7689380619fd894c8508730e2bed11f, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
@@ -611,8 +615,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nextScene:
-  - TestScene
-  - TestMatchScene
+  - AloneScene
+  - LocalMatchScene
   - NetMatchWaitScene
   _prevScene: TitleScene
   _pauseScene: 
@@ -650,6 +654,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isVertical: 0
   _isDirection: 0
+  _cursorObject: {fileID: 0}
   _selecCursorImg: {fileID: 1743424699}
   _selectModeImg:
   - {fileID: 634561540}
@@ -685,7 +690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2797856b636ff84b9010c9e89091ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _settingPrefab: {fileID: 5879540223905490698, guid: 2b2a9917e75ea624982cc8a3c978f539, type: 3}
+  _settingPrefab: {fileID: 8449951707519056007, guid: b8719dd8a1f25264897017f4cb44fccd, type: 3}
   _soundManager: {fileID: 1633873110}
 --- !u!1 &735807702
 GameObject:
