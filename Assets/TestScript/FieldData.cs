@@ -191,7 +191,7 @@ public class FieldData : MonoBehaviour
         // もし中身が入っていたらエラー表記を出
 
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
-        _sphere[pos.y, pos.x] = Instantiate(_prefabSphere, world_position, Quaternion.identity, transform);
+        _sphere[pos.y, pos.x] = Instantiate(_prefabSphere, world_position, _prefabSphere.transform.rotation, transform);
         _sphere[pos.y, pos.x].GetComponent<SphereData>().SetColorType((ColorType)val);
 
         // 設置したよ
@@ -423,9 +423,9 @@ public class FieldData : MonoBehaviour
         //Debug.Log(_isInstallaion);
         return _isInstallaion;
     }
-    public void GetInstallation(bool flag)
+    public void GetInstallation()
     {
-        _isInstallaion = flag;
+        _isInstallaion = false;
     }
     public bool SetInstallation()
     {

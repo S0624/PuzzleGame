@@ -21,10 +21,6 @@ public class ColorSeedCreate : MonoBehaviour
             _colorSeed[i].upColor = _colorNum;
             _colorNum2 = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax - 2);
             _colorSeed[i].downColor = _colorNum2;
-            //_colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax);
-            //_testColor[i].upColor = _colorNum;
-            //_colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax);
-            //_testColor[i].downColor = _colorNum;
 #endif
         }
     }

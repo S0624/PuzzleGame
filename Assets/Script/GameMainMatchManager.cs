@@ -33,14 +33,17 @@ public class GameMainMatchManager : MonoBehaviour
     private int[] _obstacle = new int[2];
     private int[] _obstacleAdd = new int[2];
     private int _obstacleCount = 0;
-    private int _obstacleMax = 30;
+    private int _obstacleMax = 5;
     // 計算のフラグ.
-    private bool _calculation = false;
+    private bool _isLimit = false;
     // ゲームオーバーかどうかのフラグを取得する.
     private bool _isGameOver = false;
     // サウンドマネージャーの取得
     private SoundManager _soundManager;
 
+    // てすと
+    private bool _isCalculation = false;
+    int _total = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -59,7 +62,7 @@ public class GameMainMatchManager : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         // ゲームスタート画面の更新処理.
         if (_startCanvas.IsStartCanvas())
@@ -199,8 +202,6 @@ public class GameMainMatchManager : MonoBehaviour
                     _soundManager.SEPlay(SoundSEData.AllClear);
                     Debug.Log("ぜんけし");
                     _allClearTex[i] = Instantiate(AllClearImg, _imgPos[i].transform.position, Quaternion.identity);
-                    //_allClearTex[i] = Instantiate(AllClearImg, _imgPos[i].transform);
-                    //_allClearTex[i].transform.SetParent(_imgPos[i].transform, false);
                 }
             }
             else
@@ -215,10 +216,120 @@ public class GameMainMatchManager : MonoBehaviour
     // 邪魔スフィアの計算(相殺処理)
     private void ObstacleCalculation()
     {
-        // お互いの連鎖が終わった時に落とす.
+        //        // 連鎖が終わった時に落とす.
+        //        int[] add = new int[2];
+        //        int total = 0;
+        //        for (int i = 0; i < _fieldData.Length; i++)
+        //        {
+        //            // とりあえず値を取得するよ.
+        //            _obstacleAdd[i] = _fieldData[i].GetObstacle();
+        //            // 今持っている数値が大きかったら代入するよ
+        //            if (_obstacle[i] < _obstacleAdd[i])
+        //            {
+        //                _obstacle[i] = _obstacleAdd[i];
+        //            }
+        //        }
 
-        int[] add = new int[2];
-        int total = 0;
+        //        // 計算するよ
+        //        // 減らしていく処理はまだ、つまりまだこれは計算だけなの
+        //        Debug.Log("あぶれたひと" + _obstacleCount);
+        //        if (_isLimit && !_isCalculation)
+        //        {
+        //            Debug.Log("ここに通ってる");
+        //            total = (_obstacle[0] - _obstacle[1]) + _obstacleCount;
+        //            //_calculation = false;
+        //            _isCalculation = true;
+        //            _obstacleCount = 0;
+        //        }
+        //        else
+        //        {
+        //            //Debug.Log("ここに通ってる");
+        //            total = (_obstacle[0] - _obstacle[1]);
+        //            //_obstacleCount = 0;
+        //        }
+        //        Debug.Log("いず" + _isLimit + "いず" + _isCalculation);
+
+        //        // 最大数は30にしたいので30より多い数を送らないようにする.
+        //        total = MaxLimit(total);
+
+        //#if true
+        //        // デバック用におじゃまの数表示
+        //        TestObsText(total);
+        //#endif
+        //        //Debug.Log(_testController[0].IsInstallaion());
+        //        if (total == 0)
+        //        {
+        //            //Debug.Log("均衡中...");
+        //        }
+        //        else if (total > 0)
+        //        {
+        //            //Debug.Log(_testController[1].IsInstallaion());
+        //            if (!_fieldData[0].IsFieldUpdate() && _fieldData[1].IsInstallaion())
+        //            {
+        //                _fieldData[1].SetObstacle(total);
+        //                _fieldData[1].GetInstallation(false);
+        //                //Debug.Log("右に" + total + "と" + _obstacleCount);
+        //            }
+        //            else
+        //            {
+        //                return;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            if (!_fieldData[1].IsFieldUpdate() && _fieldData[0].IsInstallaion())
+        //            {
+        //                _fieldData[0].SetObstacle(total * -1);
+        //                Debug.Log("おくるよ");
+        //                _fieldData[0].GetInstallation(false);
+
+        //            }
+        //            else
+        //            {
+        //                return;
+        //            }
+        //        }
+        //        // 初期化
+        //        for (int i = 0; i < _fieldData.Length; i++)
+        //        {
+        //            // とりあえず値を取得するよ.
+        //            _obstacle[i] = 0;
+        //            _obstacleAdd[i] = 0;
+        //        }
+        //        _isCalculation = false;
+
+        //        //_calculation = false;
+        Test();
+    }
+    // 最大数の制限処理
+    private int MaxLimit(int total)
+    {
+        // 最大数は30にしたいので30より多い数を送らないようにする.
+        if (total > _obstacleMax)
+        {
+            _obstacleCount = total - _obstacleMax;
+            total = _obstacleMax;
+            _isLimit = true;
+        }
+        else if (total < -_obstacleMax)
+        {
+            _obstacleCount = total + _obstacleMax;
+            //_obstacleCount *= -1;
+            total = -_obstacleMax;
+            _isLimit = true;
+        }
+        else
+        {
+            //_obstacleMax = 0;
+            _isLimit = false;
+        }
+        return total;
+    }
+    // テスト用実装
+    private void Test()
+    {
+        // 連鎖が終わった時に落とす.
+
         for (int i = 0; i < _fieldData.Length; i++)
         {
             // とりあえず値を取得するよ.
@@ -229,76 +340,78 @@ public class GameMainMatchManager : MonoBehaviour
                 _obstacle[i] = _obstacleAdd[i];
             }
         }
-        // 計算するよ
-        // 減らしていく処理はまだ、つまりまだこれは計算だけなの
-        Debug.Log("あぶれたひと" + _obstacleCount);
-        if (_calculation)
+
+        //// 計算するよ
+        //// 減らしていく処理はまだ、つまりまだこれは計算だけなの
+        ////Debug.Log("あぶれたひと" + _obstacleCount);
+        //_total = (_obstacle[0] - _obstacle[1]) + _obstacleCount;
+        if (_isLimit && _isCalculation)
         {
-            //Debug.Log("ここに通ってる");
-            total = (_obstacle[0] - _obstacle[1]);
+            Debug.Log("ここに通ってる");
+            _total = (_obstacle[0] - _obstacle[1]) + _obstacleCount;
+            _obstacleCount = 0;
             //_calculation = false;
+            _isCalculation = false;
         }
         else
         {
-            Debug.Log("ここに通ってる");
-            total = (_obstacle[0] - _obstacle[1]) + _obstacleCount;
-            _obstacleCount = 0;
+            //Debug.Log("ここに通ってる");
+            _total = (_obstacle[0] - _obstacle[1]);
+            //_obstacleCount = 0;
         }
-        // 最大数は30にしたいので30より多い数を送らないようにする.
-        if (total > _obstacleMax)
-        {
-            _obstacleCount = total - _obstacleMax;
-            total = _obstacleMax;
-            _calculation = true;
-        }
-        else if (total < -_obstacleMax)
-        {
-            _obstacleCount = total + _obstacleMax;
-            //_obstacleCount *= -1;
-            total = -_obstacleMax;
-            _calculation = true;
-        }
-        Debug.Log(total);
-        //else
-        //{
-        //    _obstacleCount = 0;
-        //}
+        //Debug.Log("いず" + _isLimit + "いず" + _isCalculation);
+
+        //// 最大数は30にしたいので30より多い数を送らないようにする.
+        _total = MaxLimit(_total);
+        //Debug.Log(_total);
 #if true
-        TestObsText(total);
+        // デバック用におじゃまの数表示
+        TestObsText();
 #endif
-        //Debug.Log(_testController[0].IsInstallaion());
-        if (total == 0)
+        if (_total > 0)
         {
-            //Debug.Log("均衡中...");
-        }
-        else if (total > 0)
-        {
-            //Debug.Log(_testController[1].IsInstallaion());
             if (!_fieldData[0].IsFieldUpdate() && _fieldData[1].IsInstallaion())
             {
-                _fieldData[1].SetObstacle(total);
-                _fieldData[1].GetInstallation(false);
-                //Debug.Log("右に" + total + "と" + _obstacleCount);
+                _fieldData[1].SetObstacle(_total);
+                _fieldData[1].GetInstallation();
+                _isCalculation = true;
+
+                //_obstacle[0] = 0;
+            }
+            else if(_fieldData[1].IsInstallaion())
+            {
+                _fieldData[1].GetInstallation();
+                return;
+
             }
             else
             {
                 return;
             }
         }
-        else
+        else if (_total < 0)
         {
             if (!_fieldData[1].IsFieldUpdate() && _fieldData[0].IsInstallaion())
             {
-                _fieldData[0].SetObstacle(total * -1);
-                Debug.Log("おくるよ");
-                _fieldData[0].GetInstallation(false);
-                //Debug.Log("左に" + total * -1 + "と" + _obstacleCount);
+                _fieldData[0].SetObstacle(_total * -1);
+                _fieldData[0].GetInstallation();
+                _isCalculation = true;
+
+                //_obstacle[1] = 0;
+
+            }
+            else if (_fieldData[0].IsInstallaion())
+            {
+                _fieldData[0].GetInstallation();
+                return;
+
             }
             else
             {
                 return;
             }
         }
+
         // 初期化
         for (int i = 0; i < _fieldData.Length; i++)
         {
@@ -306,18 +419,20 @@ public class GameMainMatchManager : MonoBehaviour
             _obstacle[i] = 0;
             _obstacleAdd[i] = 0;
         }
+        //_total = 0;
         //_calculation = false;
     }
+
     // テキスト用
-    private void TestObsText(int total)
+    private void TestObsText()
     {
-        if (total < 0 || _obstacleCount < 0)
+        if (_total < 0)
         {
-            _testText[0].SetObstacleCount((total + _obstacleCount) * -1);
+            _testText[0].SetObstacleCount((_total + _obstacleCount) * -1);
         }
-        else if (total > 0 || _obstacleCount > 0)
+        else if (_total > 0)
         {
-            _testText[1].SetObstacleCount(total + _obstacleCount);
+            _testText[1].SetObstacleCount(_total + _obstacleCount);
         }
         else
         {
@@ -326,4 +441,22 @@ public class GameMainMatchManager : MonoBehaviour
         }
 
     }
+    //// テキスト用
+    //private void TestObsText(int total)
+    //{
+    //    if (total < 0)
+    //    {
+    //        _testText[0].SetObstacleCount((total + _obstacleCount) * -1);
+    //    }
+    //    else if (total > 0)
+    //    {
+    //        _testText[1].SetObstacleCount(total + _obstacleCount);
+    //    }
+    //    else
+    //    {
+    //        _testText[0].SetObstacleCount(0);
+    //        _testText[1].SetObstacleCount(0);
+    //    }
+
+    //}
 }
