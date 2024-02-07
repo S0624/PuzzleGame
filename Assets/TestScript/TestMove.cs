@@ -11,7 +11,7 @@ public class TestMove : MonoBehaviour
     // フィールドの情報を受け取るための変数
     public FieldData _fieldObject; 
     // 色の情報を受け取るための変数
-    public TestColorManager _colorManager;
+    public SphereColorManager _colorManager;
     // 移動速度.
     //private float _speed;
     //private float currentSpeed;
@@ -253,7 +253,7 @@ public class TestMove : MonoBehaviour
                 // こいつが悪さをしている
                 // こいつはforで置ける一番低い場所を取ってしまうので0からいくとそうなる（説明下手だな？）
                 pos = _fieldObject.SteepDescent(pos, _direction);
-                _colorNum = _colorManager.GetComponent<TestColorManager>().GetColorNumber(child.name,childcount);
+                _colorNum = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name,childcount);
                 //Debug.Log(child.position + "wa"+ child.name +"  " + pos.y + " " + _colorNum);
                 _fieldObject.IsNormalSphere(pos, _colorNum);
                 childcount++;
@@ -282,7 +282,7 @@ public class TestMove : MonoBehaviour
             _direction = 0;
             SphereRotation();
             // HACK うーん・・・とりあえず色替えはできてるけどバグが発生してるぅ
-            _colorManager.GetComponent<TestColorManager>().ColorChenge(this.gameObject.name);
+            _colorManager.GetComponent<SphereColorManager>().ColorChenge(this.gameObject.name);
             _isReGenereteSpher = false;
         }
     }

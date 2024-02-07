@@ -16,7 +16,7 @@ public class GameMainManager : MonoBehaviour
     private GameObject _allClearTex = null;
     // オブジェクトの取得.
     public ColorSeedCreate _seed;
-    public TestColorManager _colormanager;
+    public SphereColorManager _colormanager;
     public FieldData _field;
     public SphereMove _move;
     public PauseController _pause;

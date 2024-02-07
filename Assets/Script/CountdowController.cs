@@ -12,7 +12,6 @@ public class CountdowController : MonoBehaviour
     private Vector3 _defaultScale = Vector3.one;
     private Vector3 _stopPos;
     public SpriteRenderer _renderer;
-    private int _isChenge = 0;
     private bool _isRota = false;
     //public bool _isGoText = false;
     // タイマー

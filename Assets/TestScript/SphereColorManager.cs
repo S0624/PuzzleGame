@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 
-public class TestColorManager : MonoBehaviour
+public class SphereColorManager : MonoBehaviour
 {
     private ColorSeedCreate _seed;
     //// HACK なんかいい処理ないんですか別ファイルで全く同じの使ってる

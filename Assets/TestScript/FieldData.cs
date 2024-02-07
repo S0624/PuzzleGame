@@ -61,8 +61,6 @@ public class FieldData : MonoBehaviour
     // HACK テスト用のフラグ(処理が終わったよ、のフラグ)
     private bool _isProcess = false;
 
-    // 全消しフラグ
-    private bool _isClearAll = false;
     // フィールドの処理のフラグ
     private bool _isField = false;
     // サウンドの取得
@@ -114,7 +112,6 @@ public class FieldData : MonoBehaviour
     {
         // 下から詰めるけどランダムに降らせたい.
         // そんでたぶんこのままだと大変なことになる気がする.
-        //_obstacleNum = 1;
         //if (!_isInstallaion) return;
 
         if (_obstacleNum >= _borad_Width)
@@ -851,6 +848,7 @@ public class FieldData : MonoBehaviour
         }
         // お邪魔計算.
         _obstacleCount = (_score * _eraseCount) * (_bonus) / 70;
+        
         //Debug.Log("連鎖数:" + _chainCount + "ボーナス:" + _bonus);
         //Debug.Log(_obstacleCount);
         //Debug.Log(_bonus);
@@ -891,7 +889,7 @@ public class FieldData : MonoBehaviour
     {
         // HACK とりあえず雑にテストでゲームオーバー処理をしようとしてる
         // 2をマイナスしている理由は12のところがばってんで13は使用しないので12をみたいため
-        if(_sphere[_borad_Height - 2,3] != null || _sphere[_borad_Height - 2, 4] != null)
+        if(_sphere[_borad_Height - 2,2] != null || _sphere[_borad_Height - 2, 3] != null)
         {
             //Debug.Log("Game Over");
             return true;

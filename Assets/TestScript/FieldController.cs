@@ -57,8 +57,6 @@ public class FieldController : MonoBehaviour
     // HACK テスト用のフラグ(処理が終わったよ、のフラグ)
     private bool _isProcess = false;
 
-    // 全消しフラグ
-    private bool _isClearAll = false;
     // フィールドの処理のフラグ
     private bool _isField = false;
 
