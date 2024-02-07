@@ -102,6 +102,7 @@ public class GameMainManager : MonoBehaviour
             {
                 // 一回だけ初期化処理を行うよ
                 _move.SphereInit();
+                _move.SphereReGenerete();
                 _isStartInit = true;
             }
         }

@@ -74,10 +74,13 @@ public class GameMainMatchManager : MonoBehaviour
         // ポーズ画面を開いていたら処理を止める.
         if (!_pause.IsPause())
         {
-            // テスト用 ゲームオーバーになったら画像を表示
+            // ゲームオーバーになったら画像を表示
             GenereteGameOver();
+            // 全消しになったら画像を表示
             GenereteAllClear();
+            // 魚の更新
             _fish.FishUpdate();
+            // 勝利したら画像を表示
             GenereteGameWin();
             // ゲームオーバーになったら処理を止めるよ.
             if (_isGameOver) return;
@@ -153,6 +156,7 @@ public class GameMainMatchManager : MonoBehaviour
                 foreach (var move in _moveSphere)
                 {
                     move.SphereInit();
+                    move.SphereReGenerete();
                 }
                 _isStartInit = true;
             }

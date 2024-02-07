@@ -212,7 +212,7 @@ public class FieldData : MonoBehaviour
 
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
         world_position.y += _borad_Height;
-        _sphere[pos.y, pos.x] = Instantiate(_disturbanceSphere, world_position, Quaternion.identity, transform);
+        _sphere[pos.y, pos.x] = Instantiate(_disturbanceSphere, world_position, _disturbanceSphere.transform.rotation, transform);
         _sphere[pos.y, pos.x].GetComponent<SphereData>().SetColorType((ColorType)val);
 
         // 設置したよ

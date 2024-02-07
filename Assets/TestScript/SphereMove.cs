@@ -289,7 +289,7 @@ public class SphereMove : MonoBehaviour
         }
     }
     // スフィアの再生成.
-    private void SphereReGenerete()
+    public void SphereReGenerete()
     {
         _spherePos = new Vector2Int(3, _borad_Height);
         this.transform.position = _spherePostemp;
