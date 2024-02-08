@@ -104,6 +104,14 @@ public class GameMainMatchManager : MonoBehaviour
                 {
                     _moveSphere[i].InstallationProcess(_fieldData[i].IsSetSphere(), _fieldData[i]);
                 }
+                // スフィアを再生成できるかのフラグが成立していたら
+                if (_moveSphere[i]._isRegeneration)
+                {
+                    // カウントをリセットす
+                    _moveSphere[i]._isRegeneration = false;
+                    Debug.Log("とおってる？そのに。");
+                    _isSetCount[i] = 0;
+                }
             }
             foreach (var field in _fieldData)
             {
@@ -137,9 +145,9 @@ public class GameMainMatchManager : MonoBehaviour
             {
                 if(i == 0)
                 {
-                    Debug.Log("かけらを");
+                    Debug.Log("ぜろだよ");
                 }
-                _isSetCount[i] = 0;
+                //_isSetCount[i] = 0;
                 _moveSphere[i].FreeFallUpdate();
             }
         }
@@ -430,7 +438,7 @@ public class GameMainMatchManager : MonoBehaviour
                 _fieldData[0].GetInstallation();
                 _isCalculation = true;
                 _isSetCount[0]++;
-                Debug.Log("お？");
+                Debug.Log("とおってる？");
                 //_obstacle[1] = 0;
 
             }

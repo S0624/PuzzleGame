@@ -37,6 +37,7 @@ public class SphereMove : MonoBehaviour
     private int _direction = 0;
     // サウンドの取得
     private SoundManager _soundManager;
+    public bool _isRegeneration = false;
     // Start is called before the first frame update
     // 初期化処理
     void Start()
@@ -282,7 +283,7 @@ public class SphereMove : MonoBehaviour
             controller.DisturbanceFall();
             // お邪魔が落下中だったら次のスフィアを生成しない.
             if (controller.MoveObstacleSphere()) return;
-
+            _isRegeneration = true;
             controller.IsSetReset();
             // スフィアを再生成する.
             SphereReGenerete();
