@@ -29,7 +29,7 @@ public class SphereData : MonoBehaviour
     {
         return _type;
     }
-    // HACK
+    // 点滅するときに色のアルファ値をいじる
     public void ChangeColor(float alpha)
     {
         // 内部時刻timeにおけるアルファ値を反映
@@ -37,6 +37,11 @@ public class SphereData : MonoBehaviour
         //Debug.Log(alpha);
         color.a = alpha;
         my_renderer.material.color = color;
+    }
+    // 点滅するときに色のアルファ値をいじる
+    public void ChangeSize(Vector3 size)
+    {
+        my_renderer.transform.localScale = size;
     }
 
     public void SetPos(Vector3 pos)

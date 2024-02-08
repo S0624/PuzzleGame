@@ -35,18 +35,15 @@ public class GameMainMatchManager : MonoBehaviour
     private int _obstacleCount = 0;
     private int[] _obstaclePrev = new int[2];
     private int _obstacleMax = 15;
-    // 計算のフラグ.
-    private bool _isLimit = false;
     // ゲームオーバーかどうかのフラグを取得する.
     private bool _isGameOver = false;
     // サウンドマネージャーの取得
     private SoundManager _soundManager;
 
-    // てすと
-    private bool _isCalculation = false;
+    // おじゃまのトータル数
     private int _total = 0;
-    private int[] _isSetCount = new int[2];
-    private bool _isAdd = false;
+    // お邪魔を落としたというフラグ
+    private bool[] _isSetFallt = new bool[2];
     // Start is called before the first frame update
     void Start()
     {
@@ -109,8 +106,7 @@ public class GameMainMatchManager : MonoBehaviour
                 {
                     // カウントをリセットす
                     _moveSphere[i]._isRegeneration = false;
-                    Debug.Log("とおってる？そのに。");
-                    _isSetCount[i] = 0;
+                    _isSetFallt[i] = false;
                 }
             }
             foreach (var field in _fieldData)
@@ -143,11 +139,6 @@ public class GameMainMatchManager : MonoBehaviour
             // セットしていなかったらうごかせる.
             if (!_fieldData[i].IsSetSphere())
             {
-                if(i == 0)
-                {
-                    Debug.Log("ぜろだよ");
-                }
-                //_isSetCount[i] = 0;
                 _moveSphere[i].FreeFallUpdate();
             }
         }
@@ -220,7 +211,6 @@ public class GameMainMatchManager : MonoBehaviour
                 if (_fieldData[i].FieldAllClear())
                 {
                     _soundManager.SEPlay(SoundSEData.AllClear);
-                    Debug.Log("ぜんけし");
                     _allClearTex[i] = Instantiate(AllClearImg, _imgPos[i].transform.position, Quaternion.identity);
                 }
             }
@@ -236,127 +226,7 @@ public class GameMainMatchManager : MonoBehaviour
     // 邪魔スフィアの計算(相殺処理)
     private void ObstacleCalculation()
     {
-        //        // 連鎖が終わった時に落とす.
-        //        int[] add = new int[2];
-        //        int total = 0;
-        //        for (int i = 0; i < _fieldData.Length; i++)
-        //        {
-        //            // とりあえず値を取得するよ.
-        //            _obstacleAdd[i] = _fieldData[i].GetObstacle();
-        //            // 今持っている数値が大きかったら代入するよ
-        //            if (_obstacle[i] < _obstacleAdd[i])
-        //            {
-        //                _obstacle[i] = _obstacleAdd[i];
-        //            }
-        //        }
-
-        //        // 計算するよ
-        //        // 減らしていく処理はまだ、つまりまだこれは計算だけなの
-        //        Debug.Log("あぶれたひと" + _obstacleCount);
-        //        if (_isLimit && !_isCalculation)
-        //        {
-        //            Debug.Log("ここに通ってる");
-        //            total = (_obstacle[0] - _obstacle[1]) + _obstacleCount;
-        //            //_calculation = false;
-        //            _isCalculation = true;
-        //            _obstacleCount = 0;
-        //        }
-        //        else
-        //        {
-        //            //Debug.Log("ここに通ってる");
-        //            total = (_obstacle[0] - _obstacle[1]);
-        //            //_obstacleCount = 0;
-        //        }
-        //        Debug.Log("いず" + _isLimit + "いず" + _isCalculation);
-
-        //        // 最大数は30にしたいので30より多い数を送らないようにする.
-        //        total = MaxLimit(total);
-
-        //#if true
-        //        // デバック用におじゃまの数表示
-        //        TestObsText(total);
-        //#endif
-        //        //Debug.Log(_testController[0].IsInstallaion());
-        //        if (total == 0)
-        //        {
-        //            //Debug.Log("均衡中...");
-        //        }
-        //        else if (total > 0)
-        //        {
-        //            //Debug.Log(_testController[1].IsInstallaion());
-        //            if (!_fieldData[0].IsFieldUpdate() && _fieldData[1].IsInstallaion())
-        //            {
-        //                _fieldData[1].SetObstacle(total);
-        //                _fieldData[1].GetInstallation(false);
-        //                //Debug.Log("右に" + total + "と" + _obstacleCount);
-        //            }
-        //            else
-        //            {
-        //                return;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (!_fieldData[1].IsFieldUpdate() && _fieldData[0].IsInstallaion())
-        //            {
-        //                _fieldData[0].SetObstacle(total * -1);
-        //                Debug.Log("おくるよ");
-        //                _fieldData[0].GetInstallation(false);
-
-        //            }
-        //            else
-        //            {
-        //                return;
-        //            }
-        //        }
-        //        // 初期化
-        //        for (int i = 0; i < _fieldData.Length; i++)
-        //        {
-        //            // とりあえず値を取得するよ.
-        //            _obstacle[i] = 0;
-        //            _obstacleAdd[i] = 0;
-        //        }
-        //        _isCalculation = false;
-
-        //        //_calculation = false;
-        Test();
-    }
-    // 最大数の制限処理
-    private int MaxLimit(int total)
-    {
-        //if (_obstacleCount + _obstacleMax != _obstaclePrevCount && !_isAdd)
-        //{
-        //    Debug.Log("だぁ");
-        //    total += _obstacleCount;
-        //    _isAdd = true;
-        //}
-        //_obstaclePrevCount = total;
-        // 最大数は30にしたいので30より多い数を送らないようにする.
-        if (total > _obstacleMax)
-        {
-            _obstacleCount = total - _obstacleMax;
-            total = _obstacleMax;
-            _isLimit = true;
-        }
-        else if (total < -_obstacleMax)
-        {
-            _obstacleCount = total + _obstacleMax;
-            //_obstacleCount *= -1;
-            total = -_obstacleMax;
-            _isLimit = true;
-        }
-        else
-        {
-            //_obstacleCount = 0;
-            _isLimit = false;
-        }
-        return total;
-    }
-    // テスト用実装
-    private void Test()
-    {
         // 連鎖が終わった時に落とす.
-
         for (int i = 0; i < _fieldData.Length; i++)
         {
             // とりあえず値を取得するよ.
@@ -366,44 +236,15 @@ public class GameMainMatchManager : MonoBehaviour
             {
                 _obstacle[i] = _obstacleAdd[i];
             }
-            
+
             if (_obstaclePrev[i] != _obstacle[i])
             {
                 _total += (_obstacle[0] - _obstacle[1]);
             }
             _obstaclePrev[i] = _obstacle[i];
         }
-        //// 計算するよ
-        //// 減らしていく処理はまだ、つまりまだこれは計算だけなの
-        //_total = (_obstacle[0] - _obstacle[1]) + _obstacleCount;
-        //if (_isLimit && _isCalculation)
-        //{
-        //    Debug.Log("ここに通ってる");
-        //    _total = (_obstacle[0] - _obstacle[1]) + _obstacleCount;
-        //    //_obstacleCount = 0;
-        //    _isCalculation = false;
-        //}
-        //else
-        //{
-
-        //if (!_isAdd)
-        //{
-        //if (_total > _obstacleCount)
-        
-        {
-            //_total += (_obstacle[0] - _obstacle[1]);
-        }
-        //else
-        {
-            //_total = (_obstacle[0] - _obstacle[1]);
-        }
-        //_isAdd = true;
-        //}
-
         //// 最大数は30にしたいので30より多い数を送らないようにする.
         _total = MaxLimit(_total);
-        //Debug.Log(_total + "おじゃま" + _obstacleCount);
-        //Debug.Log(_total);
 #if true
         // デバック用におじゃまの数表示
         TestObsText();
@@ -411,15 +252,13 @@ public class GameMainMatchManager : MonoBehaviour
 
         if (_total > 0)
         {
-            if (!_fieldData[0].IsFieldUpdate() && _fieldData[1].IsInstallaion() && _isSetCount[1] == 0)
+            if (!_fieldData[0].IsFieldUpdate() && _fieldData[1].IsInstallaion() && !_isSetFallt[1])
             {
                 _fieldData[1].SetObstacle(_total);
                 _fieldData[1].GetInstallation();
-                _isCalculation = true;
-                _isSetCount[1]++;
-                //_obstacle[0] = 0;
+                _isSetFallt[1] = true;
             }
-            else if(_fieldData[1].IsInstallaion())
+            else if (_fieldData[1].IsInstallaion())
             {
                 _fieldData[1].GetInstallation();
                 return;
@@ -432,14 +271,11 @@ public class GameMainMatchManager : MonoBehaviour
         }
         else if (_total < 0)
         {
-            if (!_fieldData[1].IsFieldUpdate() && _fieldData[0].IsInstallaion()　&& _isSetCount[0] == 0)
+            if (!_fieldData[1].IsFieldUpdate() && _fieldData[0].IsInstallaion() && !_isSetFallt[0])
             {
                 _fieldData[0].SetObstacle(_total * -1);
                 _fieldData[0].GetInstallation();
-                _isCalculation = true;
-                _isSetCount[0]++;
-                Debug.Log("とおってる？");
-                //_obstacle[1] = 0;
+                _isSetFallt[0] = true;
 
             }
             else if (_fieldData[0].IsInstallaion())
@@ -461,13 +297,25 @@ public class GameMainMatchManager : MonoBehaviour
             _obstacle[i] = 0;
             _obstacleAdd[i] = 0;
         }
-        _isAdd = false;
-        //_total = 0;
-        //_calculation = false;
         _total = _obstacleCount;
         _obstacleCount = 0;
     }
-
+    // 最大数の制限処理
+    private int MaxLimit(int total)
+    {
+        // 最大数は30にしたいので30より多い数を送らないようにする.
+        if (total > _obstacleMax)
+        {
+            _obstacleCount = total - _obstacleMax;
+            total = _obstacleMax;
+        }
+        else if (total < -_obstacleMax)
+        {
+            _obstacleCount = total + _obstacleMax;
+            total = -_obstacleMax;
+        }
+        return total;
+    }
     // テキスト用
     private void TestObsText()
     {
@@ -486,22 +334,4 @@ public class GameMainMatchManager : MonoBehaviour
         }
 
     }
-    //// テキスト用
-    //private void TestObsText(int total)
-    //{
-    //    if (total < 0)
-    //    {
-    //        _testText[0].SetObstacleCount((total + _obstacleCount) * -1);
-    //    }
-    //    else if (total > 0)
-    //    {
-    //        _testText[1].SetObstacleCount(total + _obstacleCount);
-    //    }
-    //    else
-    //    {
-    //        _testText[0].SetObstacleCount(0);
-    //        _testText[1].SetObstacleCount(0);
-    //    }
-
-    //}
 }

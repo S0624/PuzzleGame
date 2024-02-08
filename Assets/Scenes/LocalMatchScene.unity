@@ -534,6 +534,7 @@ MonoBehaviour:
   _prefabSphere: {fileID: 1292105871287533337, guid: 357072c04f365204d9bb7a4bc8df3ae0, type: 3}
   _disturbanceSphere: {fileID: 1292105871287533337, guid: 389ff6177fb072a46adb5311aa3bb536, type: 3}
   _popEffect: {fileID: 1833123592526364050, guid: 1c9cf0233ed89e74cb8bb362e89dee4a, type: 3}
+  _bubbleEffect: {fileID: 4251568914368295955, guid: 191d70a2219a55a469932e4b09b5025f, type: 3}
   _colorTable: {fileID: 2092515531}
 --- !u!1 &125553837
 GameObject:
@@ -811,6 +812,7 @@ MonoBehaviour:
   _prefabSphere: {fileID: 1292105871287533337, guid: 357072c04f365204d9bb7a4bc8df3ae0, type: 3}
   _disturbanceSphere: {fileID: 1292105871287533337, guid: 389ff6177fb072a46adb5311aa3bb536, type: 3}
   _popEffect: {fileID: 1833123592526364050, guid: 1c9cf0233ed89e74cb8bb362e89dee4a, type: 3}
+  _bubbleEffect: {fileID: 4251568914368295955, guid: 191d70a2219a55a469932e4b09b5025f, type: 3}
   _colorTable: {fileID: 2092515531}
 --- !u!4 &201810781
 Transform:

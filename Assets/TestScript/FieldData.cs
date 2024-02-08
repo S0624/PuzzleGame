@@ -12,7 +12,8 @@ public class FieldData : MonoBehaviour
     [SerializeField] private GameObject _prefabSphere = default;
     [SerializeField] private GameObject _disturbanceSphere = default;
     [SerializeField] private GameObject _popEffect = default;
-
+    [SerializeField] private GameObject _bubbleEffect = default;
+    [SerializeField] private GameObject _starEffect = default;
 
     private int[,] _board = new int[_borad_Height, _borad_Width];
     private GameObject[,] _sphere = new GameObject[_borad_Height, _borad_Width];
@@ -23,14 +24,18 @@ public class FieldData : MonoBehaviour
     private bool _isEraseFlag = false;
     // 色をいじるために使用.
     private ParticleSystem _popParticle;
-    private GameObject _effect;
+    private GameObject _eraseEffect;
+    private GameObject _chainEffect;
     // カラーの取得.
     public ColorTable _colorTable;
 
     private Vector2 _erasePos;
+    // その場所に置いたかどうかのフラグ
+    private bool[] _isSet = new bool[_borad_Width];
     // 点滅周期[s]
     //[SerializeField] private float _cycle = 1;
-
+    // カラーの取得
+    private Color _sphereColor;
     private double _totaTime = 0.9f;
 
     private int flashcount = 0;
@@ -38,7 +43,7 @@ public class FieldData : MonoBehaviour
     // 点滅中かどうか
     private bool _isFlashAnimation;
 
-    float _timeCount = 0.1f;
+    float _timeCount = 0.3f;
 
     // スコアのカウント用
     private int _score = 10;
@@ -89,8 +94,16 @@ public class FieldData : MonoBehaviour
         _sphereDirection[(int)Direction.Left] = new Vector2Int(-1, 0);
         _sphereDirection[(int)Direction.Up] = new Vector2Int(0, 1);
         _sphereDirection[(int)Direction.Down] = new Vector2Int(0, -1);
-
+        ResetIsSet();
         _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+    }
+    // フラグのリセット
+    private void ResetIsSet()
+    {
+        for(int i = 0; i < _borad_Width; i++)
+        {
+            _isSet[i] = false;
+        }
     }
     // 生成する.
     private void Generate()
@@ -112,7 +125,6 @@ public class FieldData : MonoBehaviour
     {
         // 下から詰めるけどランダムに降らせたい.
         // そんでたぶんこのままだと大変なことになる気がする.
-        //if (!_isInstallaion) return;
 
         if (_obstacleNum >= _borad_Width)
         {
@@ -123,15 +135,29 @@ public class FieldData : MonoBehaviour
         for (int i = 0; i < remainder; i++)
         {
             _obstacleNum--;
-            int rand = Random.Range(0, _borad_Width);
+            int rand = IndexXCheck();
             int indexY = SearchDown(rand);
             IsDisturbanceSphere(new Vector2Int(rand, indexY));
         }
     }
+    private int IndexXCheck()
+    {
+        int rand = Random.Range(0, _borad_Width);
+        if(_isSet[rand])
+        {
+            IndexXCheck();
+        }
+        else
+        {
+            _isSet[rand] = true;
+        }
+
+        return rand;
+    }
     // 6個塊で以上落すときの処理
     private void BlockObstruction(int block)
     {
-        // ランダムにフィールド上すべてに生成する
+        // ランダムにフィールド上に生成する
         for (int x = 0; x < _borad_Width; x++)
         {
             int indexY = SearchDown(x);
@@ -147,7 +173,7 @@ public class FieldData : MonoBehaviour
     {
         for (int y = 0; y < _borad_Height; y++)
         {
-            // 下におじゃまがあったら次の場所を探してもらう.
+            // スフィアがあったら次の場所を探してもらう.
             if (_board[y, indexX] != 0)
             {
                 continue;
@@ -385,7 +411,7 @@ public class FieldData : MonoBehaviour
         // 初期化する.
         _isSetSphere = false;
     }
-    // testuto 邪魔落下中は動きを止めたい
+    // 邪魔落下中は動きを止めたい
     public bool MoveObstacleSphere()
     {
         for (int y = 0; y < _borad_Height; y++)
@@ -653,15 +679,32 @@ public class FieldData : MonoBehaviour
             }
             FallDownField(x, fallDown);
         }
+        EraseChainEffect();
         _chainCount++;
     }
     // 消すときのエフェクト表示.
     private void EraseEffect(int posX,int posY)
     {
         Vector3 pos = transform.position + new Vector3(posX, posY, 0.0f);
-        _effect = Instantiate(_popEffect, pos, Quaternion.identity, transform);
-        ParticleSystem.MainModule effect = _effect.GetComponent<ParticleSystem>().main;
-        effect.startColor = _colorTable.GetColor(_board[posY,posX]);
+        _sphereColor = _colorTable.GetColor(_board[posY, posX]);
+        _eraseEffect = Instantiate(_popEffect, pos, Quaternion.identity, transform);
+        // 泡のエフェクト
+        Instantiate(_bubbleEffect, pos, Quaternion.identity, transform);
+
+        ParticleSystem.MainModule effect = _eraseEffect.GetComponent<ParticleSystem>().main;
+        effect.startColor = _sphereColor;
+    }
+    private void EraseChainEffect()
+    {
+        if (!_chainEffect)
+        {
+            Debug.Log("たったら");
+            _chainEffect = Instantiate(_starEffect);
+            ParticleSystem.MainModule effect = _chainEffect.GetComponent<ParticleSystem>().main;
+            effect.startColor = _sphereColor;
+            effect.maxParticles = _chainCount;
+            //_chainEffect = Instantiate(_starEffect);
+        }
     }
     // おじゃまスフィアの消去処理.
     private void EraseDisturbance(int x, int y, int[,] tempField)

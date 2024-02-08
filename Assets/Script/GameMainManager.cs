@@ -9,6 +9,7 @@ public class GameMainManager : MonoBehaviour
     [SerializeField] private GameObject _GameStartImg;
     [SerializeField] private GameObject GameOverImg;
     [SerializeField] private GameObject AllClearImg;
+    [SerializeField] private GameObject _allClearEffect;
     // Canvasを入れるよう
     [SerializeField] private GameObject Canvas;
     private GameObject _gameStartText = null;
@@ -130,6 +131,7 @@ public class GameMainManager : MonoBehaviour
             {
                 _soundManager.SEPlay(SoundSEData.AllClear);
                 _allClearTex = Instantiate(AllClearImg);
+                Instantiate(_allClearEffect);
                 //_allClearTex.transform.SetParent(Canvas.transform, false);
             }
         }

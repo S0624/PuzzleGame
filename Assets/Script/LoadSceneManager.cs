@@ -28,6 +28,8 @@ public class LoadSceneManager : MonoBehaviour
     private FadeManager _fadeManager;
     // シーンが切り替わるときに音を鳴らすためのサウンドの取得
     private SoundManager _soundManager;
+    // フルスクかどうかのフラグ
+    private bool _isFullDisplay = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -58,7 +60,31 @@ public class LoadSceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // ゲームのディスプレイのサイズの変更処理.
+        GameDisplaySizeChenge();
+        // 更新処理.
         SceneUpdate();
+    }
+    // ゲームをフルスクにするかの処理
+    private void GameDisplaySizeChenge()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            if (_isFullDisplay)
+            {
+                // ディスプレイモードに切り替えます
+                Screen.fullScreen = false;
+                _isFullDisplay = false;
+            }
+            else
+            {
+                // フルスクリーンモードに切り替えます
+                Screen.fullScreen = true;
+                _isFullDisplay = true;
+            }
+
+        }
+
     }
     // シーンのUpdate処理.
     private void SceneUpdate()
@@ -72,7 +98,7 @@ public class LoadSceneManager : MonoBehaviour
         }
         // もし入力したキーがSpaceキーならば、強制的に処理を実行する
         // それ以外はしかるべき時に押したらシーンが移動します
-        if (Input.GetKeyDown(KeyCode.Space) || ControllerInput())
+        if (ControllerInput())
         {
             _soundManager.SEPlay(SoundSEData.TitlePushSE);
             if (_select != null && _select.SelectNum() == 1)
