@@ -1,12 +1,14 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 // HACK テスト用の移動実装
 
 public class SphereMove : MonoBehaviour
 {
     // スクリプトの取得.
     [SerializeField] private InputState _inputManager;
-    // 何Pか指定する(テスト).
+    // 何Pか指定する.
     [SerializeField] private int _playerIndex;
+    [SerializeField] private GameObject[] _ghostSphere;
 
     // フィールドの情報を受け取るための変数
     public FieldData _fieldObject; 
@@ -26,7 +28,7 @@ public class SphereMove : MonoBehaviour
     // ボタンを押し続けているか図る(これがないと一瞬で移動してしまうため)
     private int _inputframe = 0;
     // 色の番号
-    private int _colorNum;
+    private int[] _colorNum = new int[2];
     // 移動用のスコア
     private int _moveScore = 0;
     // 再生成用のフラグ.
@@ -91,6 +93,7 @@ public class SphereMove : MonoBehaviour
                 }
             }
         }
+        GhostSphereEffect();
         //#endif
     }
     // 時間で落下したときの処理.
@@ -134,6 +137,7 @@ public class SphereMove : MonoBehaviour
                 _timer = 0;
             }
         }
+
     }
 
     private void MoveState()
@@ -247,7 +251,6 @@ public class SphereMove : MonoBehaviour
             int childcount = 0;
             // スコアを初期化する.
             _moveScore = 0;
-            //_fieldObject.GetComponent<TestController>().GetInstallation(true);
             foreach (Transform child in this.transform)
             {
                 // 子オブジェクトに対する処理をここに書く
@@ -261,16 +264,56 @@ public class SphereMove : MonoBehaviour
                 // こいつが悪さをしている
                 // こいつはforで置ける一番低い場所を取ってしまうので0からいくとそうなる（説明下手だな？）
                 pos = _fieldObject.SteepDescent(pos, _direction);
-                _colorNum = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name,childcount);
+                _colorNum[childcount] = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name,childcount);
                 //Debug.Log(child.position + "wa"+ child.name +"  " + pos.y + " " + _colorNum);
-                _fieldObject.IsNormalSphere(pos, _colorNum);
+                _fieldObject.IsNormalSphere(pos, _colorNum[childcount]);
                 childcount++;
             }
-            //_spherePos = new Vector2Int(3, -10);
             // HACK 余りにも力業オブ力業.
             this.transform.position = new Vector3(0,-10,0);
             // 再生成のフラグを立てる.
             _isReGenereteSpher = true;
+        }
+    }
+    // ゴースト処理
+    private void GhostSphereEffect()
+    {
+        if (!_fieldObject.IsGameOver())
+        {
+            if (_isReGenereteSpher)
+            {
+                for (int i = 0; i < _ghostSphere.Length; i++)
+                {
+                    _ghostSphere[i].transform.position = new Vector3(0, -10, 0);
+                }
+                return;
+            }
+            // 子オブジェクトの番号を取得する用に使用
+            int childcount = 0;
+            foreach (Transform child in this.transform)
+            {
+                // 位置の更新
+                Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x + _spherePos.x,
+                    (int)child.transform.position.y - (int)this.transform.position.y);
+                pos = _fieldObject.SteepDescent(pos);
+                // HACK 強制的に位置を変更している。
+                if (_direction == (int)Direction.Down)
+                {
+                    if (childcount != 0)
+                    {
+                        pos.y = pos.y - _sphereDirection[_direction].y;
+                    }
+
+                }
+                // ゴーストの場所変更
+                _ghostSphere[childcount].transform.localPosition = new Vector3(pos.x, pos.y, 0);
+
+                // 色の取得
+                _colorNum[childcount] = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name, childcount);
+                _ghostSphere[childcount].GetComponent<Renderer>().material.color = _colorManager.GetComponent<SphereColorManager>().GetColor(child.name, childcount, _colorNum[childcount]);
+
+                childcount++;
+            }
         }
     }
     // スフィアを設置したときの処理.
@@ -313,13 +356,14 @@ public class SphereMove : MonoBehaviour
     private void SpherePos(int x = 0, int y = 0)
     {
         this.transform.position = transform.position + new Vector3(x, y, 0);
+        //transform.DOMove(transform.position + new Vector3(x, y, 0), 0.1f).SetEase(Ease.InCubic);
         _spherePos.x += x;
         _spherePos.y += y;
     }
     // キューブの移動状態.
     private bool SphereMoveState()
     {
-        if (_inputframe > 10 || _inputManager.DGetInputWasPressData())
+        if (_inputframe > 8 || _inputManager.DGetInputWasPressData())
         {
             return true;
         }

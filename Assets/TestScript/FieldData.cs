@@ -139,13 +139,17 @@ public class FieldData : MonoBehaviour
             int indexY = SearchDown(rand);
             IsDisturbanceSphere(new Vector2Int(rand, indexY));
         }
+        // フラグの初期化
+        IsSetReset();
     }
+
     private int IndexXCheck()
     {
-        int rand = Random.Range(0, _borad_Width);
+        int rand = Random.Range(0, _borad_Width - 1);
         if(_isSet[rand])
         {
             IndexXCheck();
+            Debug.Log("やぁ" + rand);
         }
         else
         {
@@ -698,11 +702,10 @@ public class FieldData : MonoBehaviour
     {
         if (!_chainEffect)
         {
-            Debug.Log("たったら");
             _chainEffect = Instantiate(_starEffect);
             ParticleSystem.MainModule effect = _chainEffect.GetComponent<ParticleSystem>().main;
             effect.startColor = _sphereColor;
-            effect.maxParticles = _chainCount;
+            effect.maxParticles = _chainCount + 1;
             //_chainEffect = Instantiate(_starEffect);
         }
     }
@@ -788,7 +791,7 @@ public class FieldData : MonoBehaviour
 
 //#if DEBUG
     // クイック処理
-    public Vector2Int SteepDescent(Vector2Int pos, int dir)
+    public Vector2Int SteepDescent(Vector2Int pos, int dir = 0)
     {
         Vector2Int result = new Vector2Int();
         // 下まで急降下させる

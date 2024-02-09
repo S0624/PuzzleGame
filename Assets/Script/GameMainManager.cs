@@ -54,7 +54,7 @@ public class GameMainManager : MonoBehaviour
         // ポーズ画面を開いていたら処理を止める.
         if (!_pause.IsPause())
         {
-            // テスト用 ゲームオーバーになったら画像を表示
+            // ゲームオーバーになったら画像を表示
             GenereteGameOver();
             GenereteAllClear();
             _fish.FishUpdate();
@@ -122,7 +122,7 @@ public class GameMainManager : MonoBehaviour
             }
         }
     }
-    // テスト用 全消しになったら画像を表示
+    // 全消しになったら画像を表示
     private void GenereteAllClear()
     {
         if (_allClearTex == null)

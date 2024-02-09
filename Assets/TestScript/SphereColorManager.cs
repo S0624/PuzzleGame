@@ -119,4 +119,22 @@ public class SphereColorManager : MonoBehaviour
         }
         return 0;
     }
+    public Color GetColor(string name, int childNum,int color)
+    {
+        for (int i = 0; i < _colorNameData.Length; i++)
+        {
+            if (_colorNameData[i] == name)
+            {
+                if (childNum == 0)
+                {
+                    return _colorTable.GetColor(color);
+                }
+                else
+                {
+                    return _colorTable.GetColor(color);
+                }
+            }
+        }
+        return Color.white;
+    }
 }

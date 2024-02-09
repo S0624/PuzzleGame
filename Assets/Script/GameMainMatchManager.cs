@@ -10,6 +10,7 @@ public class GameMainMatchManager : MonoBehaviour
     [SerializeField] private GameObject[] _imgPos;
     [SerializeField] private GameObject AllClearImg;
     [SerializeField] private GameObject GameWinImg;
+    [SerializeField] private GameObject[] _allClearEffect;
     // Canvasを入れるよう
     [SerializeField] private GameObject Canvas;
     private GameObject _gameStartText = null;
@@ -212,6 +213,7 @@ public class GameMainMatchManager : MonoBehaviour
                 {
                     _soundManager.SEPlay(SoundSEData.AllClear);
                     _allClearTex[i] = Instantiate(AllClearImg, _imgPos[i].transform.position, Quaternion.identity);
+                    Instantiate(_allClearEffect[i]);
                 }
             }
             else
