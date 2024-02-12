@@ -1567,6 +1567,7 @@ MonoBehaviour:
   - SelectScene
   _prevScene: 
   _pauseScene: SelectScene
+  _demoScene: 
   _controller:
   - {fileID: 201810780}
   _select: {fileID: 0}

@@ -72,6 +72,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _backMinImge: {fileID: 1687997513225060338}
   _soundText: {fileID: 6960976476857933265}
+  _isSelectSetting: 0
   _soundVol:
   - {fileID: 5666257244458620438}
   - {fileID: 6044952568436606875}
@@ -121,6 +122,14 @@ PrefabInstance:
     - target: {fileID: 1239081331840585307, guid: a0bd7fce01c485648b77bf4256aaf5db, type: 3}
       propertyPath: m_Name
       value: CursorCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 5687665730761864526, guid: a0bd7fce01c485648b77bf4256aaf5db, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -581
+      objectReference: {fileID: 0}
+    - target: {fileID: 5687665730761864526, guid: a0bd7fce01c485648b77bf4256aaf5db, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 178
       objectReference: {fileID: 0}
     - target: {fileID: 8531983644637755506, guid: a0bd7fce01c485648b77bf4256aaf5db, type: 3}
       propertyPath: m_Pivot.x

@@ -26,9 +26,9 @@ public class Fade : MonoBehaviour
 		fade.Range = cutoutRange;
 	}
 
-	private void FadeOutTest()
+	private void FadeOut()
 	{
-		cutoutRange -= 0.01f;
+		cutoutRange -= 0.02f;
 		if (cutoutRange < 0)
 		{
 			cutoutRange = 0;
@@ -36,9 +36,9 @@ public class Fade : MonoBehaviour
 		fade.Range = cutoutRange;
 
 	}
-	private void FadeInTest()
+	private void FadeIn()
 	{
-		cutoutRange += 0.01f;
+		cutoutRange += 0.02f;
 		if (cutoutRange > 1)
 		{
 			cutoutRange = 1;
@@ -48,11 +48,11 @@ public class Fade : MonoBehaviour
 	}
 	public void FadeOut (float time)
 	{
-		FadeOutTest();
+		FadeOut();
 	}
 
 	public void FadeIn (float time)
 	{
-		FadeInTest();
+		FadeIn();
 	}
 }

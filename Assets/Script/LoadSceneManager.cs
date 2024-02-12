@@ -61,6 +61,7 @@ public class LoadSceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //if (_fade.cutoutRange != 0.0f) return;
         // ゲームのディスプレイのサイズの変更処理.
         GameDisplaySizeChenge();
         // 更新処理.
@@ -102,30 +103,33 @@ public class LoadSceneManager : MonoBehaviour
     }
     private void SceneTransition()
     {
-        // もし入力したキーがSpaceキーならば、強制的に処理を実行する
-        // それ以外はしかるべき時に押したらシーンが移動します
-        if (ControllerInput())
-        {
-            _soundManager.SEPlay(SoundSEData.TitlePushSE);
-            if (_select != null && _select.SelectNum() == 1)
-            {
-                if (_selectManager.ControllerCheck()) return;
-            }
-            _buttonPush = true;
-            _fadeManager._isFade = _buttonPush;
-        }
         if (_buttonPush)
         {
             SceneSwitching();
         }
-        // 前のシーンの情報がなかったら処理を飛ばす.
-        if (_prevScene == "") return;
-        // 戻るボタンを押したら一個前のシーンに戻る
-        if (Input.GetKeyUp(KeyCode.KeypadEnter) || _input[0].UI.Cancel.WasPerformedThisFrame())
+        // もし入力したキーがSpaceキーならば、強制的に処理を実行する
+        // それ以外はしかるべき時に押したらシーンが移動します
+        if (_fade.cutoutRange == 0.0f)
         {
-            _buttonPush = true;
-            _isPrevFlag = true;
-            _fadeManager._isFade = _buttonPush;
+            if (ControllerInput())
+            {
+                _soundManager.SEPlay(SoundSEData.TitlePushSE);
+                if (_select != null && _select.SelectNum() == 1)
+                {
+                    if (_selectManager.ControllerCheck()) return;
+                }
+                _buttonPush = true;
+                _fadeManager._isFade = _buttonPush;
+            }
+            // 前のシーンの情報がなかったら処理を飛ばす.
+            if (_prevScene == "") return;
+            // 戻るボタンを押したら一個前のシーンに戻る
+            if (Input.GetKeyUp(KeyCode.KeypadEnter) || _input[0].UI.Cancel.WasPerformedThisFrame())
+            {
+                _buttonPush = true;
+                _isPrevFlag = true;
+                _fadeManager._isFade = _buttonPush;
+            }
         }
     }
     // セレクトシーンの更新処理

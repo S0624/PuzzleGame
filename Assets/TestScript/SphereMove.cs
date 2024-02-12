@@ -77,21 +77,22 @@ public class SphereMove : MonoBehaviour
             // フィールドの情報の更新処理.
             if (!_fieldObject.IsFieldUpdate())
             {
+                // 本来はクイック移動はない
+                //#if true
+                Vector2 moveInput = _inputManager.GetInputMoveDate();
+                // 急降下で下に落とす(DEBUG機能).
+                if (moveInput.y > 0)
+                {
+                    if (_inputManager.DGetInputWasPressData())
+                    {
+                        Installation();
+                    }
+                }
                 MoveState();
                 RotationState();
             }
 
-            // 本来はクイック移動はない
-            //#if true
-            Vector2 moveInput = _inputManager.GetInputMoveDate();
-            // 急降下で下に落とす(DEBUG機能).
-            if (moveInput.y > 0)
-            {
-                if (_inputManager.DGetInputWasPressData())
-                {
-                    Installation();
-                }
-            }
+
         }
         GhostSphereEffect();
         //#endif
@@ -152,7 +153,7 @@ public class SphereMove : MonoBehaviour
         // 下.
         if (moveInput.y < 0)
         {
-            bool isTestMove  = false;
+            bool isMove  = false;
             if (SphereMoveState())
             {
                 _moveScore++;
@@ -169,14 +170,14 @@ public class SphereMove : MonoBehaviour
                     }
                     checkPos = new Vector2Int(checkPos.x, checkPos.y - (int)this.transform.position.y) + _spherePos;
                     
-                    isTestMove = _fieldObject.IsNextSphereY(checkPos, 0);
-                    if(isTestMove)
+                    isMove = _fieldObject.IsNextSphereY(checkPos, 0);
+                    if(isMove)
                     {
                         break;
                     }
                 }
                 
-                if (!isTestMove)
+                if (!isMove)
                 {
                     //_cubePos.y--;
                     _timer = 0;

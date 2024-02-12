@@ -39,15 +39,17 @@ public class SettingController : MonoBehaviour
 	private int _selectNum = 0;
 	private int _soundNum = 0;
 	private int _backNum = 0;
-	private float _bgmVolume = 5;
-	private float _seVolume = 5;
+	private float _bgmVolume = 0;
+	private float _seVolume = 0;
+	private int _limitVol = 10;
 	//public GameStartController _startCanvas;
 	private void Start()
 	{
 		CursorChoices();
 		_inputManager = GameObject.Find("InputManager").GetComponent<InputState>();
-
-		_input = new InputManager();
+		_bgmVolume = _soundManager.BGMVolume() * _limitVol;
+		_seVolume = _soundManager.SEVolume() * _limitVol;
+        _input = new InputManager();
 		_input.Enable();
 		_soundLength = _soundManager._soundBGMData.Length - 1;
 	}
@@ -102,9 +104,9 @@ public class SettingController : MonoBehaviour
 			_settingManager.SoundImageUpdate(_soundNum);
 
 			// BGMを変更させる
-			_bgmVolume = MoveInput((int)_bgmVolume, 10, true);
+			_bgmVolume = MoveInput((int)_bgmVolume, _limitVol, true);
 			// SEを変更させる
-			_seVolume = MoveInput((int)_seVolume, 10, true);
+			_seVolume = MoveInput((int)_seVolume, _limitVol, true);
 			// 背景のデータ取得
 			_backNum = MoveInput(_backNum, _backImageMax);
 			_settingManager.ChengeBack(_backNum);
@@ -150,12 +152,12 @@ public class SettingController : MonoBehaviour
 		else if (_cursorNum == _bgm)
 		{
 			// BGMを変更させる
-			_bgmVolume = MoveInput((int)_bgmVolume, 10, true);
+			_bgmVolume = MoveInput((int)_bgmVolume, _limitVol, true);
 		}
 		else if (_cursorNum == _se)
 		{
 			// SEを変更させる
-			_seVolume = MoveInput((int)_seVolume, 10, true);
+			_seVolume = MoveInput((int)_seVolume, _limitVol, true);
 		}
 		else if (_cursorNum == _background)
 		{
@@ -176,8 +178,8 @@ public class SettingController : MonoBehaviour
 	private void SettingDataUpdate()
     {
 		_settingManager.SoundImageUpdate(_soundNum);
-		_settingManager.BGMVolumeChenge(_bgmVolume / 10);
-		_settingManager.SEVolumeChenge(_seVolume / 10);
+		_settingManager.BGMVolumeChenge(_bgmVolume / _limitVol);
+		_settingManager.SEVolumeChenge(_seVolume / _limitVol);
 		SoundVolumeChenge();
 		_settingManager.ChengeBack(_backNum);
 	}

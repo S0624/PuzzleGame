@@ -29,6 +29,8 @@ public class CursorController : MonoBehaviour
     private int _selectMax = 0;
     // 最小値
     private int _selectMin = 0;
+    // テキスト更新中かどうか
+    private bool _isText = false;
     // シーンが切り替わるときに音を鳴らすためのサウンドの取得
     private SoundManager _soundManager;
 
@@ -54,6 +56,7 @@ public class CursorController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if (_isText) return;
         if (_isDecision) return;
         // カーソルのアニメーション
         CursorAnim();
@@ -167,6 +170,10 @@ public class CursorController : MonoBehaviour
         {
             return input.x;
         }
+    }
+    public void IsTextUpdateNow(bool text)
+    {
+        _isText = text;
     }
 
 }

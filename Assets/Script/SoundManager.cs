@@ -9,13 +9,20 @@ public class SoundManager : MonoBehaviour
     public AudioClip[] _soundSEData;
     public AudioSource _bgmSource;
     public AudioSource _seSource;
+    public static float _bgmVol = 0.5f;
+    public static float _seVol = 0.5f;
     //public AudioClip _audioSource;
     // Start is called before the first frame update
     void Start()
     {
+        VolumeInit();
         BGMPlay();
     }
-
+    private void VolumeInit()
+    {
+        SoundBGMVolume(_bgmVol);
+        SoundSEVolume(_seVol);
+    }
     // Update is called once per frame
     void Update()
     {
@@ -53,9 +60,14 @@ public class SoundManager : MonoBehaviour
     }
     public void SoundBGMVolume(float vol)
     {
-        _bgmSource.volume = vol;
+        _bgmVol = vol;
+        _bgmSource.volume = _bgmVol;
     }
-
+    // 音量を返す
+    public float BGMVolume()
+    {
+        return _bgmVol;
+    }
     // SEを鳴らす
     public void SEPlay()
     {
@@ -90,6 +102,13 @@ public class SoundManager : MonoBehaviour
 
     public void SoundSEVolume(float vol)
     {
+        _seVol = vol;
         _seSource.volume = vol;
     }
+    // 音量を返す
+    public float SEVolume()
+    {
+        return _seVol;
+    }
+    
 }

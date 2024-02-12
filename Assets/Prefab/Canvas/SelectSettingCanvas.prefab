@@ -122,8 +122,12 @@ PrefabInstance:
       value: CursorCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 5687665730761864526, guid: a0bd7fce01c485648b77bf4256aaf5db, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -587
+      objectReference: {fileID: 0}
+    - target: {fileID: 5687665730761864526, guid: a0bd7fce01c485648b77bf4256aaf5db, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 78
+      value: 107
       objectReference: {fileID: 0}
     - target: {fileID: 8531983644637755506, guid: a0bd7fce01c485648b77bf4256aaf5db, type: 3}
       propertyPath: m_Pivot.x

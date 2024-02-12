@@ -6,7 +6,7 @@ public class TitleScene : MonoBehaviour
 {
     // 時間が経過したらデモ動画シーンに移行する
     private int _timer = 0;
-    private int _limitTimer = 80;
+    private int _limitTimer = 600;
     // ロードシーンの取得
     public LoadSceneManager _loadSceneManager;
     // Start is called before the first frame update
