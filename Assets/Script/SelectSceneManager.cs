@@ -13,6 +13,8 @@ public class SelectSceneManager : MonoBehaviour
     // 警告画像の取得
     public GameObject _warning;
     public GameObject _warninigObject;
+    private GameObject _difficulty;
+    public GameObject _difficultyObject;
     // 警告画像の表示時間
     private int _warningDisplayTimer = 60;
     // 表示の削除のフラグ
@@ -138,6 +140,16 @@ public class SelectSceneManager : MonoBehaviour
             _select.Decision(false);
             _isDisplay = false;
             Destroy(_warninigObject);
+        }
+    }
+    public void DifficultyDisplay()
+    {
+        if (!_difficulty)
+        {
+            _select.Decision(true);
+            _warninigObject = Instantiate(_warning);
+            _warninigObject.transform.SetParent(_canvas.transform, false);
+            _warninigObject.transform.DOScale(Vector3.one, 1.0f).SetEase(Ease.OutCirc);
         }
     }
     private void InputCheck()

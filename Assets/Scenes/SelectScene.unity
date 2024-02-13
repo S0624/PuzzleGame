@@ -769,6 +769,7 @@ MonoBehaviour:
   _canvas: {fileID: 837595627}
   _warning: {fileID: 1413585459496241145, guid: e51ca9aa6ffca2c47b0879d9203b7819, type: 3}
   _warninigObject: {fileID: 0}
+  _difficultyObject: {fileID: 5879540223905490698, guid: a858c9c849a901241bff770d11f6c85c, type: 3}
   _isReacquisition: 0
   _setting: {fileID: 686054271}
 --- !u!114 &686054271
@@ -2264,7 +2265,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 141186, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11486218, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
       propertyPath: m_Enabled
