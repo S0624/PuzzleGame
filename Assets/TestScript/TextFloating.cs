@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 // オブジェクトをふわふわさせる用のscript.
 public class TextFloating : MonoBehaviour
 {
@@ -38,9 +37,11 @@ public class TextFloating : MonoBehaviour
         }
         else
         {
-            if (_isMove) return;
-            _imgTransform.transform.DOMoveY(_startMyPos - _limitPos, 2.5f).SetEase(Ease.InOutQuad);
-            _isMove = true;
+            _imgTransform.position -= new Vector3(0, _floatingPos, 0);
+            if (_imgTransform.position.y < _limitPos)
+            {
+                _imgTransform.position = new Vector3(_imgTransform.position.x,_limitPos, _imgTransform.position.z);
+            }
         }
     }
 }

@@ -301,7 +301,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 198553626}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 5.2525744, y: 4.24, z: -19.54}
+  m_LocalPosition: {x: 5.2525744, y: 4.4, z: -19.54}
   m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -321,7 +321,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _isLoop: 0
-  _limitPos: 2
+  _limitPos: 1
   _floatingPos: 0.01
 --- !u!4 &256534619 stripped
 Transform:

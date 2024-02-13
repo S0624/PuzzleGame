@@ -31,6 +31,9 @@ public class SelectSceneManager : MonoBehaviour
     private SoundManager _soundManager;
     // コントローラーの数取得
     private int _controllerNum = 0;
+    public　Image[] _image;
+    // スケールを変えたかどうかのフラグ
+    private bool _isScale = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -142,14 +145,24 @@ public class SelectSceneManager : MonoBehaviour
             Destroy(_warninigObject);
         }
     }
+    public void ImageScaleChenge(int num)
+    {
+        if (!_isScale)
+        {
+            _isScale = true;
+            _select.Decision(true);
+            _image[num].transform.DOScale(Vector3.one, 1.0f).SetEase(Ease.OutCirc);
+        }
+    }
     public void DifficultyDisplay()
     {
         if (!_difficulty)
         {
             _select.Decision(true);
-            _warninigObject = Instantiate(_warning);
-            _warninigObject.transform.SetParent(_canvas.transform, false);
-            _warninigObject.transform.DOScale(Vector3.one, 1.0f).SetEase(Ease.OutCirc);
+            //_difficulty = Instantiate(_difficultyObject);
+            //_difficulty.transform.SetParent(_canvas.transform, false);
+            _image[0].transform.DOScale(Vector3.one, 1.0f).SetEase(Ease.OutCirc);
+            //_difficulty.transform.DOScale(Vector3.one, 1.0f).SetEase(Ease.OutCirc);
         }
     }
     private void InputCheck()

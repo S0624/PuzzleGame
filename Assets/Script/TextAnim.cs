@@ -7,15 +7,19 @@ using UnityEngine;
 using UnityEngine.UI;
 public class TextAnim : MonoBehaviour
 {
-    public TextMeshProUGUI _text;
+    public TextMeshProUGUI[] _text;
     public CursorController _cursor;
     public string[] _textContent;
-    private string _textAdd;
+    private string[] _textAdd;
     private int _prevNum = -1;
-    private bool _isText = false;
+    // 時間の計測
+    private float _timer = 0.01f;
+    // 文字数のカウント
+    int _count = 0;
     // Start is called before the first frame update
     void Start()
     {
+        _textAdd = new string[_text.Length];
         TextNewLine();
     }
 
@@ -23,24 +27,27 @@ public class TextAnim : MonoBehaviour
     void Update()
     {
         TextContentUpdate();
-        _cursor.IsTextUpdateNow(_isText);
         if (_prevNum != _cursor.SelectNum())
         {
-            _isText = true;
             TextInit();
             _prevNum = _cursor.SelectNum();
-            StartCoroutine(TextDisplayUpdate());
         }
+        TextDisplayUpdate();
     }
+    // 初期化
     private void TextInit()
     {
-        _textAdd = "";
-        _text.text = "";
+        for (int i = 0; i < _text.Length; i++)
+        {
+            _textAdd[i] = "";
+            _text[i].text = "";
+        }
+        _count = 0;
     }
     // テキストの内容更新
     private void TextContentUpdate()
     {
-        _text.text = _textAdd;
+        _text[_cursor.SelectNum()].text = _textAdd[_cursor.SelectNum()];
     }
     // 改行処理
     private void TextNewLine()
@@ -55,18 +62,20 @@ public class TextAnim : MonoBehaviour
             }
         }
     }
-    // コルーチンを使って、１文字ごと表示する。
-    IEnumerator TextDisplayUpdate()
+    // １文字ごと表示する。
+    private void TextDisplayUpdate()
     {
         // 半角スペースで文字を分割する。
         var words = _textContent[_cursor.SelectNum()].Split(' ');
-        foreach (var word in words)
+        if (words.Length - 1 == _count) return;
+        _timer += 0.02f;
+        if (_timer > 0.03f)
         {
             // 0.03秒刻みで１文字ずつ表示する
-            _textAdd = _textAdd + word;
-            yield return new WaitForSeconds(0.02f);
+            _textAdd[_cursor.SelectNum()] = _textAdd[_cursor.SelectNum()] + words[_count];
+            _count++;
+            _timer = 0;
         }
-        _isText = false;
 
     }
 }

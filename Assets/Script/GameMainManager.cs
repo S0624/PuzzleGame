@@ -61,7 +61,10 @@ public class GameMainManager : MonoBehaviour
             // ゲームオーバーになったら処理を止めるよ.
             if (_isGameOver) return;
             // キューブの回転処理.
-            _move.SphereUpdate();
+            if (!_field.IsSetSphere())
+            {
+                _move.SphereUpdate();
+            }
             _move.InstallationProcess(_field.IsSetSphere(), _field);
             // フィールドの更新処理.
             _field.FieldUpdate();

@@ -126,7 +126,7 @@ public class LoadSceneManager : MonoBehaviour
             // 戻るボタンを押したら一個前のシーンに戻る
             if (Input.GetKeyUp(KeyCode.KeypadEnter) || _input[0].UI.Cancel.WasPerformedThisFrame())
             {
-                //_buttonPush = true;
+                _buttonPush = true;
                 _isPrevFlag = true;
                 _fadeManager._isFade = _buttonPush;
             }
@@ -174,7 +174,7 @@ public class LoadSceneManager : MonoBehaviour
             _select.Decision(_buttonPush);
             //// ネットワークは準備中なので押せないようにするよ
             //if (_select.SelectNum() == 2) return;
-            _selectManager.DifficultyDisplay();
+            _selectManager.ImageScaleChenge(_select.SelectNum());
             // Sceneを切り替える
             LoadScene(_nextScene[_select.SelectNum()]);
         }

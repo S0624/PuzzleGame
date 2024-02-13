@@ -44,7 +44,7 @@ public class GameMainMatchManager : MonoBehaviour
     // おじゃまのトータル数
     private int _total = 0;
     // お邪魔を落としたというフラグ
-    private bool[] _isSetFallt = new bool[2];
+    private bool[] _isSetFall = new bool[2];
     // Start is called before the first frame update
     void Start()
     {
@@ -107,7 +107,7 @@ public class GameMainMatchManager : MonoBehaviour
                 {
                     // カウントをリセットす
                     _moveSphere[i]._isRegeneration = false;
-                    _isSetFallt[i] = false;
+                    _isSetFall[i] = false;
                 }
             }
             foreach (var field in _fieldData)
@@ -254,11 +254,11 @@ public class GameMainMatchManager : MonoBehaviour
 
         if (_total > 0)
         {
-            if (!_fieldData[0].IsFieldUpdate() && _fieldData[1].IsInstallaion() && !_isSetFallt[1])
+            if (!_fieldData[0].IsFieldUpdate() && _fieldData[1].IsInstallaion() && !_isSetFall[1])
             {
                 _fieldData[1].SetObstacle(_total);
                 _fieldData[1].GetInstallation();
-                _isSetFallt[1] = true;
+                _isSetFall[1] = true;
             }
             else if (_fieldData[1].IsInstallaion())
             {
@@ -273,11 +273,11 @@ public class GameMainMatchManager : MonoBehaviour
         }
         else if (_total < 0)
         {
-            if (!_fieldData[1].IsFieldUpdate() && _fieldData[0].IsInstallaion() && !_isSetFallt[0])
+            if (!_fieldData[1].IsFieldUpdate() && _fieldData[0].IsInstallaion() && !_isSetFall[0])
             {
                 _fieldData[0].SetObstacle(_total * -1);
                 _fieldData[0].GetInstallation();
-                _isSetFallt[0] = true;
+                _isSetFall[0] = true;
 
             }
             else if (_fieldData[0].IsInstallaion())

@@ -10,16 +10,16 @@ public class ColorSeedCreate : MonoBehaviour
     // 色の番号
     private int _colorNum;
     private int _colorNum2;
-
+    static public int _colorDifficulty = 1;
     // カラーの種生成.
     public void InitColor()
     {
         for (int i = 0; i < _colorSeed.Length; i++)
         {
 #if true
-            _colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax - 2);
+            _colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax - _colorDifficulty);
             _colorSeed[i].upColor = _colorNum;
-            _colorNum2 = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax - 2);
+            _colorNum2 = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax - _colorDifficulty);
             _colorSeed[i].downColor = _colorNum2;
 #endif
         }

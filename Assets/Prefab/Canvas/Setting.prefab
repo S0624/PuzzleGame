@@ -251,6 +251,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1843106506219268373, guid: 2f42b0b4cfb0c9344a4b0d5b74addfe0, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 51f2e772a522fab4384c25b9c0df8777, type: 3}
     - target: {fileID: 2692679644876961988, guid: 2f42b0b4cfb0c9344a4b0d5b74addfe0, type: 3}
       propertyPath: m_Name
       value: SettingCanvas
@@ -259,6 +263,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6459862546934127269, guid: 2f42b0b4cfb0c9344a4b0d5b74addfe0, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 51f2e772a522fab4384c25b9c0df8777, type: 3}
     - target: {fileID: 6483535304836728466, guid: 2f42b0b4cfb0c9344a4b0d5b74addfe0, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

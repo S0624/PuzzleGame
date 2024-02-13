@@ -49,13 +49,13 @@ public class SphereColorManager : MonoBehaviour
         _sphereColor[0] = _nowSphere;
         _sphereColor[1] = _nextSphere;
         _sphereColor[2] = _nextSecondSphere;
-        int _test = 0;
+        int colorNum = 0;
         foreach (var sphere in _sphereColor)
         {
             foreach (Transform child in sphere.transform)
             {
-                _colorNameData[_test] = child.name;
-                _test++;
+                _colorNameData[colorNum] = child.name;
+                colorNum++;
             }
         }
     }

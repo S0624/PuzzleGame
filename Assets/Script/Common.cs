@@ -8,8 +8,8 @@ public enum ColorType
     Green,    // 緑.
     Red,    // 赤.
     Yellow,    // 黄色.
-    Blue,    // 青.
     Purple,    // 紫.
+    Blue,    // 青.
     PuyoMax,       // ぷよ最大値(仮).
     hindrance,     // おじゃま(仮).
 };

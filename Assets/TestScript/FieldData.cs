@@ -140,7 +140,7 @@ public class FieldData : MonoBehaviour
             IsDisturbanceSphere(new Vector2Int(rand, indexY));
         }
         // フラグの初期化
-        IsSetReset();
+        ResetIsSet();
     }
 
     private int IndexXCheck()
@@ -679,8 +679,8 @@ public class FieldData : MonoBehaviour
                     EraseDisturbance(x, y, tempField);
                 }
             }
-            fallDown++;
             FallDownField(x, fallDown);
+            fallDown++;
         }
         EraseChainEffect();
         _chainCount++;
@@ -747,9 +747,6 @@ public class FieldData : MonoBehaviour
                 _board[y, x] = _board[y + 1, x];
                 _board[y + 1, x] = 0;
             }
-        }
-        for (int y = 0; y < _borad_Height - 1; y++)
-        {
             if (_board[y, x] != 0)
             {
                 hight = y;
