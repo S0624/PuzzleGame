@@ -149,7 +149,6 @@ public class FieldData : MonoBehaviour
         if(_isSet[rand])
         {
             IndexXCheck();
-            Debug.Log("やぁ" + rand);
         }
         else
         {
@@ -656,13 +655,13 @@ public class FieldData : MonoBehaviour
         }
 
     }
-    // キューブを消す処理
+    // スフィアを消す処理
     private void EraseSphere(int[,] tempField)
     {
         int fallDown = 0;
         for (int x = 0; x < _borad_Width; x++)
         {
-            fallDown = 0;
+            //fallDown = 0;
             for (int y = 0; y < _borad_Height; y++)
             {
                 if (tempField[y, x] == 1)
@@ -676,11 +675,11 @@ public class FieldData : MonoBehaviour
                     _sphere[y, x] = null;
                     _board[y, x] = 0;
                     tempField[y, x] = 0;
-                    fallDown++;
                     _eraseCount++;
                     EraseDisturbance(x, y, tempField);
                 }
             }
+            fallDown++;
             FallDownField(x, fallDown);
         }
         EraseChainEffect();
@@ -735,7 +734,7 @@ public class FieldData : MonoBehaviour
         }
     }
     // 消えた時に落とす処理.
-    private void FallDownField(int x ,int falldown)
+    private void FallDownField(int x ,int falldown = 0)
     {
         // 落す処理(配列の情報をずらす(現在のフィールドにあるキューブを落す))
         int hight = 0;
@@ -753,12 +752,12 @@ public class FieldData : MonoBehaviour
         {
             if (_board[y, x] != 0)
             {
-                    hight = y;
+                hight = y;
             }
         }
         if(FallCheck(x , hight))
         {
-            FallDownField(x, 0);
+            FallDownField(x, falldown);
         }
     }
     // すべて落したかの確認.
