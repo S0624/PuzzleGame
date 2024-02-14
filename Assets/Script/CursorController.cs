@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Linq;
 
 public class CursorController : MonoBehaviour
 {
@@ -12,15 +13,16 @@ public class CursorController : MonoBehaviour
     [Header("特定の方向の指定")] public bool _isDirection;
     // オブジェクトの位置の取得.
     public GameObject _cursorObject;
-    private GameObject _cursor;
     public RectTransform _selecCursorImg;
     public RectTransform[] _selectModeImg;
     // ボタンの処理をするための変数.
     private InputState _inputManager;
-    private InputManager _input;
+    private InputManager[] _input;
+    private Vector2[] _moveInput;
+    private float[] _dir;
     private int _selectNum = 0;
     // 一瞬だけ押したかどうか.
-    private InputAction _isNowAction;
+    private InputAction[] _isNowAction;
     // 押し続けた時の処理
     private int _inputframe = 0;
     // 決定したかどうか
@@ -46,8 +48,19 @@ public class CursorController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _input = new InputManager();
-        _input.Enable();
+        // ゲームパッドの取得.
+        _input = Gamepad.all.Select(pad =>
+        {
+            var control = new InputManager();
+            control.devices = new UnityEngine.InputSystem.Utilities.ReadOnlyArray<InputDevice>(new[] { pad });
+            control.Enable();
+            return control;
+        }).ToArray();
+        //_input = new InputManager();
+        //_input.Enable();
+        _isNowAction = new InputAction[_input.Length];
+        _moveInput =  new Vector2[_input.Length];
+        _dir =  new float[_input.Length];
         _selectMax = _selectModeImg.Length - 1;
         _inputManager = GameObject.Find("InputManager").GetComponent<InputState>();
         _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
@@ -60,33 +73,41 @@ public class CursorController : MonoBehaviour
         if (_isDecision) return;
         // カーソルのアニメーション
         CursorAnim();
-        // 入力情報の取得.
-        _isNowAction = _input.UI.CursorMove;
-        Vector2 moveInput = _inputManager.GetInputMoveDate();
+      
+        for (int i = 0; i < _input.Length; i++)
+        {
+            // 入力情報の取得.
+            _isNowAction[i] = _input[i].UI.CursorMove;
+            _moveInput[i] = _inputManager.GetInputMoveDate(true,i, _input.Length);
+            _dir[i] = InputDirection(_moveInput[i]);
+        }
 
         // 選択した方向の入力値を返す.
-        var dir = InputDirection(moveInput);
         if (_inputManager.IsMovePressed())
         {
             _inputframe++;
         }
-        // 左右の入力検知.
-        if (dir > 0)
+        for (int i = 0; i < _input.Length; i++)
         {
-            if (IsPressKey() || _isNowAction.WasPressedThisFrame())
+            // 左右の入力検知.
+            if (_dir[i] > 0)
             {
-                _soundManager.SEPlay(SoundSEData.Select);
-                _selectNum++;
-                _inputframe = 0;
+                if (IsPressKey() || _isNowAction[i].WasPressedThisFrame())
+                {
+                    Debug.Log("おせてる");
+                    _soundManager.SEPlay(SoundSEData.Select);
+                    _selectNum++;
+                    _inputframe = 0;
+                }
             }
-        }
-        else if (dir < 0)
-        {
-            if (IsPressKey() || _isNowAction.WasPressedThisFrame())
+            else if (_dir[i] < 0)
             {
-                _soundManager.SEPlay(SoundSEData.Select);
-                _selectNum--;
-                _inputframe = 0;
+                if (IsPressKey() || _isNowAction[i].WasPressedThisFrame())
+                {
+                    _soundManager.SEPlay(SoundSEData.Select);
+                    _selectNum--;
+                    _inputframe = 0;
+                }
             }
         }
         // カーソルの移動制限
@@ -111,7 +132,7 @@ public class CursorController : MonoBehaviour
     //  キーの入力状態.
     private bool IsPressKey()
     {
-        if (_inputframe > 15)
+        if (_inputframe > 12)
         {
             return true;
         }

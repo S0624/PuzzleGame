@@ -11,6 +11,10 @@ public class ColorSeedCreate : MonoBehaviour
     private int _colorNum;
     private int _colorNum2;
     static public int _colorDifficulty = 1;
+    public void ColorPreparation(int color)
+    {
+        _colorDifficulty = color;
+    }
     // カラーの種生成.
     public void InitColor()
     {

@@ -18,7 +18,8 @@ public class SelectSceneManager : MonoBehaviour
     // 警告画像の表示時間
     private int _warningDisplayTimer = 60;
     // 表示の削除のフラグ
-    private bool _isDisplay = false;
+    private bool _isWarningsDisplay = false;
+    private bool _isPrevWarningsDisplay = false;
     // 再取得するフラグ
     public bool _isReacquisition = false;
     // 設定画面の取得
@@ -31,13 +32,21 @@ public class SelectSceneManager : MonoBehaviour
     private SoundManager _soundManager;
     // コントローラーの数取得
     private int _controllerNum = 0;
+    // 画像の取得
     public　Image[] _image;
+    private int _imageScaleNum = 0;
+    // defaultの大きさの取得
+    private Vector3 _defaultScale = Vector3.one;
     // スケールを変えたかどうかのフラグ
     private bool _isScale = false;
+
+    public bool _isWarningDestory = false;
+    private bool _isDifficultyDestory = false;
     // Start is called before the first frame update
     void Start()
     {
         //GetControllerInit();
+        _defaultScale = _image[0].transform.localScale;
     }
     // ゲームパッドを受け取る
     public void GetInputInit(InputManager[] input)
@@ -53,7 +62,7 @@ public class SelectSceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SelectSceneUpdate();
+        //SelectSceneUpdate();
     }
     // セッティング画面の更新処理
     public bool IsSettingUpdate()
@@ -85,8 +94,7 @@ public class SelectSceneManager : MonoBehaviour
     }
     public void SelectSceneUpdate()
     {
-
-        DisplayDestory();
+        WarningDisplayDestory();
         InputCheck();
     }
     // コントローラーの数の取得
@@ -106,9 +114,14 @@ public class SelectSceneManager : MonoBehaviour
         }
         return false;
     }
+    public bool IsWarningDisplay()
+    {
+        return _warninigObject;
+    }
 
     public bool DisplayUpdate()
     {
+        bool fade = false;
         _isReacquisition = false;
         if (_warninigObject)
         {
@@ -119,39 +132,50 @@ public class SelectSceneManager : MonoBehaviour
                 if (_warningDisplayTimer < 0)
                 {
                     // コントローラーの数の取得
-                    if (_input.Length >= 2)
+                    if (_controllerNum >= 2)
                     {
-                        return true;
+                        fade = true;
                     }
                     _isReacquisition = true;
                     _warningDisplayTimer = 60;
 
                 }
             }
-            if (_input[0].UI.Cancel.WasPerformedThisFrame() || _input[0].UI.Submit.WasPerformedThisFrame())
+            if (_input[0].UI.Cancel.WasPerformedThisFrame())
             {
-                _isDisplay = true;
+                _isWarningsDisplay = true;
             }
         }
-        return false;
+        return fade;
     }
     // 警告画像の削除処理
-    private void DisplayDestory()
+    private void WarningDisplayDestory()
     {
-        if (_isDisplay)
+        if (_isWarningsDisplay && _isPrevWarningsDisplay != _isWarningsDisplay)
         {
             _select.Decision(false);
-            _isDisplay = false;
+            _isWarningsDisplay = false;
             Destroy(_warninigObject);
+            _isWarningDestory = true;
         }
+        _isPrevWarningsDisplay = _isWarningsDisplay;
     }
     public void ImageScaleChenge(int num)
     {
         if (!_isScale)
         {
+            _imageScaleNum = num;
             _isScale = true;
             _select.Decision(true);
-            _image[num].transform.DOScale(Vector3.one, 1.0f).SetEase(Ease.OutCirc);
+            _image[_imageScaleNum].transform.DOScale(Vector3.one, 0.8f).SetEase(Ease.OutCirc);
+        }
+    }
+    public void ImageScaleDefalutChenge()
+    {
+        if (_isScale)
+        {
+            _isScale = false;
+            _image[_imageScaleNum].transform.DOScale(_defaultScale, 0.5f).SetEase(Ease.OutCirc);
         }
     }
     public void DifficultyDisplay()
@@ -159,11 +183,43 @@ public class SelectSceneManager : MonoBehaviour
         if (!_difficulty)
         {
             _select.Decision(true);
-            //_difficulty = Instantiate(_difficultyObject);
-            //_difficulty.transform.SetParent(_canvas.transform, false);
-            _image[0].transform.DOScale(Vector3.one, 1.0f).SetEase(Ease.OutCirc);
-            //_difficulty.transform.DOScale(Vector3.one, 1.0f).SetEase(Ease.OutCirc);
+            _difficulty = Instantiate(_difficultyObject);
+            _difficulty.transform.SetParent(_canvas.transform, false);
+            _difficulty.transform.DOScale(Vector3.one, 0.8f).SetEase(Ease.OutExpo);
+            _difficulty.GetComponent<DifficultyManager>()._input = _input;
         }
+    }
+    // 削除処理
+    public void DifficultyDisplayDestory()
+    {
+        if (_difficulty)
+        {
+            _isDifficultyDestory = _difficulty.GetComponent<DifficultyManager>()._isButton;
+            if (_difficulty.GetComponent<DifficultyManager>()._isButton)
+            {
+                _select.Decision(false);
+                Destroy(_difficulty);
+                //_difficulty.GetComponent<DifficultyManager>()._isButton = false;
+            }
+        }
+    }
+    // 現在難易度選択が表示されているかどうか
+    public bool NowDifficultyDisplay()
+    {
+        bool display = false;
+        if (_difficulty)
+        {
+            display = _difficulty.GetComponent<DifficultyManager>()._isPushButton;
+        }
+        return display;
+    }
+    public bool IsDifficultyObj()
+    {
+        return _difficulty;
+    }
+    public bool IsDifficultyDestory()
+    {
+        return _isDifficultyDestory;
     }
     private void InputCheck()
     {
@@ -174,7 +230,6 @@ public class SelectSceneManager : MonoBehaviour
                 GameObject child = _warninigObject.transform.GetChild(2).gameObject;
                 var color = Color.white;
                 color.a = 255;
-                Debug.Log(color.a);
                 child.GetComponent<Image>().color = color;
             }
         }

@@ -15,6 +15,12 @@ public class InputState : MonoBehaviour
     void Start()
     {
         // ゲームパッドの取得.
+        InputInit();
+    }
+
+    private void InputInit()
+    {
+        // ゲームパッドの取得.
         _inputManager = Gamepad.all.Select(pad =>
         {
             var control = new InputManager();
@@ -24,10 +30,8 @@ public class InputState : MonoBehaviour
         }).ToArray();
         _move = new Vector2[_inputManager.Length];
         _isPress = new bool[_inputManager.Length];
-        _rota = new bool[_inputManager.Length,(int)RotaState.max];
+        _rota = new bool[_inputManager.Length, (int)RotaState.max];
     }
-
-
     void Update()
     {
         InputStateUpdate();
@@ -95,8 +99,16 @@ public class InputState : MonoBehaviour
         _index = playerIndex;
     }
     // 移動した量を返す.
-    public Vector2 GetInputMoveDate()
+    public Vector2 GetInputMoveDate(bool isSelect = false,int index = 0 , int indexMax = 0)
     {
+        if(isSelect)
+        {
+            if(_move.Length != indexMax)
+            {
+                InputInit();
+            }
+            return _move[index];
+        }
         return _move[_index];
     }
     // 移動キーを押しっぱなしかどうかを検知する.
