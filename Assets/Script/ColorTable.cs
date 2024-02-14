@@ -8,8 +8,8 @@ public class ColorTable : MonoBehaviour
         Color.green,        // 緑.
         Color.red,          // 赤.
         Color.yellow,       // 黄色.
+        Color.cyan,         // 青.
         Color.magenta,      // 紫.
-        Color.blue,         // 青.
         Color.gray,         // 仮でグレーを入れる
 
         Color.gray,         // おじゃま(グレー)

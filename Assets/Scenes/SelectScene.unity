@@ -776,6 +776,7 @@ MonoBehaviour:
   - {fileID: 634561541}
   - {fileID: 554467031}
   - {fileID: 2116324757}
+  _isWarningDestory: 0
 --- !u!114 &686054271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2523,6 +2524,7 @@ MonoBehaviour:
   - {fileID: 1152375196}
   - {fileID: 796610294}
   _cursor: {fileID: 686054269}
+  _difficulty: {fileID: 0}
   _textContent:
   - "\u3072 \u3068 \u308A \u3067 \u904A \u3073 \u307E \u3059 \u3002 \\n \u30A8 \u30F3
     \u30C9 \u30EC \u30B9 \u30E2 \u30FC \u30C9 \u3067 \u3059 \u3002 "
@@ -2548,11 +2550,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11486218, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11486218, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
       propertyPath: cutoutRange
-      value: 0
+      value: 0.981
+      objectReference: {fileID: 0}
+    - target: {fileID: 11491604, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
+      propertyPath: cutoutRange
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22424616, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
       propertyPath: m_Pivot.x

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CursorController : MonoBehaviour
+public class DifficultyController : MonoBehaviour
 {
     // 方向の指定
     [Header("方向の指定")] public bool _isVertical;

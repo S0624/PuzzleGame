@@ -9,6 +9,7 @@ public class TextAnim : MonoBehaviour
 {
     public TextMeshProUGUI[] _text;
     public CursorController _cursor;
+    public DifficultyManager _difficulty;
     public string[] _textContent;
     private string[] _textAdd;
     private int _prevNum = -1;
@@ -16,6 +17,7 @@ public class TextAnim : MonoBehaviour
     private float _timer = 0.01f;
     // 文字数のカウント
     int _count = 0;
+    private int _selectNum = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -26,11 +28,19 @@ public class TextAnim : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(_cursor)
+        {
+            _selectNum = _cursor.SelectNum();
+        }
+        else if(_difficulty)
+        {
+            _selectNum = _difficulty._selectNum;
+        }
         TextContentUpdate();
-        if (_prevNum != _cursor.SelectNum())
+        if (_prevNum != _selectNum)
         {
             TextInit();
-            _prevNum = _cursor.SelectNum();
+            _prevNum = _selectNum;
         }
         TextDisplayUpdate();
     }
@@ -47,7 +57,7 @@ public class TextAnim : MonoBehaviour
     // テキストの内容更新
     private void TextContentUpdate()
     {
-        _text[_cursor.SelectNum()].text = _textAdd[_cursor.SelectNum()];
+        _text[_selectNum].text = _textAdd[_selectNum];
     }
     // 改行処理
     private void TextNewLine()
@@ -66,13 +76,13 @@ public class TextAnim : MonoBehaviour
     private void TextDisplayUpdate()
     {
         // 半角スペースで文字を分割する。
-        var words = _textContent[_cursor.SelectNum()].Split(' ');
+        var words = _textContent[_selectNum].Split(' ');
         if (words.Length - 1 == _count) return;
         _timer += 0.02f;
         if (_timer > 0.03f)
         {
             // 0.03秒刻みで１文字ずつ表示する
-            _textAdd[_cursor.SelectNum()] = _textAdd[_cursor.SelectNum()] + words[_count];
+            _textAdd[_selectNum] = _textAdd[_selectNum] + words[_count];
             _count++;
             _timer = 0;
         }

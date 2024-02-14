@@ -186,7 +186,7 @@ public class SelectSceneManager : MonoBehaviour
             _difficulty = Instantiate(_difficultyObject);
             _difficulty.transform.SetParent(_canvas.transform, false);
             _difficulty.transform.DOScale(Vector3.one, 0.8f).SetEase(Ease.OutExpo);
-            _difficulty.GetComponent<DifficultyManager>()._input = _input;
+            //_difficulty.GetComponent<DifficultyManager>()._input = _input;
         }
     }
     // 削除処理

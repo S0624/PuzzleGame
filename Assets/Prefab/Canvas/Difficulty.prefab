@@ -152,7 +152,8 @@ MonoBehaviour:
   - {fileID: 3360377406652314889}
   - {fileID: 3360377406920059117}
   - {fileID: 3360377407948391585}
-  _cursor: {fileID: 3360377408226523588}
+  _cursor: {fileID: 0}
+  _difficulty: {fileID: 3360377408226523589}
   _textContent:
   - "\u30BF \u30B3 \u306E \u8272 \u304C 3 \u8272 \u306B \u306A \u308A \u307E \u3059
     \u3002 \\n \u521D \u5FC3 \u8005 \u306E \u65B9 \u306B \u304A \u52E7 \u3081 \u3067
@@ -1017,7 +1018,6 @@ GameObject:
   - component: {fileID: 3360377408226523591}
   - component: {fileID: 3360377408226523586}
   - component: {fileID: 3360377408226523587}
-  - component: {fileID: 3360377408226523588}
   - component: {fileID: 3360377408226523589}
   - component: {fileID: 3360377408226523590}
   m_Layer: 5
@@ -1086,26 +1086,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &3360377408226523588
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3360377408226523592}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0c9a596a0ef8c14a8e33fb14775dd2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _isVertical: 1
-  _isDirection: 0
-  _cursorObject: {fileID: 0}
-  _selecCursorImg: {fileID: 3360377407451082936}
-  _selectModeImg:
-  - {fileID: 3360377407792410830}
-  - {fileID: 3360377406857195689}
-  - {fileID: 3360377407846815005}
 --- !u!114 &3360377408226523589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1118,9 +1098,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e21737c5f700264f938063159dd5dd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cursor: {fileID: 3360377408226523588}
+  _selecCursorImg: {fileID: 3360377407451082936}
+  _selectModeImg:
+  - {fileID: 3360377407792410830}
+  - {fileID: 3360377406857195689}
+  - {fileID: 3360377407846815005}
+  _cursor: {fileID: 0}
   _isPushButton: 0
   _isButton: 0
+  _selectNum: 0
   _color: {fileID: 3360377408226523590}
 --- !u!114 &3360377408226523590
 MonoBehaviour:

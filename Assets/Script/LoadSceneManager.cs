@@ -60,7 +60,6 @@ public class LoadSceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (_fade.cutoutRange != 0.0f) return;
         // ゲームのディスプレイのサイズの変更処理.
         GameDisplaySizeChenge();
         // 更新処理.
