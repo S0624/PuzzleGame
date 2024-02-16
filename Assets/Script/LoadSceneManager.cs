@@ -21,6 +21,7 @@ public class LoadSceneManager : MonoBehaviour
     public SelectSceneManager _selectManager;
     // ボタンを押したかのフラグ
     private bool _buttonPush = false;
+    private bool _title = false;
     private bool _isPrevFlag  = false;
     // フェードの取得.
     private Fade _fade;
@@ -105,6 +106,7 @@ public class LoadSceneManager : MonoBehaviour
         {
             SceneSwitching();
         }
+        if (_title) return;
         // しかるべき時に押したらシーンが移動します
         if (_fade.cutoutRange == 0.0f)
         {
@@ -238,7 +240,8 @@ public class LoadSceneManager : MonoBehaviour
     }
     public void TitleChenge()
     {
-        _fadeManager._isFade = true;
+        _title = true;
+        _fadeManager._isFade = _title;
         LoadScene(_demoScene);
     }
     // ポーズ画面からモードセレクトに戻るを押された場合の処理.
