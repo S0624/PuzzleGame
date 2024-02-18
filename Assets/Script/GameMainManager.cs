@@ -66,6 +66,12 @@ public class GameMainManager : MonoBehaviour
                 _move.SphereUpdate();
             }
             _move.InstallationProcess(_field.IsSetSphere(), _field);
+            // スフィアを再生成できるかのフラグが成立していたら
+            if (_move._isRegeneration)
+            {
+                // カウントをリセットす
+                _move._isRegeneration = false;
+            }
             // フィールドの更新処理.
             _field.FieldUpdate();
         }
