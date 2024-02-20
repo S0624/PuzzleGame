@@ -21,7 +21,8 @@ public class LoadSceneManager : MonoBehaviour
     public SelectSceneManager _selectManager;
     // ボタンを押したかのフラグ
     private bool _buttonPush = false;
-    private bool _title = false;
+    // 放置していたら移行するフラグ
+    private bool _autoState = false;
     private bool _isPrevFlag  = false;
     // フェードの取得.
     private Fade _fade;
@@ -34,7 +35,6 @@ public class LoadSceneManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Application.targetFrameRate = 60;
         _fade = GameObject.Find("FadeCanvas").GetComponent<Fade>();
         _fadeManager = GameObject.Find("FadeManager").GetComponent<FadeManager>();
         GetControllerInit();
@@ -106,7 +106,7 @@ public class LoadSceneManager : MonoBehaviour
         {
             SceneSwitching();
         }
-        if (_title) return;
+        if (_autoState) return;
         // しかるべき時に押したらシーンが移動します
         if (_fade.cutoutRange == 0.0f)
         {
@@ -235,13 +235,15 @@ public class LoadSceneManager : MonoBehaviour
     // Demo動画のところでのみ使用する処理
     public void DemoMoveSceneChenge()
     {
-        _fadeManager._isFade = true;
+        _autoState = true;
+        _fadeManager._isFade = _autoState;
         LoadScene(_nextScene[0]);
     }
+    // タイトルからDemo動画に移行する処理
     public void TitleChenge()
     {
-        _title = true;
-        _fadeManager._isFade = _title;
+        _autoState = true;
+        _fadeManager._isFade = _autoState;
         LoadScene(_demoScene);
     }
     // ポーズ画面からモードセレクトに戻るを押された場合の処理.

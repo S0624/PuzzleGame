@@ -40,6 +40,7 @@ public class SphereMove : MonoBehaviour
     // サウンドの取得
     private SoundManager _soundManager;
     public bool _isRegeneration = false;
+    private float _goshtalpha = 0.8f;
     // Start is called before the first frame update
     // 初期化処理
     void Start()
@@ -94,7 +95,7 @@ public class SphereMove : MonoBehaviour
 
 
         }
-        GhostSphereEffect();
+        GhostSphereUpdate();
         //#endif
     }
     // 時間で落下したときの処理.
@@ -276,8 +277,10 @@ public class SphereMove : MonoBehaviour
             _isReGenereteSpher = true;
         }
     }
-    // ゴースト処理
-    private void GhostSphereEffect()
+    /// <summary>
+    /// ゴーストの更新処理
+    /// </summary>
+    private void GhostSphereUpdate()
     {
         if (!_fieldObject.IsGameOver())
         {
@@ -308,14 +311,26 @@ public class SphereMove : MonoBehaviour
                 }
                 // ゴーストの場所変更
                 _ghostSphere[childcount].transform.localPosition = new Vector3(pos.x, pos.y, 0);
+                // ゴーストのカラー変更処理
+                GhostSphereColor(child,childcount);
 
-                // 色の取得
-                _colorNum[childcount] = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name, childcount);
-                _ghostSphere[childcount].GetComponent<Renderer>().material.color = _colorManager.GetComponent<SphereColorManager>().GetColor(child.name, childcount, _colorNum[childcount]);
 
                 childcount++;
             }
         }
+    }
+    /// <summary>
+    /// ゴーストのカラー処理
+    /// </summary>
+    private void GhostSphereColor(Transform child,int childcount)
+    {
+        // 色の取得
+        _colorNum[childcount] = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name, childcount);
+        var ghostcolor = _colorManager.GetComponent<SphereColorManager>().GetColor(child.name, childcount, _colorNum[childcount]);
+        // ゴーストのアルファ値を半透明にする
+        ghostcolor.a = _goshtalpha;
+        // ゴーストのカラーの取得
+        _ghostSphere[childcount].GetComponent<Renderer>().material.color = ghostcolor;
     }
     // スフィアを設置したときの処理.
     public void InstallationProcess(bool isChain,FieldData controller)

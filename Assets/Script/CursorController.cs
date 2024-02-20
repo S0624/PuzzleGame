@@ -42,13 +42,14 @@ public class CursorController : MonoBehaviour
     private int _timer = 0;
     // 待つ時間
     private int _maxTimer = 15;
-
+    // フラグの取得
+    private bool _isAction = false;
     // Start is called before the first frame update
     void Start()
     {
+        _selectMax = _selectModeImg.Length - 1;
         _input = new InputManager();
         _input.Enable();
-        _selectMax = _selectModeImg.Length - 1;
         _inputManager = GameObject.Find("InputManager").GetComponent<InputState>();
         _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
@@ -56,12 +57,12 @@ public class CursorController : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (_isText) return;
         if (_isDecision) return;
         // カーソルのアニメーション
         CursorAnim();
         // 入力情報の取得.
         _isNowAction = _input.UI.CursorMove;
+
         Vector2 moveInput = _inputManager.GetInputMoveDate();
 
         // 選択した方向の入力値を返す.
@@ -70,11 +71,21 @@ public class CursorController : MonoBehaviour
         {
             _inputframe++;
         }
+            Debug.Log("あらら～？" + _isNowAction.WasPressedThisFrame());
+        if (_isNowAction.WasPressedThisFrame())
+        {
+            _isAction = true;
+        }
+        //if (_fadeManager)
+        //{
+        //    _fadeManager._isTest = _isNowAction.WasPressedThisFrame();
+        //}
         // 左右の入力検知.
         if (dir > 0)
         {
-            if (IsPressKey() || _isNowAction.WasPressedThisFrame())
+            if (IsPressKey() || _isAction)
             {
+                _isAction = false;
                 _soundManager.SEPlay(SoundSEData.Select);
                 _selectNum++;
                 _inputframe = 0;
@@ -82,8 +93,9 @@ public class CursorController : MonoBehaviour
         }
         else if (dir < 0)
         {
-            if (IsPressKey() || _isNowAction.WasPressedThisFrame())
+            if (IsPressKey() || _isAction)
             {
+                _isAction = false;
                 _soundManager.SEPlay(SoundSEData.Select);
                 _selectNum--;
                 _inputframe = 0;
@@ -111,7 +123,7 @@ public class CursorController : MonoBehaviour
     //  キーの入力状態.
     private bool IsPressKey()
     {
-        if (_inputframe > 15)
+        if (_inputframe > 10)
         {
             return true;
         }
@@ -171,9 +183,4 @@ public class CursorController : MonoBehaviour
             return input.x;
         }
     }
-    public void IsTextUpdateNow(bool text)
-    {
-        _isText = text;
-    }
-
 }

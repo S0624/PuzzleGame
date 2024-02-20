@@ -55,9 +55,3 @@ public enum SoundSEData
     AllClear,
     GameOver,
 }
-
-
-public class Common : MonoBehaviour
-{
-
-}

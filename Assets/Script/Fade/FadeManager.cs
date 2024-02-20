@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using TMPro;
 
 public class FadeManager : MonoBehaviour
 {
@@ -6,18 +7,27 @@ public class FadeManager : MonoBehaviour
     [SerializeField] private Fade _fade;
     // フェードのフラグ.
     public bool _isFade = false;
-
+    public bool _isTest = false;
+    public TextMeshProUGUI _test;
     private void Update()
     {
+        if (_test != null)
+        {
+            _test.text = _fade.cutoutRange.ToString() + "\n" + _isFade;
+        }
+        //Debug.Log(_fade.cutoutRange);
+        //Debug.Log(_isFade + "ぱぱぱぱぱ" + _fade.cutoutRange);
         // 押されていたらフェードイン.
         if (_isFade)
         {
-            _fade.FadeIn(1.0f);
+            Debug.Log("in");
+            _fade.FadeIn();
         }
         // 押されていなかったらフェードアウト.
         else
         {
-            _fade.FadeOut(1.0f);
+            Debug.Log("out");
+            _fade.FadeOut();
         }
     }
 }

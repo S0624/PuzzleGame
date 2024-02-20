@@ -5,40 +5,40 @@ public class Fade : MonoBehaviour
 {
 	IFade fade;
 
+    [SerializeField, Range(0, 1)]
+    public float cutoutRange = 1.0f;
+	private float fadeSpeed = 0.02f; 
 	void Start ()
 	{
         Init ();
-        this.cutoutRange = 1.0f;
+        //this.cutoutRange = 1.0f;
 		fade.Range = cutoutRange;
 	}
 
-    [SerializeField, Range(0, 1)]
-    public float cutoutRange;
 
     void Init ()
 	{
         fade = GetComponent<IFade> ();
 	}
 
-	void OnValidate ()
-	{
-		Init ();
-		fade.Range = cutoutRange;
-	}
+	//void OnValidate ()
+	//{
+	//	Init ();
+	//	fade.Range = cutoutRange;
+	//}
 
-	private void FadeOut()
+	public void FadeOut()
 	{
-		cutoutRange -= 0.02f;
+		cutoutRange -= fadeSpeed;
 		if (cutoutRange < 0)
 		{
 			cutoutRange = 0;
 		}
 		fade.Range = cutoutRange;
-
 	}
-	private void FadeIn()
+	public void FadeIn()
 	{
-		cutoutRange += 0.02f;
+		cutoutRange += fadeSpeed;
 		if (cutoutRange > 1)
 		{
 			cutoutRange = 1;
@@ -46,13 +46,13 @@ public class Fade : MonoBehaviour
 		fade.Range = cutoutRange;
 
 	}
-	public void FadeOut (float time)
-	{
-		FadeOut();
-	}
+	//public void FadeOut (float time)
+	//{
+	//	FadeOut();
+	//}
 
-	public void FadeIn (float time)
-	{
-		FadeIn();
-	}
+	//public void FadeIn (float time)
+	//{
+	//	FadeIn();
+	//}
 }
