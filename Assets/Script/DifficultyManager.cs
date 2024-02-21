@@ -97,6 +97,7 @@ public class DifficultyManager : MonoBehaviour
     {
         if (_input.UI.Submit.WasPerformedThisFrame())
         {
+            Debug.Log("はい？");
             _isPushButton = true;
             _isDecision = true;
         }

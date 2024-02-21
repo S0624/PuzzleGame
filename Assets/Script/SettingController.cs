@@ -78,7 +78,6 @@ public class SettingController : MonoBehaviour
 		{
 			_isSettingCanvas = true;
 			_settingUI = GameObject.Instantiate(_settingPrefab) as GameObject;
-			Time.timeScale = 0f;
 		}
 
 	}
@@ -270,7 +269,6 @@ public class SettingController : MonoBehaviour
 		_isSettingCanvas = false;
 		// キャンバスを削除.
 		Destroy(_settingUI);
-		Time.timeScale = 1f;
 	}
 	// スタート画面を開いているかどうか.
 	public bool IsSettingCanvas()

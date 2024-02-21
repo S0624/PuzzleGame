@@ -32,6 +32,7 @@ public class LoadSceneManager : MonoBehaviour
     private SoundManager _soundManager;
     // フルスクかどうかのフラグ
     private bool _isFullDisplay = false;
+    static public bool _isSceneChenge = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -61,10 +62,22 @@ public class LoadSceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // シーン移行が可能かどうかのフラグの更新処理
+        SceneChengeFlagUpdate();
         // ゲームのディスプレイのサイズの変更処理.
         GameDisplaySizeChenge();
         // 更新処理.
         SceneUpdate();
+    }
+    /// <summary>
+    /// シーン移行が可能かどうかのフラグの更新処理
+    /// </summary>
+    private void SceneChengeFlagUpdate()
+    {
+        if (_fade.cutoutRange == 0.0f)
+        {
+            _isSceneChenge = false;
+        }
     }
     // ゲームをフルスクにするかの処理
     private void GameDisplaySizeChenge()
@@ -252,14 +265,36 @@ public class LoadSceneManager : MonoBehaviour
         _buttonPush = true;
         _fadeManager._isFade = true;
         LoadScene(_pauseScene);
+        Time.timeScale = 1f;
     }
     // シーンをロードする
     private void LoadScene(string scenename)
     {
-        if (_fade.cutoutRange == 1.0f && _fadeManager._isFade)
+        // シーンを移行してもよいかどうかをチェックする
+        if (IsLoadSceneChenge())
         {
+            // シーン移行したのでシーン移行をできないようにフラグを立てる
+            _isSceneChenge = true;
             SceneManager.LoadSceneAsync(scenename);
         }
+    }
+    /// <summary>
+    /// シーンをロードしてもいいかの検知
+    /// </summary>
+    /// <returns>シーンをロード可能</returns>
+    private bool IsLoadSceneChenge()
+    {
+        // チェンジ可能かどうかのフラグ
+        bool isChenge = true;
+        // もし条件にあってなかったらfalseを返す
+        // フェードが終わりきっているかどうか
+        if (_fade.cutoutRange != 1.0f) return false;
+        // フェードのフラグがたっているかどうか
+        if (!_fadeManager._isFade) return false;
+        // シーンを移行しても可能かどうかのフラグ
+        if (_isSceneChenge) return false;
+        // ここまで来れたらすべての条件をクリアしている
+        return isChenge;
     }
     public float FadeNumericalValue()
     {

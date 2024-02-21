@@ -333,7 +333,7 @@ public class SphereMove : MonoBehaviour
         _ghostSphere[childcount].GetComponent<Renderer>().material.color = ghostcolor;
     }
     // スフィアを設置したときの処理.
-    public void InstallationProcess(bool isChain,FieldData controller)
+    public void InstallationProcess(bool isChain, FieldData controller)
     ///private void SphereReGenerete()
     {
         if (isChain && _isReGenereteSpher)
@@ -392,9 +392,9 @@ public class SphereMove : MonoBehaviour
         if (_inputManager.GetInputRotaDate(RotaState.right))
         {
             _soundManager.SEPlay(SoundSEData.Rota);
-            
+            if (!IsRotaChenck()) return;
             _direction++;
-            if (_direction >= 4)
+            if (_direction > 3)
             {
                 _direction = 0;
             }
@@ -405,6 +405,7 @@ public class SphereMove : MonoBehaviour
         else if (_inputManager.GetInputRotaDate(RotaState.left))
         {
             _soundManager.SEPlay(SoundSEData.Rota);
+            if (!IsRotaChenck()) return;
             _direction--;
             if (_direction < 0)
             {
@@ -414,6 +415,27 @@ public class SphereMove : MonoBehaviour
             SphereRotation();
         }
 
+    }
+    /// <summary>
+    /// 回転可能かどうか
+    /// </summary>
+    private bool IsRotaChenck()
+    {
+        foreach (Transform child in this.transform)
+        {
+            child.transform.position =
+                new Vector3(_sphereDirection[_direction].x + transform.position.x, _sphereDirection[_direction].y + transform.position.y, 0);
+            break;
+        }
+        foreach (Transform child in this.transform)
+        {
+            // 子オブジェクトに対する処理をここに書く
+            Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x,
+                (int)child.transform.position.y - (int)this.transform.position.y) + _spherePos;
+            if (!_fieldObject.IsSphereRota(pos, _direction)) return false;
+
+        }
+        return true;
     }
     // 回転処理.
     private void SphereRotation()

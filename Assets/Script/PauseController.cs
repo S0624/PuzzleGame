@@ -70,7 +70,6 @@ public class PauseController : MonoBehaviour
 			{
 				_isSelectScene = true;
 				// 閉じる.
-				PauseClose();
 				//Debug.Log("しーんいこうするよ");
 			}
 			else

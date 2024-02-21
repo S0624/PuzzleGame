@@ -29,8 +29,6 @@ public class CursorController : MonoBehaviour
     private int _selectMax = 0;
     // 最小値
     private int _selectMin = 0;
-    // テキスト更新中かどうか
-    private bool _isText = false;
     // シーンが切り替わるときに音を鳴らすためのサウンドの取得
     private SoundManager _soundManager;
 
@@ -67,11 +65,11 @@ public class CursorController : MonoBehaviour
 
         // 選択した方向の入力値を返す.
         var dir = InputDirection(moveInput);
+        Debug.Log(dir);
         if (_inputManager.IsMovePressed())
         {
             _inputframe++;
         }
-            Debug.Log("あらら～？" + _isNowAction.WasPressedThisFrame());
         if (_isNowAction.WasPressedThisFrame())
         {
             _isAction = true;

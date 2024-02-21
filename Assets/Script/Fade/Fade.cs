@@ -8,10 +8,11 @@ public class Fade : MonoBehaviour
     [SerializeField, Range(0, 1)]
     public float cutoutRange = 1.0f;
 	private float fadeSpeed = 0.02f; 
+
 	void Start ()
 	{
         Init ();
-        //this.cutoutRange = 1.0f;
+        this.cutoutRange = 1.0f;
 		fade.Range = cutoutRange;
 	}
 
@@ -30,14 +31,18 @@ public class Fade : MonoBehaviour
 	public void FadeOut()
 	{
 		cutoutRange -= fadeSpeed;
+
 		if (cutoutRange < 0)
 		{
 			cutoutRange = 0;
 		}
 		fade.Range = cutoutRange;
+
+
 	}
 	public void FadeIn()
 	{
+
 		cutoutRange += fadeSpeed;
 		if (cutoutRange > 1)
 		{

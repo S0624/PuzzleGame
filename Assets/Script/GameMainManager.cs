@@ -69,7 +69,7 @@ public class GameMainManager : MonoBehaviour
             // スフィアを再生成できるかのフラグが成立していたら
             if (_move._isRegeneration)
             {
-                // カウントをリセットす
+                // カウントをリセットする
                 _move._isRegeneration = false;
             }
             // フィールドの更新処理.

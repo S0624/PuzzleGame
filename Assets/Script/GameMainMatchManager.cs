@@ -256,9 +256,16 @@ public class GameMainMatchManager : MonoBehaviour
         {
             if (!_fieldData[0].IsFieldUpdate() && _fieldData[1].IsInstallaion() && !_isSetFall[1])
             {
-                _fieldData[1].SetObstacle(_total);
-                _fieldData[1].GetInstallation();
-                _isSetFall[1] = true;
+                if (!_fieldData[1].IsFieldUpdate())
+                {
+                    _fieldData[1].SetObstacle(_total);
+                    _fieldData[1].GetInstallation();
+                    _isSetFall[1] = true;
+                }
+                else
+                {
+                    return;
+                }
             }
             else if (_fieldData[1].IsInstallaion())
             {
@@ -275,10 +282,16 @@ public class GameMainMatchManager : MonoBehaviour
         {
             if (!_fieldData[1].IsFieldUpdate() && _fieldData[0].IsInstallaion() && !_isSetFall[0])
             {
-                _fieldData[0].SetObstacle(_total * -1);
-                _fieldData[0].GetInstallation();
-                _isSetFall[0] = true;
-
+                if (!_fieldData[0].IsFieldUpdate())
+                {
+                    _fieldData[0].SetObstacle(_total * -1);
+                    _fieldData[0].GetInstallation();
+                    _isSetFall[0] = true;
+                }
+                else
+                {
+                    return;
+                }
             }
             else if (_fieldData[0].IsInstallaion())
             {

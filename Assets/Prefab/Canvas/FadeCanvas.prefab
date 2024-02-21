@@ -147,3 +147,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fade: {fileID: 11491604}
   _isFade: 0
+  _isTest: 0
+  _test: {fileID: 0}

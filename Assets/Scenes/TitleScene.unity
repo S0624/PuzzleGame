@@ -365,7 +365,7 @@ MonoBehaviour:
   _demoScene: DemoScene
   _controller:
   - {fileID: 0}
-  _select: {fileID: 0}
+  _selectCursor: {fileID: 0}
   _selectManager: {fileID: 0}
 --- !u!4 &309696738
 Transform:
@@ -836,7 +836,7 @@ PrefabInstance:
     - target: {fileID: 11486218, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
       propertyPath: maskTexture
       value: 
-      objectReference: {fileID: 2800000, guid: 34ce9c1be55d76f40a5bdffe4016ee4e, type: 3}
+      objectReference: {fileID: 2800000, guid: b23eadd10b3125841ac96f2aa6f1da19, type: 3}
     - target: {fileID: 11491604, guid: 53c22e1773be7f84aad8ed8b7b58fa6e, type: 3}
       propertyPath: cutoutRange
       value: 1

@@ -6,8 +6,11 @@ public class FieldData : MonoBehaviour
 {
     // ボードの横の最大値(6 * 13).
     private const int _borad_Width = 6;
+    // ボードの最大値から一つ引いたもの
+    private const int _boradWidthMax = _borad_Width - 1;
     // ボードの縦の最大値.
     private const int _borad_Height = 13;
+    private const int _boradHeightMax = _borad_Height - 1;
 
     [SerializeField] private GameObject _prefabSphere = default;
     [SerializeField] private GameObject _disturbanceSphere = default;
@@ -36,8 +39,10 @@ public class FieldData : MonoBehaviour
     //[SerializeField] private float _cycle = 1;
     // カラーの取得
     private Color _sphereColor;
+    private double _timeMax = 0.8f;
     private double _totaTime = 0.9f;
-
+    // 点滅の回数
+    private int _frashMax = 3;
     private int flashcount = 0;
 
     // 点滅中かどうか
@@ -145,7 +150,7 @@ public class FieldData : MonoBehaviour
 
     private int IndexXCheck()
     {
-        int rand = Random.Range(0, _borad_Width - 1);
+        int rand = Random.Range(0, _boradWidthMax);
         if(_isSet[rand])
         {
             IndexXCheck();
@@ -210,7 +215,10 @@ public class FieldData : MonoBehaviour
     // フィールド内にセットする
     public bool IsNormalSphere(Vector2Int pos, int val)
     {
+        // 再設置を避けるための処理
+        if (_isSetEnd) return false;
         if (!IsCanSetSphere(pos)) return false;
+        if(pos.y > _boradHeightMax) return false;
 
         // 色番号をセット.
         _board[pos.y, pos.x] = val;
@@ -269,7 +277,7 @@ public class FieldData : MonoBehaviour
     {
         //Debug.Log("X" + (pos.x + add) + "Y :" + pos.y);
         // 範囲外じゃないかどうか
-        if (pos.x + add < 0 || pos.x + add > _borad_Width - 1)
+        if (pos.x + add < 0 || pos.x + add > _boradWidthMax)
         {
             //Debug.Log("範囲外やで");
             return true;
@@ -388,7 +396,6 @@ public class FieldData : MonoBehaviour
             _bonus = 0;
         }
 
-
         if (!_isField)
         {
             // 連鎖が終わっている.
@@ -400,7 +407,6 @@ public class FieldData : MonoBehaviour
             // 設置のみを行った.
             else if (_isSetSphere)
             {
-                //Debug.Log("!せっちのみ");
                 _isSetEnd = true;
             }
         }
@@ -410,7 +416,6 @@ public class FieldData : MonoBehaviour
             _isSetEnd = false;
             //Debug.Log("れんさしてる");
         }
-
         // 初期化する.
         _isSetSphere = false;
     }
@@ -471,9 +476,9 @@ public class FieldData : MonoBehaviour
     private bool IsSameColor(ColorType colorType, int x, int y)
     {
         if (x < 0) return false;
-        if (x > _borad_Width - 1) return false;
+        if (x > _boradWidthMax) return false;
         if (y < 0) return false;
-        if (y > _borad_Height - 1) return false;
+        if (y > _boradHeightMax) return false;
 
 
         if(_sphere[y, x] == null) return false;
@@ -507,9 +512,9 @@ public class FieldData : MonoBehaviour
 
             //範囲外はチェックしない
             if (indexX < 0) continue;
-            if (indexX > _borad_Width - 1) continue;
+            if (indexX > _boradWidthMax) continue;
             if (indexY < 0) continue;
-            if (indexY > _borad_Height - 1) continue;
+            if (indexY > _boradHeightMax) continue;
 
             if (tempField[indexY,indexX] == 0)//すでにつながっている判定されている部分はチェックしない
             {
@@ -635,12 +640,12 @@ public class FieldData : MonoBehaviour
             flashcount++;
         }
         // 三回点滅したら.
-        if (flashcount >= 3 && _isFlashAnimation)
+        if (flashcount >= _frashMax && _isFlashAnimation)
         {
             _isEraseFlag = true;
             flashcount = 0;
             _isFlashAnimation = false;
-            _totaTime = 0.8f;
+            _totaTime = _timeMax;
             _timeCount *= -1;
         }
         if (_isEraseFlag)
@@ -738,7 +743,7 @@ public class FieldData : MonoBehaviour
     {
         // 落す処理(配列の情報をずらす(現在のフィールドにあるキューブを落す))
         int hight = 0;
-        for (int y = 0; y < _borad_Height - 1; y++)
+        for (int y = 0; y < _boradHeightMax; y++)
         {
             if (_board[y, x] == 0)
             {
@@ -791,7 +796,7 @@ public class FieldData : MonoBehaviour
     {
         Vector2Int result = new Vector2Int();
         // 下まで急降下させる
-        for (int y = _borad_Height - 1; y >= 0; y--)
+        for (int y = _boradHeightMax; y >= 0; y--)
         {
             if (_sphere[y, pos.x] == null)
             {
@@ -811,11 +816,12 @@ public class FieldData : MonoBehaviour
             result.y = result.y + pos.y;
             return result;
         }
-        if(dir == (int)Direction.Up)
+        var posY = result.y - 2;
+        if (dir == (int)Direction.Up)
         {
-            if (_sphere[result.y - 2, result.x] == null)
+            if (_sphere[posY, result.x] == null)
             {
-                result.y = result.y - 2;
+                result.y = posY;
             }
         }
         EraseScore();
@@ -829,15 +835,45 @@ public class FieldData : MonoBehaviour
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0);
         return world_position;
     }
+    /// <summary>
+    /// 回転可能かどうかの処理
+    /// </summary>
+    /// <param name="pos">現在の位置</param>
+    /// <param name="direction">方向</param>
+    /// <returns></returns>
+    public bool IsSphereRota(Vector2Int pos, int direction)
+    {
+        // 方向をキャスト
+        var dir = (Direction)direction;
+        // 現在地から左右のポジションの取得
+        var leftpos = pos.x - 1;
+        var rightpos = pos.x + 1;
+        // 上下の時のみ処理を行う
+        if(Direction.Down == dir || Direction.Up == dir)
+        {
+            if (pos.x == 0 && _sphere[pos.y, rightpos] != null)
+            {
+                return false;
+            }
+            if (pos.x == _boradWidthMax && _sphere[pos.y, leftpos] != null)
+            {
+                return false;
+            }
+            if (pos.x < 0 || pos.x >= _boradWidthMax) return true;
+            if (_sphere[pos.y, rightpos] != null && _sphere[pos.y, leftpos])
+            {
+                return false;
+            }
+        }
+        return true;
 
+    }
     // 範囲外に行かないように調整
-    // HACK ここで回したときに壁じゃなくキューブに当たった場合どうするか
+    // HACK ここで回したときに壁じゃなくスフィアに当たった場合どうするか
     //public int MoveRotaCheck(Vector2Int pos, Vector2Int direction)
     public Vector2Int MoveRotaCheck(Vector2Int pos, Vector2Int direction)
     {
-        //Debug.Log(EraseScore());
         Vector2Int rotaPos = new Vector2Int();
-        //rotaPos = direction * -1;
         if(pos.x < 0)
         {
             rotaPos = new Vector2Int(1,0);
@@ -851,7 +887,6 @@ public class FieldData : MonoBehaviour
         if (pos.y < 0)
         {
             rotaPos = new Vector2Int(0, 1);
-            //Debug.Log("posが0以下やで");
             return rotaPos;
         }
         if (_sphere[pos.y,pos.x] != null)
@@ -889,7 +924,7 @@ public class FieldData : MonoBehaviour
             _bonus += 32;
         }
         // お邪魔計算.
-        _obstacleCount = (_score * _eraseCount) * (_bonus) / 70;
+        _obstacleCount = (int)((_score * _eraseCount) * (_bonus) * 0.0125f);
         
         //Debug.Log("連鎖数:" + _chainCount + "ボーナス:" + _bonus);
         //Debug.Log(_obstacleCount);

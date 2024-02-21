@@ -47,6 +47,9 @@ public class SelectSceneManager : MonoBehaviour
     {
         //GetControllerInit();
         _defaultScale = _image[0].transform.localScale;
+        
+        //_setting.StartSettingOpen();
+        //_setting.SettingCanvasClose();
     }
     // ゲームパッドを受け取る
     public void GetInputInit(InputManager[] input)
@@ -73,7 +76,7 @@ public class SelectSceneManager : MonoBehaviour
         {
             if (_isSetting)
             {
-                //_setting.SettingCanvasClose();
+                _setting.SettingCanvasClose();
             }
             else
             {
