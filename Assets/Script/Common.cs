@@ -55,3 +55,17 @@ public enum SoundSEData
     AllClear,
     GameOver,
 }
+
+public enum FieldContentsData
+{
+    None,       // 空
+    Octopus,    // たこ.
+    Obstacle,    // おじゃま.
+}
+public enum PlayerNumber
+{
+    // 左のプレイヤー
+    LeftPlayer,
+    // 右のプレイヤー
+    RightPlayer,
+}

@@ -43,7 +43,7 @@ public class FieldData : MonoBehaviour
     private double _totaTime = 0.9f;
     // 点滅の回数
     private int _frashMax = 3;
-    private int flashcount = 0;
+    private int _flashcount = 0;
 
     // 点滅中かどうか
     private bool _isFlashAnimation;
@@ -82,7 +82,7 @@ public class FieldData : MonoBehaviour
         {
             for (int x = 0; x < _borad_Width; x++)
             {
-                _board[y, x] = 0;
+                _board[y, x] = (int)FieldContentsData.None; ;
 
                 if (_sphere[y, x] != null) Destroy(_sphere[y, x]);
                 _sphere[y, x] = null;
@@ -182,7 +182,7 @@ public class FieldData : MonoBehaviour
         for (int y = 0; y < _borad_Height; y++)
         {
             // スフィアがあったら次の場所を探してもらう.
-            if (_board[y, indexX] != 0)
+            if (_board[y, indexX] != (int)FieldContentsData.None)
             {
                 continue;
             }
@@ -303,7 +303,7 @@ public class FieldData : MonoBehaviour
         {
             for (int x = 0; x < _borad_Width; x++)
             {
-                _eraseBoard[y, x] = 0;
+                _eraseBoard[y, x] = (int)FieldContentsData.None;
             }
         }
 
@@ -395,7 +395,6 @@ public class FieldData : MonoBehaviour
             _chainCount = 0;
             _bonus = 0;
         }
-
         if (!_isField)
         {
             // 連鎖が終わっている.
@@ -468,7 +467,7 @@ public class FieldData : MonoBehaviour
         {
             for (int y = 0; y < _borad_Height; y++)
             {
-                tempField[y,x] = 0;
+                tempField[y,x] = (int)FieldContentsData.None;
             }
         }
     }
@@ -498,12 +497,12 @@ public class FieldData : MonoBehaviour
         // おじゃまだった場合2をいれる.
         if (color == ColorType.hindrance)
         {
-            tempField[y, x] = 2;
+            tempField[y, x] = (int)FieldContentsData.Obstacle;
         }
         else
         {
             //同じ色の場合
-            tempField[y, x] = 1;        //同じ色がつながっている
+            tempField[y, x] = (int)FieldContentsData.Octopus;        //同じ色がつながっている
         }
         for (int dir = 0; dir < (int)Direction.max; dir++)
         {
@@ -532,7 +531,7 @@ public class FieldData : MonoBehaviour
         {
             for (int y = 0; y < _borad_Height; y++)
             {
-                if (tempField[y,x] == 1)
+                if (tempField[y,x] == (int)FieldContentsData.Octopus)
                 {
                     count++;
                 }
@@ -547,14 +546,14 @@ public class FieldData : MonoBehaviour
         {
             for (int y = 0; y < _borad_Height; y++)
             {
-                if (tempField[y, x] == 1)
+                if (tempField[y, x] == (int)FieldContentsData.Octopus)
                 {
-                    _eraseBoard[y, x] = 1;
+                    _eraseBoard[y, x] = (int)FieldContentsData.Octopus;
                 }
                 // おじゃまのデータを入れる.
                 else if (_board[y, x] == (int)ColorType.hindrance)
                 {
-                    _eraseBoard[y, x] = 2;
+                    _eraseBoard[y, x] = (int)FieldContentsData.Obstacle;
                 }
             }
         }
@@ -562,52 +561,6 @@ public class FieldData : MonoBehaviour
     // HACK 光らせたいからそのテスト
     private void FrashField(int[,] tempField,bool frash)
     {
-
-        ////var alpha = 0.0f;
-        //_isFlashAnimation = true;
-        //float blinkSpeed = 5.0f; // 点滅の速さ
-        //// 内部時刻を経過させる
-        ////_time += test ;
-        ////_time ++;
-        ////_time += 0.1f;
-        ////_time += Time.deltaTime;
-        //// 周期cycleで繰り返す波のアルファ値計算
-        //var alpha = 0.5f + 0.5f * Mathf.Sin(blinkSpeed * (float)_time);
-        ////var alpha = _time;
-        //Debug.Log(_time + "alphaの値" + alpha);
-        //for (int x = 0; x < _borad_Width; x++)
-        //{
-        //    for (int y = 0; y < _borad_Height; y++)
-        //    {
-        //        if (tempField[y, x] == 1)
-        //        {
-        //            _time += Time.deltaTime;
-        //            // 点滅？処理.
-        //            _Cube[y, x].GetComponent<Test>().ChangeColor((float)alpha);
-        //            //if (_Cube[y, x] != null) Destroy(_Cube[y, x]);
-        //        }
-        //    }
-        //}
-        ////if(alpha < 0 || alpha > 1)
-        ////{
-        ////    test *= -1;
-        ////}
-        //// HACK なんか気持ち悪い処理になってる なんか、なんかちがう
-        //if (alpha >= 0.99f)
-        ////if (alpha >= 1.0f)
-        //{
-        //    flashcount++;
-        //}
-        //// 三回点滅したら.
-        //if (flashcount >= 3)
-        //{
-        //    flashcount = 0;
-        //    _isFlashAnimation = false;
-        //    //_time = 0.0f;
-        //    alpha = 1.0f;
-        //    EraseField(tempField);
-        //}
-
         _isFlashAnimation = frash;
         // HACK テスト実装
         // 内部時刻を経過させる
@@ -622,7 +575,7 @@ public class FieldData : MonoBehaviour
         {
             for (int y = 0; y < _borad_Height; y++)
             {
-                if (tempField[y, x] == 1)
+                if (tempField[y, x] == (int)FieldContentsData.Octopus)
                 {
                     _isEraseNowFlag = true;
                      //点滅？処理.
@@ -637,13 +590,13 @@ public class FieldData : MonoBehaviour
         // HACK なんか気持ち悪い処理になってる なんか、なんかちがう
         if (alpha >= 1.0f)
         {
-            flashcount++;
+            _flashcount++;
         }
         // 三回点滅したら.
-        if (flashcount >= _frashMax && _isFlashAnimation)
+        if (_flashcount >= _frashMax && _isFlashAnimation)
         {
             _isEraseFlag = true;
-            flashcount = 0;
+            _flashcount = 0;
             _isFlashAnimation = false;
             _totaTime = _timeMax;
             _timeCount *= -1;
@@ -669,19 +622,19 @@ public class FieldData : MonoBehaviour
             //fallDown = 0;
             for (int y = 0; y < _borad_Height; y++)
             {
-                if (tempField[y, x] == 1)
+                if (tempField[y, x] == (int)FieldContentsData.Octopus)
                 {
                     _erasePos = new Vector2(x, y);
                     _soundManager.SEPlay(SoundSEData.EraseSE);
+                    EraseDisturbance(x, y, tempField);
                     // こわす(消す)処理.
                     if (_sphere[y, x] != null) Destroy(_sphere[y, x]);
                     // 消したときの演出.
                     EraseEffect(x, y);
                     _sphere[y, x] = null;
-                    _board[y, x] = 0;
-                    tempField[y, x] = 0;
+                    _board[y, x] = (int)FieldContentsData.None;
+                    tempField[y, x] = (int)FieldContentsData.None;
                     _eraseCount++;
-                    EraseDisturbance(x, y, tempField);
                 }
             }
             FallDownField(x, fallDown);
@@ -727,13 +680,15 @@ public class FieldData : MonoBehaviour
         {
             int dirX = x + _sphereDirection[i].x;
             int dirY = y + _sphereDirection[i].y;
+            // 範囲外じゃないか
             if (dirX >= 0 && dirX < _borad_Width && dirY >= 0 && dirY < _borad_Height)
             {
-                if (tempField[dirY, dirX] == 2)
+                if (tempField[dirY, dirX] == (int)FieldContentsData.Obstacle)
                 {
                     Destroy(_sphere[dirY, dirX]);
                     _sphere[dirY, dirX] = null;
-                    _board[dirY, dirX] = 0;
+                    _board[dirY, dirX] = (int)FieldContentsData.None;
+                    tempField[dirY, dirX] = (int)FieldContentsData.None;
                 }
             }
         }
@@ -745,15 +700,16 @@ public class FieldData : MonoBehaviour
         int hight = 0;
         for (int y = 0; y < _boradHeightMax; y++)
         {
-            if (_board[y, x] == 0)
+            if (_board[y, x] == (int)FieldContentsData.None)
             {
                 _sphere[y, x] = _sphere[y + 1, x];
                 _sphere[y + 1, x] = null;
                 _board[y, x] = _board[y + 1, x];
-                _board[y + 1, x] = 0;
+                _board[y + 1, x] = (int)FieldContentsData.None;
             }
-            if (_board[y, x] != 0)
+            if (_board[y, x] != (int)FieldContentsData.None)
             {
+                //hight = y + 1;
                 hight = y;
             }
         }
@@ -765,14 +721,35 @@ public class FieldData : MonoBehaviour
     // すべて落したかの確認.
     private bool FallCheck(int x,int indexY)
     {
-        for (int y = 0; y < indexY; y++)
+        var max = 0;
+        for (int y = 0; y < _boradHeightMax; y++)
         {
-            if (_board[y, x] == 0)
+            if (_board[y, x] == (int)FieldContentsData.None)
             {
-                return true;
+                max = y;
+            }
+            else
+            {
+                Debug.Log(max);
+                if (max != 0) return true;
             }
         }
+        aaaa
+        //Debug.Log(max);
+        //if(max != indexY)
+        //{
+        //    Debug.Log("あああ");
+        //    return true;
+        //}
         return false;
+        //for (int y = 0; y < indexY; y++)
+        //{
+        //    if (_board[y, x] == (int)FieldContentsData.None)
+        //    {
+        //        return true;
+        //    }
+        //}
+        //return false;
     }
     // キューブが落下中かどうか
     // HACK 落下中だと移動できなくしたいんだけどこまったことになってる
@@ -782,15 +759,13 @@ public class FieldData : MonoBehaviour
         {
             if (_sphere[y, x] != null && _sphere[y, x].GetComponent<SphereData>().IsMoveSphere())
             {
-                //Debug.Log("とおったよHey");
-                //_isTestEraseFlag = false;
                 return true;
             }
         }
         return false;
     }
 
-//#if DEBUG
+    //#if DEBUG
     // クイック処理
     public Vector2Int SteepDescent(Vector2Int pos, int dir = 0)
     {
@@ -889,6 +864,7 @@ public class FieldData : MonoBehaviour
             rotaPos = new Vector2Int(0, 1);
             return rotaPos;
         }
+        if (pos.y > _boradHeightMax) return rotaPos;
         if (_sphere[pos.y,pos.x] != null)
         {
             rotaPos = -direction;
@@ -966,9 +942,8 @@ public class FieldData : MonoBehaviour
     {
         // HACK とりあえず雑にテストでゲームオーバー処理をしようとしてる
         // 2をマイナスしている理由は12のところがばってんで13は使用しないので12をみたいため
-        if(_sphere[_borad_Height - 2,2] != null || _sphere[_borad_Height - 2, 3] != null)
+        if(_sphere[_boradHeightMax - 1, 2] != null || _sphere[_boradHeightMax - 1, 3] != null)
         {
-            //Debug.Log("Game Over");
             return true;
         }
         return false;

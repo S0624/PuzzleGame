@@ -45,6 +45,11 @@ public class GameMainMatchManager : MonoBehaviour
     private int _total = 0;
     // お邪魔を落としたというフラグ
     private bool[] _isSetFall = new bool[2];
+    // 左のプレイヤー
+    private int _leftPlayer = (int)PlayerNumber.LeftPlayer;
+    // 右のプレイヤー
+    private int _rightPlayer = (int)PlayerNumber.RightPlayer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -241,7 +246,7 @@ public class GameMainMatchManager : MonoBehaviour
 
             if (_obstaclePrev[i] != _obstacle[i])
             {
-                _total += (_obstacle[0] - _obstacle[1]);
+                _total += (_obstacle[_leftPlayer] - _obstacle[_rightPlayer]);
             }
             _obstaclePrev[i] = _obstacle[i];
         }
@@ -254,22 +259,22 @@ public class GameMainMatchManager : MonoBehaviour
 
         if (_total > 0)
         {
-            if (!_fieldData[0].IsFieldUpdate() && _fieldData[1].IsInstallaion() && !_isSetFall[1])
+            if (!_fieldData[_leftPlayer].IsFieldUpdate() && _fieldData[_rightPlayer].IsInstallaion() && !_isSetFall[_rightPlayer])
             {
-                if (!_fieldData[1].IsFieldUpdate())
+                if (!_fieldData[_rightPlayer].IsFieldUpdate())
                 {
-                    _fieldData[1].SetObstacle(_total);
-                    _fieldData[1].GetInstallation();
-                    _isSetFall[1] = true;
+                    _fieldData[_rightPlayer].SetObstacle(_total);
+                    _fieldData[_rightPlayer].GetInstallation();
+                    _isSetFall[_rightPlayer] = true;
                 }
                 else
                 {
                     return;
                 }
             }
-            else if (_fieldData[1].IsInstallaion())
+            else if (_fieldData[_rightPlayer].IsInstallaion())
             {
-                _fieldData[1].GetInstallation();
+                _fieldData[_rightPlayer].GetInstallation();
                 return;
 
             }
@@ -280,22 +285,22 @@ public class GameMainMatchManager : MonoBehaviour
         }
         else if (_total < 0)
         {
-            if (!_fieldData[1].IsFieldUpdate() && _fieldData[0].IsInstallaion() && !_isSetFall[0])
+            if (!_fieldData[_rightPlayer].IsFieldUpdate() && _fieldData[_leftPlayer].IsInstallaion() && !_isSetFall[_leftPlayer])
             {
-                if (!_fieldData[0].IsFieldUpdate())
+                if (!_fieldData[_leftPlayer].IsFieldUpdate())
                 {
-                    _fieldData[0].SetObstacle(_total * -1);
-                    _fieldData[0].GetInstallation();
-                    _isSetFall[0] = true;
+                    _fieldData[_leftPlayer].SetObstacle(_total * -1);
+                    _fieldData[_leftPlayer].GetInstallation();
+                    _isSetFall[_leftPlayer] = true;
                 }
                 else
                 {
                     return;
                 }
             }
-            else if (_fieldData[0].IsInstallaion())
+            else if (_fieldData[_leftPlayer].IsInstallaion())
             {
-                _fieldData[0].GetInstallation();
+                _fieldData[_leftPlayer].GetInstallation();
                 return;
 
             }
@@ -336,16 +341,16 @@ public class GameMainMatchManager : MonoBehaviour
     {
         if (_total < 0  || _obstacleCount < 0)
         {
-            _testText[0].SetObstacleCount((_total + _obstacleCount) * -1);
+            _testText[_leftPlayer].SetObstacleCount((_total + _obstacleCount) * -1);
         }
         else if (_total > 0 || _obstacleCount > 0)
         {
-            _testText[1].SetObstacleCount(_total + _obstacleCount);
+            _testText[_rightPlayer].SetObstacleCount(_total + _obstacleCount);
         }
         else
         {
-            _testText[0].SetObstacleCount(0);
-            _testText[1].SetObstacleCount(0);
+            _testText[_leftPlayer].SetObstacleCount(0);
+            _testText[_rightPlayer].SetObstacleCount(0);
         }
 
     }

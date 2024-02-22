@@ -65,7 +65,6 @@ public class CursorController : MonoBehaviour
 
         // 選択した方向の入力値を返す.
         var dir = InputDirection(moveInput);
-        Debug.Log(dir);
         if (_inputManager.IsMovePressed())
         {
             _inputframe++;
