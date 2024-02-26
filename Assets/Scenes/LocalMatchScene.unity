@@ -3759,10 +3759,11 @@ MonoBehaviour:
   - SelectScene
   _prevScene: 
   _pauseScene: SelectScene
+  _demoScene: 
   _controller:
   - {fileID: 201810780}
   - {fileID: 119861353}
-  _select: {fileID: 0}
+  _selectCursor: {fileID: 0}
   _selectManager: {fileID: 0}
 --- !u!114 &1654032361
 MonoBehaviour:

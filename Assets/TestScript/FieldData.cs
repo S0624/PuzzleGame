@@ -734,7 +734,6 @@ public class FieldData : MonoBehaviour
                 if (max != 0) return true;
             }
         }
-        aaaa
         //Debug.Log(max);
         //if(max != indexY)
         //{
