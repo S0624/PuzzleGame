@@ -234,6 +234,11 @@ public class FieldData : MonoBehaviour
 
         return true;
     }
+    /// <summary>
+    /// おじゃまの設置
+    /// </summary>
+    /// <param name="pos"><位置/param>
+    /// <returns>設置できるかどうか</returns>
     public bool IsDisturbanceSphere(Vector2Int pos)
     {
         int val = (int)ColorType.hindrance;
@@ -242,7 +247,6 @@ public class FieldData : MonoBehaviour
         _isInstallaion = true;
         // 色番号をセット.
         _board[pos.y, pos.x] = val;
-        // もし中身が入っていたらエラー表記を出
 
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
         world_position.y += _borad_Height;
@@ -626,14 +630,16 @@ public class FieldData : MonoBehaviour
                 {
                     _erasePos = new Vector2(x, y);
                     _soundManager.SEPlay(SoundSEData.EraseSE);
-                    EraseDisturbance(x, y, tempField);
                     // こわす(消す)処理.
-                    if (_sphere[y, x] != null) Destroy(_sphere[y, x]);
-                    // 消したときの演出.
-                    EraseEffect(x, y);
-                    _sphere[y, x] = null;
-                    _board[y, x] = (int)FieldContentsData.None;
-                    tempField[y, x] = (int)FieldContentsData.None;
+                    if (_sphere[y, x] != null)
+                    {
+                        // 消したときの演出.
+                        EraseEffect(x, y);
+                        // 消去処理
+                        SphereDestory(x, y);
+                        tempField[y, x] = (int)FieldContentsData.None;
+                    }
+                    EraseDisturbance(x, y, tempField);
                     _eraseCount++;
                 }
             }
@@ -642,6 +648,17 @@ public class FieldData : MonoBehaviour
         }
         EraseChainEffect();
         _chainCount++;
+    }
+    /// <summary>
+    /// スフィア消去処理
+    /// </summary>
+    /// <param name="x">X座標</param>
+    /// <param name="y">Y座標</param>
+    private void SphereDestory(int x,int y)
+    {
+        Destroy(_sphere[y, x]);
+        _sphere[y, x] = null;
+        _board[y, x] = (int)FieldContentsData.None;
     }
     // 消すときのエフェクト表示.
     private void EraseEffect(int posX,int posY)
@@ -670,24 +687,23 @@ public class FieldData : MonoBehaviour
     private void EraseDisturbance(int x, int y, int[,] tempField)
     {
         // てすと実装
-        Vector2Int[] _sphereDirection = new Vector2Int[4];
-        _sphereDirection[(int)Direction.Down] = new Vector2Int(0, -1);
-        _sphereDirection[(int)Direction.Left] = new Vector2Int(-1, 0);
-        _sphereDirection[(int)Direction.Up] = new Vector2Int(0, 1);
-        _sphereDirection[(int)Direction.Right] = new Vector2Int(1, 0);
+        Vector2Int[] sphereDirection = new Vector2Int[(int)Direction.max];
+        sphereDirection[(int)Direction.Down] = new Vector2Int(0, -1);
+        sphereDirection[(int)Direction.Left] = new Vector2Int(-1, 0);
+        sphereDirection[(int)Direction.Up] = new Vector2Int(0, 1);
+        sphereDirection[(int)Direction.Right] = new Vector2Int(1, 0);
         // きえるぷよのタテヨコ方向におじゃまがあったら消す処理.
-        for (int i = 0; i < _sphereDirection.Length; i++)
+        for (int i = 0; i < sphereDirection.Length; i++)
         {
-            int dirX = x + _sphereDirection[i].x;
-            int dirY = y + _sphereDirection[i].y;
+            int dirX = x + sphereDirection[i].x;
+            int dirY = y + sphereDirection[i].y;
             // 範囲外じゃないか
             if (dirX >= 0 && dirX < _borad_Width && dirY >= 0 && dirY < _borad_Height)
             {
                 if (tempField[dirY, dirX] == (int)FieldContentsData.Obstacle)
                 {
-                    Destroy(_sphere[dirY, dirX]);
-                    _sphere[dirY, dirX] = null;
-                    _board[dirY, dirX] = (int)FieldContentsData.None;
+                    // 消去処理
+                    SphereDestory(dirX, dirY);
                     tempField[dirY, dirX] = (int)FieldContentsData.None;
                 }
             }
@@ -709,8 +725,8 @@ public class FieldData : MonoBehaviour
             }
             if (_board[y, x] != (int)FieldContentsData.None)
             {
-                //hight = y + 1;
-                hight = y;
+                hight = y + 1;
+                //hight = y;
             }
         }
         if(FallCheck(x , hight))
