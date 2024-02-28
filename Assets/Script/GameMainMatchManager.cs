@@ -22,7 +22,7 @@ public class GameMainMatchManager : MonoBehaviour
     public SphereColorManager[] _colorManager;
     public FieldData[] _fieldData;
     public SphereMove[] _moveSphere;
-    public TestText[] _testText;
+    public TestText[] _obstacleText;
     public PauseController _pause;
     public GameStartController _startCanvas;
     public LoadSceneManager _scene;
@@ -254,7 +254,7 @@ public class GameMainMatchManager : MonoBehaviour
         _total = MaxLimit(_total);
 #if true
         // デバック用におじゃまの数表示
-        TestObsText();
+        ObsText();
 #endif
 
         if (_total > 0)
@@ -337,20 +337,20 @@ public class GameMainMatchManager : MonoBehaviour
         return total;
     }
     // テキスト用
-    private void TestObsText()
+    private void ObsText()
     {
         if (_total < 0  || _obstacleCount < 0)
         {
-            _testText[_leftPlayer].SetObstacleCount((_total + _obstacleCount) * -1);
+            _obstacleText[_leftPlayer].SetObstacleCount((_total + _obstacleCount) * -1);
         }
         else if (_total > 0 || _obstacleCount > 0)
         {
-            _testText[_rightPlayer].SetObstacleCount(_total + _obstacleCount);
+            _obstacleText[_rightPlayer].SetObstacleCount(_total + _obstacleCount);
         }
         else
         {
-            _testText[_leftPlayer].SetObstacleCount(0);
-            _testText[_rightPlayer].SetObstacleCount(0);
+            _obstacleText[_leftPlayer].SetObstacleCount(0);
+            _obstacleText[_rightPlayer].SetObstacleCount(0);
         }
 
     }

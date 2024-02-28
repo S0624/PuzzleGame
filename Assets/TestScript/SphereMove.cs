@@ -79,9 +79,8 @@ public class SphereMove : MonoBehaviour
             if (!_fieldObject.IsFieldUpdate())
             {
                 // 本来はクイック移動はない
-                //#if true
                 Vector2 moveInput = _inputManager.GetInputMoveDate();
-                // 急降下で下に落とす(DEBUG機能).
+                // 急降下で下に落とす.
                 if (moveInput.y > 0)
                 {
                     if (_inputManager.DGetInputWasPressData())
@@ -260,7 +259,6 @@ public class SphereMove : MonoBehaviour
                 Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x + _spherePos.x,
                     (int)child.transform.position.y - (int)this.transform.position.y);
 
-                //Debug.Log(pos);
 
                 // HACK テスト用.
                 // こいつが悪さをしている
@@ -268,6 +266,8 @@ public class SphereMove : MonoBehaviour
                 pos = _fieldObject.SteepDescent(pos, _direction);
                 _colorNum[childcount] = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name,childcount);
                 //Debug.Log(child.position + "wa"+ child.name +"  " + pos.y + " " + _colorNum);
+                Debug.Log("ここは" + pos);
+                
                 _fieldObject.IsNormalSphere(pos, _colorNum[childcount]);
                 childcount++;
             }
@@ -387,7 +387,6 @@ public class SphereMove : MonoBehaviour
     }
     private void RotationState()
     {
-        // HACK 雑に回転処理を実装(お試し)
         // 右回り
         if (_inputManager.GetInputRotaDate(RotaState.right))
         {

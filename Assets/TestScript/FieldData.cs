@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
-// コメントがないよ？
 
+// フィールドの管理スクリプト
 public class FieldData : MonoBehaviour
 {
     // ボードの横の最大値(6 * 13).
@@ -217,12 +217,10 @@ public class FieldData : MonoBehaviour
     {
         // 再設置を避けるための処理
         if (_isSetEnd) return false;
+        // 範囲外ではないかのチェック
         if (!IsCanSetSphere(pos)) return false;
-        if(pos.y > _boradHeightMax) return false;
-
         // 色番号をセット.
         _board[pos.y, pos.x] = val;
-        // もし中身が入っていたらエラー表記を出
 
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
         _sphere[pos.y, pos.x] = Instantiate(_prefabSphere, world_position, _prefabSphere.transform.rotation, transform);
@@ -704,7 +702,7 @@ public class FieldData : MonoBehaviour
                 {
                     // 消去処理
                     SphereDestory(dirX, dirY);
-                    tempField[dirY, dirX] = (int)FieldContentsData.None;
+                    //tempField[dirY, dirX] = (int)FieldContentsData.None;
                 }
             }
         }
@@ -737,34 +735,39 @@ public class FieldData : MonoBehaviour
     // すべて落したかの確認.
     private bool FallCheck(int x,int indexY)
     {
-        var max = 0;
-        for (int y = 0; y < _boradHeightMax; y++)
-        {
-            if (_board[y, x] == (int)FieldContentsData.None)
-            {
-                max = y;
-            }
-            else
-            {
-                Debug.Log(max);
-                if (max != 0) return true;
-            }
-        }
-        //Debug.Log(max);
-        //if(max != indexY)
-        //{
-        //    Debug.Log("あああ");
-        //    return true;
-        //}
-        return false;
-        //for (int y = 0; y < indexY; y++)
+        //var max = 0;
+        //for (int y = 0; y < _boradHeightMax; y++)
         //{
         //    if (_board[y, x] == (int)FieldContentsData.None)
         //    {
-        //        return true;
+        //        max = y;
+        //    }
+        //    else
+        //    {
+        //        //if (max != 0) return true;
+        //        if (max != 0)
+        //        {
+        //            Debug.Log("Y" + y + "X" + x + "borad" + _board[y,x]);
+        //            return true;
+        //        }
         //    }
         //}
+        ////Debug.Log(max);
+        ////if(max != indexY)
+        ////{
+        ////    Debug.Log("あああ");
+        ////    return true;
+        ////}
         //return false;
+        for (int y = 0; y < indexY; y++)
+        {
+            if (_board[y, x] == (int)FieldContentsData.None)
+            {
+                Debug.Log("Y" + y + "X" + x + "borad" + _board[y, x]);
+                return true;
+            }
+        }
+        return false;
     }
     // キューブが落下中かどうか
     // HACK 落下中だと移動できなくしたいんだけどこまったことになってる
@@ -784,7 +787,7 @@ public class FieldData : MonoBehaviour
     // クイック処理
     public Vector2Int SteepDescent(Vector2Int pos, int dir = 0)
     {
-        Vector2Int result = new Vector2Int();
+        Vector2Int result = pos;
         // 下まで急降下させる
         for (int y = _boradHeightMax; y >= 0; y--)
         {
@@ -799,16 +802,24 @@ public class FieldData : MonoBehaviour
             }
         }
 
-        // HACK とんでもないゴリ押しの処理
-        // 上向いてる時だけ無理やり処理を強制してる
         if (pos.y > 0)
         {
             result.y = result.y + pos.y;
             return result;
         }
+        // HACK とんでもないゴリ押しの処理
+        // 上向いてる時だけ無理やり処理を強制してる
         var posY = result.y - 2;
         if (dir == (int)Direction.Up)
         {
+            if (posY < 0)
+            {
+                Debug.Log(posY);
+                //result.y = _boradHeightMax;
+                result.y = 0;
+                posY = _boradHeightMax;
+                //return result;
+            }
             if (_sphere[posY, result.x] == null)
             {
                 result.y = posY;
@@ -838,8 +849,14 @@ public class FieldData : MonoBehaviour
         // 現在地から左右のポジションの取得
         var leftpos = pos.x - 1;
         var rightpos = pos.x + 1;
+        // 指定範囲外に出たら回せないようにする
+        if (pos.y > _boradHeightMax - 1)
+        {
+            Debug.Log("ちょちょちょ");
+            return false;
+        }
         // 上下の時のみ処理を行う
-        if(Direction.Down == dir || Direction.Up == dir)
+        if (Direction.Down == dir || Direction.Up == dir)
         {
             if (pos.x == 0 && _sphere[pos.y, rightpos] != null)
             {
@@ -855,6 +872,7 @@ public class FieldData : MonoBehaviour
                 return false;
             }
         }
+        
         return true;
 
     }

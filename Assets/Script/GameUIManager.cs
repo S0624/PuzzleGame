@@ -11,7 +11,7 @@ public class GameUIManager : MonoBehaviour
     public Image[] _chainImage;
     // 仮実装用
     public FieldData _fieldController;
-    public SphereMove _testMove;
+    public SphereMove _sphereMove;
     // スコアを入れる用の変数.
     private int _score = 0;
     // スコアを入れる用の変数.
@@ -42,10 +42,10 @@ public class GameUIManager : MonoBehaviour
     private void ScoreUpdate()
     {
         _score += _fieldController.EraseScore();
-        _score += _testMove.MoveScore();
+        _score += _sphereMove.MoveScore();
         // 本来ここではやらないほうがいい処理、テスト用に作っているので仮実装
         _fieldController.SetScore();
-        _testMove.SetScore();
+        _sphereMove.SetScore();
         // スコアの更新.
         for (int i = 0; i < _scoreImage.Length; i++)
         {
