@@ -9,9 +9,9 @@ using UnityEngine.UI;
 public class MatchmakingView : MonoBehaviourPunCallbacks
 {
     // プレイヤーネームの取得
-    public InputField _playerNameInputField = default;
+    public TMP_InputField _playerNameInputField = default;
     // passwordの取得
-    public InputField _passwordInputField = default;
+    public TMP_InputField _passwordInputField = default;
     public int _passwordLenght = 6;
     // プレイヤーのデータを管理するフラグ
     private bool _isPass = false;
@@ -134,6 +134,7 @@ public class MatchmakingView : MonoBehaviourPunCallbacks
             }
         }
         _joinRoomButton.interactable = isPush;
+        Debug.Log(_playerNameInputField.text);
         // 名前を記憶させる
         PhotonNetwork.NickName = _playerNameInputField.text;
     }

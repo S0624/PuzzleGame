@@ -75,6 +75,7 @@ public class UIManager : MonoBehaviourPunCallbacks//, IPunObservable
     {
         for (int i = 0; i < _speechDubble.Length; i++)
         {
+            // プレイヤーが入室していなかったら
             if (_participationRoom._nameText[i].text == "")
             {
                 _speechDubble[i].sprite = _changeSprite[0];
@@ -91,6 +92,11 @@ public class UIManager : MonoBehaviourPunCallbacks//, IPunObservable
     {
         // リストの情報を取得
         var players = PhotonNetwork.PlayerList;
+        // 部屋の人数に合わせて処理を飛ばす
+        if(players.Length < i)
+        {
+            return;
+        }
         // 吹き出しの画像の更新処理
         if (players[i].GetButtonState())
         {

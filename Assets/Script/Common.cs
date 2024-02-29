@@ -62,6 +62,7 @@ public enum FieldContentsData
     Octopus,    // たこ.
     Obstacle,    // おじゃま.
 }
+
 public enum PlayerNumber
 {
     // 左のプレイヤー
