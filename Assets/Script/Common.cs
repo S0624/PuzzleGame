@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// 色のタイプ
 public enum ColorType
 {
     None,
@@ -13,6 +14,7 @@ public enum ColorType
     PuyoMax,       // ぷよ最大値(仮).
     hindrance,     // おじゃま(仮).
 };
+// 方向
 public enum Direction
 {
     Down,
@@ -21,18 +23,21 @@ public enum Direction
     Right,
     max,
 }
+// 回転の状態
 public enum RotaState
 {
     left,
     right,
     max,
 }
+// 色の取得
 public struct ColorArray
 {
-    public int upColor;
-    public int downColor;
+    public int upColor; // 上の色
+    public int downColor; // 下の色
 }
 
+// 音データ(BGM)
 public enum SoundBGMData
 {
     BGM,
@@ -41,6 +46,7 @@ public enum SoundBGMData
     TitleBGM,
     SelectBGM,
 }
+// 音データ(SE)
 public enum SoundSEData
 {
     Push,
@@ -56,6 +62,7 @@ public enum SoundSEData
     GameOver,
 }
 
+// フィールドの中身のデータ
 public enum FieldContentsData
 {
     None,       // 空
@@ -63,6 +70,15 @@ public enum FieldContentsData
     Obstacle,    // おじゃま.
 }
 
+// ネットワークの状態の画像
+public enum NetworkStateImage
+{
+    Sleep,
+    PreparationNow,
+    PreparationOK,
+}
+
+// プレイヤーの番号
 public enum PlayerNumber
 {
     // 左のプレイヤー

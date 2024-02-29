@@ -2259,6 +2259,14 @@ PrefabInstance:
       propertyPath: sceneViewId
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6856692167059265193, guid: 72f29b5df8844fb4a85e60cb67458e56, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6856692167059265193, guid: 72f29b5df8844fb4a85e60cb67458e56, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 28
+      objectReference: {fileID: 0}
     - target: {fileID: 6907809017293896544, guid: 72f29b5df8844fb4a85e60cb67458e56, type: 3}
       propertyPath: _passwordInputField
       value: 
@@ -3834,6 +3842,7 @@ GameObject:
   - component: {fileID: 1923004455}
   - component: {fileID: 1923004457}
   - component: {fileID: 1923004458}
+  - component: {fileID: 1923004459}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -3907,7 +3916,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1923004454}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c730837b98eadfa47bad4b073660d5a2, type: 3}
   m_Name: 
@@ -3921,6 +3930,20 @@ MonoBehaviour:
   - {fileID: 0}
   _selectCursor: {fileID: 0}
   _selectManager: {fileID: 0}
+--- !u!114 &1923004459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1923004454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a20b5e4f6e5c6284db9f724d637f47de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _nextScene: 
+  _view: {fileID: 1923004457}
 --- !u!114 &1959094508 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6724449324841915226, guid: 72f29b5df8844fb4a85e60cb67458e56, type: 3}

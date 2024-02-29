@@ -57,11 +57,6 @@ public class MatchmakingView : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinLobby();
         _canvasGroup.interactable = true;
     }
-    //// マスターサーバーへの接続が成功した時に呼ばれるコールバック
-    //public override void OnConnectedToMaster()
-    //{
-    //    PhotonNetwork.JoinLobby();
-    //}
 
     // ロビーに入った時
     public override void OnJoinedLobby()
@@ -79,12 +74,10 @@ public class MatchmakingView : MonoBehaviourPunCallbacks
         {
             if (_roomList.TryGetRoomInfo(roomButton._roomName, out var roomInfo))
             {
-                //Debug.Log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                 roomButton.SetPlayerCount(roomInfo.PlayerCount);
             }
             else
             {
-                //Debug.Log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
                 roomButton.SetPlayerCount(0);
             }
             //Debug.Log(roomInfo.PlayerCount);
@@ -134,7 +127,6 @@ public class MatchmakingView : MonoBehaviourPunCallbacks
             }
         }
         _joinRoomButton.interactable = isPush;
-        Debug.Log(_playerNameInputField.text);
         // 名前を記憶させる
         PhotonNetwork.NickName = _playerNameInputField.text;
     }

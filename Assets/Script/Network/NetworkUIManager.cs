@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
-public class UIManager : MonoBehaviourPunCallbacks//, IPunObservable
+public class NetworkUIManager : MonoBehaviourPunCallbacks//, IPunObservable
 {
     public Image _buttonImg = null;
     // ボタンの処理をするための変数.
@@ -17,7 +18,7 @@ public class UIManager : MonoBehaviourPunCallbacks//, IPunObservable
     public Sprite[] _changeSprite;
     // テキストの取得.
     public ParticipationRoom _participationRoom;
-
+    // PhotonViewの取得
     public PhotonView _view;
     // Start is called before the first frame update
     void Start()
@@ -29,6 +30,9 @@ public class UIManager : MonoBehaviourPunCallbacks//, IPunObservable
     // Update is called once per frame
     private void Update()
     {
+        // まだルームに参加していない場合は更新しない
+        if (!PhotonNetwork.InRoom) { return; }
+        _participationRoom.UpdateLabel();
         // 対象のキーを押した時の処理.
         if (_input.UI.Submit.WasPerformedThisFrame() || Input.GetKeyDown("z"))
         {
@@ -78,7 +82,7 @@ public class UIManager : MonoBehaviourPunCallbacks//, IPunObservable
             // プレイヤーが入室していなかったら
             if (_participationRoom._nameText[i].text == "")
             {
-                _speechDubble[i].sprite = _changeSprite[0];
+                _speechDubble[i].sprite = _changeSprite[(int)NetworkStateImage.Sleep];
             }
             else
             {
@@ -101,12 +105,12 @@ public class UIManager : MonoBehaviourPunCallbacks//, IPunObservable
         if (players[i].GetButtonState())
         {
             Debug.Log("とおってる？");
-            _speechDubble[i].sprite = _changeSprite[2];
+            _speechDubble[i].sprite = _changeSprite[(int)NetworkStateImage.PreparationOK];
         }
         else
         {
             Debug.Log("わかりません");
-            _speechDubble[i].sprite = _changeSprite[1];
+            _speechDubble[i].sprite = _changeSprite[(int)NetworkStateImage.PreparationNow];
         }
 
         foreach (var player in players)

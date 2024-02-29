@@ -30,15 +30,8 @@ public class ParticipationRoom : MonoBehaviourPunCallbacks
         _elapsedTime = 0f;
     }
 
-    private void Update()
+    public void UpdateLabel()
     {
-        UpdateLabel();
-    }
-    private void UpdateLabel()
-    {
-        // まだルームに参加していない場合は更新しない
-        if (!PhotonNetwork.InRoom) { return; }
-
         // 0.1秒毎にテキストを更新する
         _elapsedTime += Time.deltaTime;
         if (_elapsedTime > 0.1f)
