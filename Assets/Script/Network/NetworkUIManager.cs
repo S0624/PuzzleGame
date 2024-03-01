@@ -20,21 +20,35 @@ public class NetworkUIManager : MonoBehaviourPunCallbacks//, IPunObservable
     public ParticipationRoom _participationRoom;
     // PhotonViewの取得
     public PhotonView _view;
+    // NetworkTransitionの取得
+    public NetworkTransition _transition;
+    // Gageの取得
+    public Image _gageImage;
+    // Gageに加算する数値
+    private float _gageAdd = 0.02f;
+    // Gage最大値
+    private int _gageMax = 1;
+    // Gageがマックスになったフラグ
+    private bool _isGagemax = false;
     // Start is called before the first frame update
     void Start()
     {
         _input = new InputManager();
         _input.Enable();
+        // Gage初期化
+        _gageImage.fillAmount = 0;
     }
 
     // Update is called once per frame
     private void Update()
     {
+        IsPrevButtonUpdate();
         // まだルームに参加していない場合は更新しない
         if (!PhotonNetwork.InRoom) { return; }
         _participationRoom.UpdateLabel();
+        // 準備が完了していたらボタンを押せないようにする
         // 対象のキーを押した時の処理.
-        if (_input.UI.Submit.WasPerformedThisFrame() || Input.GetKeyDown("z"))
+        if (IsButtonInput())
         {
             // ボタンのフラグを変える処理.
             IsButtonFlagUpdate();
@@ -52,8 +66,27 @@ public class NetworkUIManager : MonoBehaviourPunCallbacks//, IPunObservable
         if (photonView.IsMine)
         {
             PhotonEventOn();
+
+        }
+        if (IsReady())
+        {
+            //Debug.Log("エイリアン");
+            _transition.PhotonEventOn();
         }
 
+    }
+    /// <summary>
+    /// ボタンを押せるかどうか
+    /// </summary>
+    /// <returns>ボタンを押したかのフラグ</returns>
+    private bool IsButtonInput()
+    {
+        // どちらも押し終わっていたら押せないようにする
+        if (IsReady()) return false;
+        // ボタンを押しました
+        if (_input.UI.Submit.WasPerformedThisFrame() || Input.GetKeyDown("z")) return true;
+        // 何もしてないのでfalse
+        return false;
     }
     // ボタンのフラグを変える処理.
     private void IsButtonFlagUpdate()
@@ -65,6 +98,29 @@ public class NetworkUIManager : MonoBehaviourPunCallbacks//, IPunObservable
         else
         {
             _isDecisionButtonPush = true;
+        }
+    }
+    private void IsPrevButtonUpdate()
+    {
+        // どちらも押し終わっていたら押せないようにする
+        if (IsReady() || !_gageImage) return;
+        if (!_isGagemax)
+        {
+            // ボタンを押しているかどうかの処理
+            if (_input.UI.Cancel.IsPressed())
+            {
+                _gageImage.fillAmount += _gageAdd;
+            }
+            else
+            {
+                _gageImage.fillAmount = 0;
+            }
+        }
+        // Gageがマックスになったら前のシーンに戻る
+        if(_gageImage.fillAmount >= _gageMax || _isGagemax)
+        {
+            _isGagemax = true;
+            _transition.PrevSceneTransition();
         }
     }
     // テスト実装
@@ -89,13 +145,13 @@ public class NetworkUIManager : MonoBehaviourPunCallbacks//, IPunObservable
                 ChengeImg(i);
             }
         }
-        //Debug.Log(_participationRoom.photonView.Owner.NickName);
     }
     // 画像を変更する処理.
     private void ChengeImg(int i)
     {
         // リストの情報を取得
         var players = PhotonNetwork.PlayerList;
+
         // 部屋の人数に合わせて処理を飛ばす
         if(players.Length < i)
         {
@@ -104,12 +160,10 @@ public class NetworkUIManager : MonoBehaviourPunCallbacks//, IPunObservable
         // 吹き出しの画像の更新処理
         if (players[i].GetButtonState())
         {
-            Debug.Log("とおってる？");
             _speechDubble[i].sprite = _changeSprite[(int)NetworkStateImage.PreparationOK];
         }
         else
         {
-            Debug.Log("わかりません");
             _speechDubble[i].sprite = _changeSprite[(int)NetworkStateImage.PreparationNow];
         }
 
@@ -117,6 +171,18 @@ public class NetworkUIManager : MonoBehaviourPunCallbacks//, IPunObservable
         {
             Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
         }
+    }
+    
+    private bool IsReady()
+    {
+        for (int i = 0; i < _speechDubble.Length; i++)
+        {
+            if(_speechDubble[i].sprite != _changeSprite[(int)NetworkStateImage.PreparationOK])
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     //void IPunObservable.OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

@@ -178,6 +178,9 @@ MonoBehaviour:
   - {fileID: 8300000, guid: a4bc745403dfb984ca0979f4ca460f74, type: 3}
   - {fileID: 8300000, guid: ee6bdfcb5e2d4f546a7ba9480ef5d3dc, type: 3}
   - {fileID: 8300000, guid: b54720d37c4722c43ae291c76e2803b6, type: 3}
+  - {fileID: 8300000, guid: 90d2ed97c783fbf4d9e69de4e86abc90, type: 3}
+  - {fileID: 8300000, guid: 650325fce9e8c87489456e440dc7d0e6, type: 3}
+  - {fileID: 8300000, guid: 383b081aedd97d74cb0c2b0af65abfa1, type: 3}
   - {fileID: 8300000, guid: 38dbc40701903994faaccbb8d735e956, type: 3}
   - {fileID: 8300000, guid: d2a8012be74b334449928147af248be3, type: 3}
   _soundSEData:

@@ -25,5 +25,11 @@ EditorBuildSettings:
     guid: ee968b1e3726a9c42ac9b652033df21d
   - enabled: 1
     path: Assets/Scenes/NetMatchScene.unity
+    guid: b5edf2bcf88790048af4ec1c34e3df9a
+  - enabled: 1
+    path: Assets/Scenes/TestScene2.unity
+    guid: 6a318ca3b8e8ee747968236427dd95bf
+  - enabled: 0
+    path: 
     guid: 58f119b13389f6b4686a95f2842b4fcf
   m_configObjects: {}

@@ -39,11 +39,11 @@ public class SoundManager : MonoBehaviour
         _bgmSource.Stop();
     }
     // サウンドを変更する
-    public void BGMChenge(SoundBGMData soundnum)
+    public void BGMChenge(int soundnum)
     {
         BGMStop();
-        var bgm = BGMDataCheck(soundnum);
-        _bgmSource.clip = _soundBGMData[bgm];
+        _bgmSource.clip = _soundBGMData[soundnum];
+        //_bgmSource.clip = _soundBGMData[bgm];
         BGMPlay();
     }
     // SEデータのチェック

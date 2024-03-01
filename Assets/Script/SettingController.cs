@@ -52,6 +52,7 @@ public class SettingController : MonoBehaviour
         _input = new InputManager();
 		_input.Enable();
 		_soundLength = _soundManager._soundBGMData.Length - 1;
+		Debug.Log(_soundLength);
 	}
 	private void CursorChoices()
 	{
@@ -253,7 +254,7 @@ public class SettingController : MonoBehaviour
 	{
 		if (_selectNum != _soundNumPrev)
 		{
-			_soundManager.BGMChenge((SoundBGMData)_selectNum);
+			_soundManager.BGMChenge(_selectNum);
 		}
 		_soundNumPrev = _selectNum;
 	}

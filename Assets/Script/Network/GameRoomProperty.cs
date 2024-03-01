@@ -33,7 +33,7 @@ public static class GameRoomProperty
         room.SetCustomProperties(propsToSet);
         propsToSet.Clear();
     }
-    // プレイヤーのスコアを取得する
+    // ボタンを取得する
     public static bool GetButtonState(this Player player)
     {
         return (bool)player.CustomProperties[_isBotton];

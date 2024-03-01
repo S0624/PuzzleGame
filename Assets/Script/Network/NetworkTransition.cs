@@ -8,31 +8,60 @@ using UnityEngine.SceneManagement;
 public class NetworkTransition : MonoBehaviourPunCallbacks
 {
     public string _nextScene;
+    public string _prevScene;
     public PhotonView _view;
+    public FadeManager _fadeManager;
+    public Fade _fade;
+    private 
     // Start is called before the first frame update
     void Start()
     {
         PhotonNetwork.IsMessageQueueRunning = true;
+
+        // デバッグ用
+        // リストの情報を取得
+        var players = PhotonNetwork.PlayerList;
+        foreach (var player in players)
+        {
+            Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (photonView.IsMine)
-        {
-            PhotonEventOn();
-        }
+
+
     }
-    private void PhotonEventOn()
+    public void PhotonEventOn()
     {
-        //_view.RPC(nameof(SceneTransition), RpcTarget.All);
+        _view.RPC(nameof(SceneTransition), RpcTarget.All);
     }
+    /// <summary>
+    /// シーン移行します。
+    /// </summary>
     [PunRPC]
     private void SceneTransition()
     {
-        PhotonNetwork.IsMessageQueueRunning = false;
+        _fadeManager._isFade = true;
+        if (_fade.cutoutRange != 1.0f) return;
 
-        Debug.Log("いこうしたい。");
-        //SceneManager.LoadSceneAsync(_nextScene, LoadSceneMode.Single);
+        PhotonNetwork.IsMessageQueueRunning = false;
+        SceneManager.LoadSceneAsync(_nextScene, LoadSceneMode.Single);
+    }
+    /// <summary>
+    /// 前のシーンに戻る
+    /// </summary>
+    public void PrevSceneTransition()
+    {
+        if (_prevScene != null)
+        {
+            _fadeManager._isFade = true;
+            if (_fade.cutoutRange != 1.0f) return;
+            // サーバーから切断する
+            PhotonNetwork.Disconnect();
+            // シーンを移行する
+            SceneManager.LoadSceneAsync(_prevScene, LoadSceneMode.Single);
+        }
     }
 }

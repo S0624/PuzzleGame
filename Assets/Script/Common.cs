@@ -40,11 +40,14 @@ public struct ColorArray
 // 音データ(BGM)
 public enum SoundBGMData
 {
-    BGM,
-    BGM1,
-    BGM2,
-    TitleBGM,
-    SelectBGM,
+    Tan,
+    Grassland,
+    Pop,
+    Gothic,
+    Circus,
+    Matching,
+    Title,
+    Select,
 }
 // 音データ(SE)
 public enum SoundSEData
