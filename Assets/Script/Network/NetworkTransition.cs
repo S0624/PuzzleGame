@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,6 +13,7 @@ public class NetworkTransition : MonoBehaviourPunCallbacks
     public PhotonView _view;
     public FadeManager _fadeManager;
     public Fade _fade;
+    public Player[] _playerData = new Player[2];
     private 
     // Start is called before the first frame update
     void Start()
@@ -63,5 +65,15 @@ public class NetworkTransition : MonoBehaviourPunCallbacks
             // シーンを移行する
             SceneManager.LoadSceneAsync(_prevScene, LoadSceneMode.Single);
         }
+    }
+    public string PlayerData(int playerNum)
+    {
+        var players = PhotonNetwork.PlayerList;
+        for (int i = 0;i < players.Length;i++)
+        {
+            _playerData[i] = players[i];
+            Debug.Log($"{players[i].NickName}({players[i].ActorNumber}) - {players[i].GetButtonState()}");
+        }
+        return _playerData[playerNum].NickName;
     }
 }

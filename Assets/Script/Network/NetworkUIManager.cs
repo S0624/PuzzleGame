@@ -5,7 +5,7 @@ using Photon.Pun;
 using UnityEngine.UI;
 using Unity.VisualScripting;
 
-public class NetworkUIManager : MonoBehaviourPunCallbacks//, IPunObservable
+public class NetworkUIManager : MonoBehaviourPunCallbacks
 {
     public Image _buttonImg = null;
     // ボタンの処理をするための変数.
@@ -167,12 +167,12 @@ public class NetworkUIManager : MonoBehaviourPunCallbacks//, IPunObservable
             _speechDubble[i].sprite = _changeSprite[(int)NetworkStateImage.PreparationNow];
         }
 
-        foreach (var player in players)
-        {
-            Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
-        }
+        //foreach (var player in players)
+        //{
+        //    Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
+        //}
     }
-    
+    // 吹き出しの準備Okかどうかの検知
     private bool IsReady()
     {
         for (int i = 0; i < _speechDubble.Length; i++)

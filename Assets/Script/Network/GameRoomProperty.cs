@@ -36,6 +36,7 @@ public static class GameRoomProperty
     // ボタンを取得する
     public static bool GetButtonState(this Player player)
     {
+        if (player.CustomProperties[_isBotton] == null) return false;
         return (bool)player.CustomProperties[_isBotton];
     }
     // ボタンを押したのかを取得する
