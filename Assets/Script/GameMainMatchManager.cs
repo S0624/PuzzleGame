@@ -57,13 +57,13 @@ public class GameMainMatchManager : MonoBehaviour
         {
             _allClearTex[i] = null;
         }
-        _seed.InitColor();
-        foreach (var col in _colorManager)
-        {
-            col.SetColorSeed(_seed);
-            col.InitObjectName();
-            col.ColorRandam();
-        }
+        //_seed.InitColor();
+        //foreach (var col in _colorManager)
+        //{
+        //    col.SetColorSeed(_seed);
+        //    col.InitObjectName();
+        //    col.ColorRandam();
+        //}
         _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
 

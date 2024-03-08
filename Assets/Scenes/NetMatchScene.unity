@@ -4363,6 +4363,10 @@ MonoBehaviour:
   _text:
   - {fileID: 989578319}
   - {fileID: 1701920293}
+  _seed: {fileID: 2092515530}
+  _colorManager:
+  - {fileID: 1383005755}
+  - {fileID: 1424830379}
 --- !u!114 &1654032368
 MonoBehaviour:
   m_ObjectHideFlags: 0

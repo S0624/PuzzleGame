@@ -1,13 +1,17 @@
 ﻿using ExitGames.Client.Photon;
+using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
 
 public static class GameRoomProperty
 {
     // 時間
-    private const string _keyStartTime = "StartTime";
+    private const string _keyStartTime = "Time";
     // ボタン
     private const string _isBotton = "BottonState";
+    // 種
+    private const string _isUpSeed = "Up";
+    private const string _isDownSeed = "Down";
 
     private static readonly Hashtable propsToSet = new Hashtable();
 
@@ -42,9 +46,46 @@ public static class GameRoomProperty
     // ボタンを押したのかを取得する
     public static void ButtonDown(this Player player,bool isState)
     {
-        //propsToSet[_isBotton] = player.GetButtonState();
         propsToSet[_isBotton] = isState;
         player.SetCustomProperties(propsToSet);
         propsToSet.Clear();
+    }
+    /// <summary>
+    /// 生成した種を記憶させる
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="upseed"></param>
+    public static void SetCreateSeed(this Player player, int[] upseed, int[] downseed)
+    {
+        propsToSet[_isUpSeed] = upseed;
+        propsToSet[_isDownSeed] = downseed;
+        player.SetCustomProperties(propsToSet);
+        propsToSet.Clear();
+    }
+    /*
+         public static void SetCreateSeed(this Player player, ColorSeedCreate seed)
+    {
+        propsToSet[_isSeed] = seed;
+        //player.SetCustomProperties(propsToSet);
+        //propsToSet.Clear();
+    }
+     
+     */
+    /// <summary>
+    /// 生成した種の取得
+    /// </summary>
+    /// <returns></returns>
+    public static int[] GetUpDColorSeed(this Player player)
+    {
+        var players = PhotonNetwork.PlayerList;
+        //if(players[0].CustomProperties[_isUpSeed] == null) return;
+        return (int[])players[0].CustomProperties[_isUpSeed];
+    }
+    public static int[] GetDownDColorSeed(this Player player)
+    {
+        var players = PhotonNetwork.PlayerList;
+        //if(players[0].CustomProperties[_isUpSeed] == null) return;
+        Debug.Log(players[0].CustomProperties[_isDownSeed]);
+        return (int[])players[0].CustomProperties[_isDownSeed];
     }
 }

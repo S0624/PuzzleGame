@@ -5,12 +5,23 @@ using UnityEngine;
 // カラーの種生成.
 public class ColorSeedCreate : MonoBehaviour
 {
+    private int _seedMax = 50;
     // カラー種.
-    private ColorArray[] _colorSeed = new ColorArray[50];
+    public ColorArray[] _colorSeed = new ColorArray[50];
     // 色の番号
     private int _colorNum;
     private int _colorNum2;
     static public int _colorDifficulty = 1;
+    public int[] _upSeed = new int[50];
+    public int[] _downSeed = new int[50];
+
+    //private void Start()
+    //{
+    //    _colorSeed = new ColorArray[_seedMax];
+    //    _upSeed = new int[50];
+    //    _downSeed = new int[_seedMax];
+    //}
+
     public void ColorPreparation(int color)
     {
         _colorDifficulty = color;
@@ -23,21 +34,34 @@ public class ColorSeedCreate : MonoBehaviour
 #if true
             _colorNum = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax - _colorDifficulty);
             _colorSeed[i].upColor = _colorNum;
+            _upSeed[i] = _colorNum;
             _colorNum2 = Random.Range((int)ColorType.Green, (int)ColorType.PuyoMax - _colorDifficulty);
             _colorSeed[i].downColor = _colorNum2;
+            _downSeed[i] = _colorNum2;
 #endif
         }
+    }
+    public void NetworkInitColor(int[]upcolor, int[] downcolor)
+    {
+        for (int i = 0; i < _colorSeed.Length; i++)
+        {
+            _colorSeed[i].upColor = upcolor[i];
+            _upSeed[i] = upcolor[i];
+            _colorSeed[i].downColor = downcolor[i];
+            _downSeed[i] = downcolor[i];
+        }
+        Debug.Log(_colorSeed[0].downColor);
     }
     // 番号に沿った色を返す.
     public int SetColorNum(int num, Direction dir)
     {
         if (dir == Direction.Up)
         {
-            return _colorSeed[num].upColor;
+            return _upSeed[num];
         }
         if (dir == Direction.Down)
         {
-            return _colorSeed[num].downColor;
+            return _downSeed[num];
         }
         // ここまで来たらエラーになる.
         Debug.Assert(true);

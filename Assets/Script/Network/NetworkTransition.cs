@@ -14,25 +14,29 @@ public class NetworkTransition : MonoBehaviourPunCallbacks
     public FadeManager _fadeManager;
     public Fade _fade;
     public Player[] _playerData = new Player[2];
-    private 
+    static public bool _isSceneTrans = false;
+    
     // Start is called before the first frame update
     void Start()
     {
         PhotonNetwork.IsMessageQueueRunning = true;
 
-        // デバッグ用
-        // リストの情報を取得
-        var players = PhotonNetwork.PlayerList;
-        foreach (var player in players)
-        {
-            Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
-        }
+        //// デバッグ用
+        //// リストの情報を取得
+        //var players = PhotonNetwork.PlayerList;
+        //foreach (var player in players)
+        //{
+        //    Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
+        //}
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        if(_fade.cutoutRange == 0.0f && _isSceneTrans)
+        {
+            _isSceneTrans = false;
+        }
 
     }
     public void PhotonEventOn()
@@ -46,8 +50,8 @@ public class NetworkTransition : MonoBehaviourPunCallbacks
     private void SceneTransition()
     {
         _fadeManager._isFade = true;
-        if (_fade.cutoutRange != 1.0f) return;
-
+        if (_fade.cutoutRange == 1.0f && !_isSceneTrans) return;
+        _isSceneTrans = true;
         PhotonNetwork.IsMessageQueueRunning = false;
         SceneManager.LoadSceneAsync(_nextScene, LoadSceneMode.Single);
     }
@@ -59,7 +63,8 @@ public class NetworkTransition : MonoBehaviourPunCallbacks
         if (_prevScene != null)
         {
             _fadeManager._isFade = true;
-            if (_fade.cutoutRange != 1.0f) return;
+            if (_fade.cutoutRange == 1.0f && !_isSceneTrans) return;
+            _isSceneTrans = true;
             // サーバーから切断する
             PhotonNetwork.Disconnect();
             // シーンを移行する
@@ -72,7 +77,7 @@ public class NetworkTransition : MonoBehaviourPunCallbacks
         for (int i = 0;i < players.Length;i++)
         {
             _playerData[i] = players[i];
-            Debug.Log($"{players[i].NickName}({players[i].ActorNumber}) - {players[i].GetButtonState()}");
+            //Debug.Log($"{players[i].NickName}({players[i].ActorNumber}) - {players[i].GetButtonState()}");
         }
         return _playerData[playerNum].NickName;
     }
