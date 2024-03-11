@@ -15,19 +15,24 @@ public class ColorSeedCreate : MonoBehaviour
     public int[] _upSeed = new int[50];
     public int[] _downSeed = new int[50];
 
-    //private void Start()
-    //{
-    //    _colorSeed = new ColorArray[_seedMax];
-    //    _upSeed = new int[50];
-    //    _downSeed = new int[_seedMax];
-    //}
-
-    public void ColorPreparation(int color)
-    {
-        _colorDifficulty = color;
-    }
     // カラーの種生成.
     public void InitColor()
+    {
+        SeedInit();
+        ColorRandom();
+    }
+    // カラーの種生成.
+    public void InitNetworkColor()
+    {
+        ColorRandom();
+    }
+    private void SeedInit()
+    {
+        _colorSeed = new ColorArray[_seedMax];
+        _upSeed = new int[50];
+        _downSeed = new int[_seedMax];
+    }
+    private void ColorRandom()
     {
         for (int i = 0; i < _colorSeed.Length; i++)
         {
@@ -41,6 +46,13 @@ public class ColorSeedCreate : MonoBehaviour
 #endif
         }
     }
+
+
+    public void ColorPreparation(int color)
+    {
+        _colorDifficulty = color;
+    }
+
     public void NetworkInitColor(int[]upcolor, int[] downcolor)
     {
         //　nullだったら処理しない（エラーになるのを防ぐため）

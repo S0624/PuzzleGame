@@ -21,7 +21,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         {
             if (i == 0)
             {
-                _seed.InitColor();
+                _seed.InitNetworkColor();
                 ColorSeedInin(_seed);
                 PhotonNetwork.LocalPlayer.SetCreateSeed(_seed._upSeed, _seed._downSeed);
             }

@@ -79,12 +79,14 @@ public static class GameRoomProperty
     {
         var players = PhotonNetwork.PlayerList;
         //if(players[0].CustomProperties[_isUpSeed] == null) return;
+        Debug.Log(players[0].CustomProperties[_isUpSeed]);
         return (int[])players[0].CustomProperties[_isUpSeed];
     }
     public static int[] GetDownDColorSeed(this Player player)
     {
         var players = PhotonNetwork.PlayerList;
         //if(players[0].CustomProperties[_isUpSeed] == null) return;
+        Debug.Log(players[0].CustomProperties[_isDownSeed]);
         return (int[])players[0].CustomProperties[_isDownSeed];
     }
 }
