@@ -87,6 +87,9 @@ public static class GameRoomProperty
         var players = PhotonNetwork.PlayerList;
         //if(players[0].CustomProperties[_isUpSeed] == null) return;
         Debug.Log(players[0].CustomProperties[_isDownSeed]);
+        var a = (int[])players[0].CustomProperties[_isDownSeed];
+        Debug.Log(a.Length);
+        Debug.Log("nemui" + a[0]);
         return (int[])players[0].CustomProperties[_isDownSeed];
     }
 }
