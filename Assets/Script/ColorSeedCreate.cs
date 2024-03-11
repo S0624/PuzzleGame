@@ -43,6 +43,11 @@ public class ColorSeedCreate : MonoBehaviour
     }
     public void NetworkInitColor(int[]upcolor, int[] downcolor)
     {
+        //　nullだったら処理しない（エラーになるのを防ぐため）
+        if (upcolor == null || downcolor == null)
+        {
+            return;
+        }
         for (int i = 0; i < _colorSeed.Length; i++)
         {
             _colorSeed[i].upColor = upcolor[i];
@@ -50,7 +55,6 @@ public class ColorSeedCreate : MonoBehaviour
             _colorSeed[i].downColor = downcolor[i];
             _downSeed[i] = downcolor[i];
         }
-        Debug.Log(_colorSeed[0].downColor);
     }
     // 番号に沿った色を返す.
     public int SetColorNum(int num, Direction dir)
