@@ -52,7 +52,6 @@ public class SettingController : MonoBehaviour
         _input = new InputManager();
 		_input.Enable();
 		_soundLength = _soundManager._soundBGMData.Length - 1;
-		Debug.Log(_soundLength);
 	}
 	private void CursorChoices()
 	{

@@ -58,19 +58,14 @@ public static class GameRoomProperty
     public static void SetCreateSeed(this Player player, int[] upseed, int[] downseed)
     {
         propsToSet[_isUpSeed] = upseed;
+        player.SetCustomProperties(propsToSet);
+        propsToSet.Clear();
+
         propsToSet[_isDownSeed] = downseed;
         player.SetCustomProperties(propsToSet);
         propsToSet.Clear();
     }
-    /*
-         public static void SetCreateSeed(this Player player, ColorSeedCreate seed)
-    {
-        propsToSet[_isSeed] = seed;
-        //player.SetCustomProperties(propsToSet);
-        //propsToSet.Clear();
-    }
-     
-     */
+
     /// <summary>
     /// 生成した種の取得
     /// </summary>
@@ -87,9 +82,9 @@ public static class GameRoomProperty
         var players = PhotonNetwork.PlayerList;
         //if(players[0].CustomProperties[_isUpSeed] == null) return;
         Debug.Log(players[0].CustomProperties[_isDownSeed]);
-        var a = (int[])players[0].CustomProperties[_isDownSeed];
-        Debug.Log(a.Length);
-        Debug.Log("nemui" + a[0]);
+        //var a = (int[])players[0].CustomProperties[_isDownSeed];
+        //Debug.Log(a.Length);
+        //Debug.Log("nemui" + a[0]);
         return (int[])players[0].CustomProperties[_isDownSeed];
     }
 }

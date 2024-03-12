@@ -39,6 +39,7 @@ public class NetworkTransition : MonoBehaviourPunCallbacks
         }
 
     }
+
     public void PhotonEventOn()
     {
         _view.RPC(nameof(SceneTransition), RpcTarget.All);
@@ -50,10 +51,13 @@ public class NetworkTransition : MonoBehaviourPunCallbacks
     private void SceneTransition()
     {
         _fadeManager._isFade = true;
-        if (_fade.cutoutRange == 1.0f && !_isSceneTrans) return;
-        _isSceneTrans = true;
-        PhotonNetwork.IsMessageQueueRunning = false;
-        SceneManager.LoadSceneAsync(_nextScene, LoadSceneMode.Single);
+        // シーンを移行してもよいかどうかをチェックする
+        if (IsLoadSceneChenge())
+        {
+            _isSceneTrans = true;
+            PhotonNetwork.IsMessageQueueRunning = false;
+            SceneManager.LoadSceneAsync(_nextScene, LoadSceneMode.Single);
+        }
     }
     /// <summary>
     /// 前のシーンに戻る
@@ -63,12 +67,15 @@ public class NetworkTransition : MonoBehaviourPunCallbacks
         if (_prevScene != null)
         {
             _fadeManager._isFade = true;
-            if (_fade.cutoutRange == 1.0f && !_isSceneTrans) return;
-            _isSceneTrans = true;
-            // サーバーから切断する
-            PhotonNetwork.Disconnect();
-            // シーンを移行する
-            SceneManager.LoadSceneAsync(_prevScene, LoadSceneMode.Single);
+            // シーンを移行してもよいかどうかをチェックする
+            if (IsLoadSceneChenge())
+            {
+                _isSceneTrans = true;
+                // サーバーから切断する
+                PhotonNetwork.Disconnect();
+                // シーンを移行する
+                SceneManager.LoadSceneAsync(_prevScene, LoadSceneMode.Single);
+            }
         }
     }
     public string PlayerData(int playerNum)
@@ -80,5 +87,23 @@ public class NetworkTransition : MonoBehaviourPunCallbacks
             //Debug.Log($"{players[i].NickName}({players[i].ActorNumber}) - {players[i].GetButtonState()}");
         }
         return _playerData[playerNum].NickName;
+    }
+    /// <summary>
+    /// シーンをロードしてもいいかの検知
+    /// </summary>
+    /// <returns>シーンをロード可能</returns>
+    private bool IsLoadSceneChenge()
+    {
+        // チェンジ可能かどうかのフラグ
+        bool isChenge = true;
+        // もし条件にあってなかったらfalseを返す
+        // フェードが終わりきっているかどうか
+        if (_fade.cutoutRange != 1.0f) return false;
+        // フェードのフラグがたっているかどうか
+        if (!_fadeManager._isFade) return false;
+        // シーンを移行しても可能かどうかのフラグ
+        if (_isSceneTrans) return false;
+        // ここまで来れたらすべての条件をクリアしている
+        return isChenge;
     }
 }

@@ -12,34 +12,19 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     // オブジェクトの取得.
     public ColorSeedCreate _seed;
     public SphereColorManager[] _colorManager;
+    private bool _isColorInit = false;
     // Start is called before the first frame update
     void Start()
     {
-        // リストの情報を取得
-        var players = PhotonNetwork.PlayerList;
-        for (int i = 0; i < players.Length; i++)
-        {
-            if (i == 0)
-            {
-                _seed.InitNetworkColor();
-                ColorSeedInin(_seed);
-                PhotonNetwork.LocalPlayer.SetCreateSeed(_seed._upSeed, _seed._downSeed);
-            }
-            else
-            {
-                Debug.Log("通ってる");
-                _seed.NetworkInitColor(players[i].GetUpDColorSeed(), players[i].GetDownDColorSeed());
-                ColorSeedInin(_seed);
-            }
-        }
-
+        ColorSeedInit();
     }
-
     // Update is called once per frame
     void Update()
     {
+        ColorSeedInit();
         // リストの情報を取得
         var players = PhotonNetwork.PlayerList;
+
         if (Input.GetKeyDown("z"))
         {
             if (_isDecisionButtonPush)
@@ -55,15 +40,49 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
         if (photonView.IsMine)
         {
-            foreach (var player in players)
-            {
-                Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
-            }
+            //foreach (var player in players)
+            //{
+            //    Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
+            //}
+        }
+        foreach (var player in players)
+        {
+            Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
         }
         // テスト用
         for (int i = 0; i < players.Length; i++)
         {
             _text[i].text = players[i].GetButtonState().ToString();
+        }
+    }
+    /// <summary>
+    /// 色の初期化と同期
+    /// </summary>
+    private void ColorSeedInit()
+    {
+        if (_isColorInit) return;
+        // リストの情報を取得
+        var players = PhotonNetwork.PlayerList;
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber == players[0].ActorNumber)
+            {
+                _seed.InitNetworkColor();
+                ColorSeedInin(_seed);
+                PhotonNetwork.LocalPlayer.SetCreateSeed(_seed._upSeed, _seed._downSeed);
+                Debug.Log("ここにとおってる");
+                _isColorInit = true;
+                break;
+            }
+            else if (PhotonNetwork.LocalPlayer.ActorNumber == players[i].ActorNumber)
+            {
+                if (_seed.NetworkInitColor(players[i].GetUpDColorSeed(), players[i].GetDownDColorSeed()))
+                {
+                    Debug.Log("通ってる" + PhotonNetwork.LocalPlayer.ActorNumber);
+                    _isColorInit = true;
+                    ColorSeedInin(_seed);
+                }
+            }
         }
     }
     /// <summary>

@@ -266,7 +266,7 @@ public class SphereMove : MonoBehaviour
                 pos = _fieldObject.SteepDescent(pos, _direction);
                 _colorNum[childcount] = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name,childcount);
                 //Debug.Log(child.position + "wa"+ child.name +"  " + pos.y + " " + _colorNum);
-                Debug.Log("ここは" + pos);
+                //Debug.Log("ここは" + pos);
                 
                 _fieldObject.IsNormalSphere(pos, _colorNum[childcount]);
                 childcount++;
