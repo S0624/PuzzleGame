@@ -13,6 +13,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     public ColorSeedCreate _seed;
     public SphereColorManager[] _colorManager;
     private bool _isColorInit = false;
+    private Vector2 _testPos = Vector2.zero;
     // Start is called before the first frame update
     void Start()
     {
@@ -22,8 +23,6 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     void Update()
     {
         ColorSeedInit();
-        // リストの情報を取得
-        var players = PhotonNetwork.PlayerList;
 
         if (Input.GetKeyDown("z"))
         {
@@ -37,7 +36,25 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             }
             Debug.Log("とおってる");
         }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            _testPos.x++;
+            Debug.Log("やあ");
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            _testPos.x--;
+            Debug.Log("うん？");
+        }
+
+    }
+    private void FixedUpdate()
+    {
+        // リストの情報を取得
+        var players = PhotonNetwork.PlayerList;
         PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
+        PhotonNetwork.LocalPlayer.SetSphereCoordinate(_testPos);
+        PhotonNetwork.LocalPlayer.CustomUpdate();
         if (photonView.IsMine)
         {
             //foreach (var player in players)
@@ -47,7 +64,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         }
         foreach (var player in players)
         {
-            Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
+            Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}{player.GetSphereCoordinate()}");
         }
         // テスト用
         for (int i = 0; i < players.Length; i++)

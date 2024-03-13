@@ -12,6 +12,8 @@ public static class GameRoomProperty
     // 種
     private const string _isUpSeed = "Up";
     private const string _isDownSeed = "Down";
+    // スフィアの座標
+    private const string _isSpherePos = "Pos";
 
     private static readonly Hashtable propsToSet = new Hashtable();
 
@@ -37,6 +39,13 @@ public static class GameRoomProperty
         room.SetCustomProperties(propsToSet);
         propsToSet.Clear();
     }
+    // カスタムプロパティの更新処理
+    // その都度更新するのではなく一度にまとめて更新する
+    public static void CustomUpdate(this Player player)
+    {
+        player.SetCustomProperties(propsToSet);
+        propsToSet.Clear();
+    }
     // ボタンを取得する
     public static bool GetButtonState(this Player player)
     {
@@ -47,8 +56,6 @@ public static class GameRoomProperty
     public static void ButtonDown(this Player player,bool isState)
     {
         propsToSet[_isBotton] = isState;
-        player.SetCustomProperties(propsToSet);
-        propsToSet.Clear();
     }
     /// <summary>
     /// 生成した種を記憶させる
@@ -58,16 +65,13 @@ public static class GameRoomProperty
     public static void SetCreateSeed(this Player player, int[] upseed, int[] downseed)
     {
         propsToSet[_isUpSeed] = upseed;
-        player.SetCustomProperties(propsToSet);
-        propsToSet.Clear();
 
         propsToSet[_isDownSeed] = downseed;
-        player.SetCustomProperties(propsToSet);
-        propsToSet.Clear();
+
     }
 
     /// <summary>
-    /// 生成した種の取得
+    /// 生成した種の取得(上)
     /// </summary>
     /// <returns></returns>
     public static int[] GetUpDColorSeed(this Player player)
@@ -77,14 +81,24 @@ public static class GameRoomProperty
         Debug.Log(players[0].CustomProperties[_isUpSeed]);
         return (int[])players[0].CustomProperties[_isUpSeed];
     }
+    /// <summary>
+    /// 生成した種の取得(下)
+    /// </summary>
+    /// <returns></returns>
     public static int[] GetDownDColorSeed(this Player player)
     {
         var players = PhotonNetwork.PlayerList;
-        //if(players[0].CustomProperties[_isUpSeed] == null) return;
-        Debug.Log(players[0].CustomProperties[_isDownSeed]);
-        //var a = (int[])players[0].CustomProperties[_isDownSeed];
-        //Debug.Log(a.Length);
-        //Debug.Log("nemui" + a[0]);
         return (int[])players[0].CustomProperties[_isDownSeed];
+    }
+    // ボタンを取得する
+    public static Vector2 GetSphereCoordinate(this Player player)
+    {
+        if (player.CustomProperties[_isSpherePos] == null) return Vector2.zero;
+        return (Vector2)player.CustomProperties[_isSpherePos];
+    }
+    // ボタンを押したのかを取得する
+    public static void SetSphereCoordinate(this Player player, Vector2 isState)
+    {
+        propsToSet[_isSpherePos] = isState;
     }
 }

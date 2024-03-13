@@ -46,6 +46,7 @@ public class UIManager : MonoBehaviourPunCallbacks//, IPunObservable
             }
         }
         PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
+        PhotonNetwork.LocalPlayer.CustomUpdate();
         if (photonView.IsMine)
         {
             PhotonEventOn();

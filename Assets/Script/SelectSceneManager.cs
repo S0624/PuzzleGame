@@ -124,7 +124,7 @@ public class SelectSceneManager : MonoBehaviour
 
     public bool DisplayUpdate()
     {
-        bool fade = false;
+        bool iscontroller = false;
         _isReacquisition = false;
         if (_warninigObject)
         {
@@ -137,7 +137,7 @@ public class SelectSceneManager : MonoBehaviour
                     // コントローラーの数の取得
                     if (_controllerNum >= 2)
                     {
-                        fade = true;
+                        iscontroller = true;
                     }
                     _isReacquisition = true;
                     _warningDisplayTimer = 60;
@@ -149,7 +149,7 @@ public class SelectSceneManager : MonoBehaviour
                 _isWarningsDisplay = true;
             }
         }
-        return fade;
+        return iscontroller;
     }
     // 警告画像の削除処理
     private void WarningDisplayDestory()

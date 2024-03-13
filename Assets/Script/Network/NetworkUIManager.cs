@@ -63,6 +63,7 @@ public class NetworkUIManager : MonoBehaviourPunCallbacks
             }
         }
         PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
+        PhotonNetwork.LocalPlayer.CustomUpdate();
         if (photonView.IsMine)
         {
             PhotonEventOn();
@@ -70,7 +71,6 @@ public class NetworkUIManager : MonoBehaviourPunCallbacks
         }
         if (IsReady())
         {
-            //Debug.Log("エイリアン");
             _transition.PhotonEventOn();
         }
 

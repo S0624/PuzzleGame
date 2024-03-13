@@ -147,7 +147,11 @@ public class LoadSceneManager : MonoBehaviour
                     _selectManager.ImageScaleDefalutChenge();
                     _selectManager._isWarningDestory = false;
                 }
-                if (_selectManager.IsWarningDisplay()) return;
+                if (_selectManager.IsWarningDisplay() && !_selectManager.DisplayUpdate())
+                {
+                    _selectCursor.Decision(true);
+                    return;
+                }
                 if (_selectManager.IsDifficultyObj())
                 {
                     _selectManager.DifficultyDisplayDestory();
