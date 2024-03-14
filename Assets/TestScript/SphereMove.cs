@@ -7,7 +7,7 @@ public class SphereMove : MonoBehaviour
     // スクリプトの取得.
     [SerializeField] private InputState _inputManager;
     // 何Pか指定する.
-    [SerializeField] private int _playerIndex;
+    public int _playerIndex;
     [SerializeField] private GameObject[] _ghostSphere;
 
     // フィールドの情報を受け取るための変数
@@ -69,7 +69,13 @@ public class SphereMove : MonoBehaviour
     public void SphereUpdate()
     {
         // キーの入力情報取得
+        Debug.Log(_playerIndex);
         _inputManager.GetInputPlayerPadNum(_playerIndex);
+        //if(_playerIndex < 0)
+        //{
+        //    this.gameObject.SetActive(false);
+        //}
+
         SphereDestory();
         // 方向キーの入力取得
         // 下左右に動かす

@@ -35,6 +35,15 @@ public class InputState : MonoBehaviour
     void Update()
     {
         InputStateUpdate();
+        //IsInputIndexCheck();
+    }
+    private bool IsInputIndexCheck()
+    {
+        if(_index < 0) 
+        {
+            return false;
+        }
+        return true;
     }
     // ゲームパッド(入力)のUpdate処理.
     public Vector2 InputStateUpdate()

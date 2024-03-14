@@ -319,6 +319,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 201810780}
     - target: {fileID: 5725173353230869355, guid: 9cd2c306a86165b4c867d5db85f2d3c8, type: 3}
+      propertyPath: _playerIndex
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5725173353230869355, guid: 9cd2c306a86165b4c867d5db85f2d3c8, type: 3}
       propertyPath: _colorManager
       value: 
       objectReference: {fileID: 1383005755}
@@ -4179,10 +4183,10 @@ GameObject:
   - component: {fileID: 1654032359}
   - component: {fileID: 1654032366}
   - component: {fileID: 1654032360}
-  - component: {fileID: 1654032361}
   - component: {fileID: 1654032362}
   - component: {fileID: 1654032364}
   - component: {fileID: 1654032363}
+  - component: {fileID: 1654032361}
   - component: {fileID: 1654032365}
   - component: {fileID: 1654032367}
   - component: {fileID: 1654032368}
@@ -4239,7 +4243,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654032357}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5c3f3950de2ad44fb7f12c27066afb6, type: 3}
   m_Name: 
@@ -4360,13 +4364,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cccbe72b4b53ef468f8be443b3286c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _text:
-  - {fileID: 989578319}
-  - {fileID: 1701920293}
+  _GameStartImg: {fileID: 1619330537628170838, guid: 1c91dbecb4bdfe743a6911ae15ddffa8, type: 3}
+  GameOverImg: {fileID: 56472850064453421, guid: 5f416759abc01c74a9c2e2f94903a5e9, type: 3}
+  _gameImgPos:
+  - {fileID: 1796064321}
+  - {fileID: 2045244860}
+  _imgPos:
+  - {fileID: 886650099}
+  - {fileID: 0}
+  AllClearImg: {fileID: 699909361198210033, guid: 09608b21b1a2886478bfbfa9ad5569b7, type: 3}
+  GameWinImg: {fileID: 56472850064453421, guid: 403fe489888e11d4c848ce7b1f56c927, type: 3}
+  _allClearEffect:
+  - {fileID: 7605931825661437878, guid: aff39e1a2ba632a4698d0469b6dcfc95, type: 3}
+  - {fileID: 8759436709347478472, guid: 1ac2dceaa6119b24aac2380dd9a2a24d, type: 3}
+  Canvas: {fileID: 1060968203}
+  _fieldData:
+  - {fileID: 201810780}
+  - {fileID: 119861353}
+  _moveSphere:
+  - {fileID: 392577900}
+  - {fileID: 132733615}
+  _obstacleText:
+  - {fileID: 1916587810}
+  - {fileID: 410276137}
+  _startCanvas: {fileID: 1654032364}
+  _fish: {fileID: 1654032365}
   _seed: {fileID: 2092515530}
   _colorManager:
   - {fileID: 1383005755}
   - {fileID: 1424830379}
+  _sphere:
+  - {fileID: 392577900}
+  - {fileID: 132733615}
+  _text:
+  - {fileID: 989578319}
+  - {fileID: 1701920293}
 --- !u!114 &1654032368
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5302,7 +5334,7 @@ PrefabInstance:
       objectReference: {fileID: 119861353}
     - target: {fileID: 5725173353230869355, guid: 9cd2c306a86165b4c867d5db85f2d3c8, type: 3}
       propertyPath: _playerIndex
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 5725173353230869355, guid: 9cd2c306a86165b4c867d5db85f2d3c8, type: 3}
       propertyPath: _colorManager
@@ -5630,6 +5662,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 375d2b9feb0b1fe429a241e8a547b33e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _upSeed: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  _downSeed: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!114 &2092515531
 MonoBehaviour:
   m_ObjectHideFlags: 0

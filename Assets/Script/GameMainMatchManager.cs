@@ -352,6 +352,5 @@ public class GameMainMatchManager : MonoBehaviour
             _obstacleText[_leftPlayer].SetObstacleCount(0);
             _obstacleText[_rightPlayer].SetObstacleCount(0);
         }
-
     }
 }
