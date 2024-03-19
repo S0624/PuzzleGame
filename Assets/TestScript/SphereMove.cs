@@ -20,7 +20,7 @@ public class SphereMove : MonoBehaviour
     // 移動情報
     // HACK たすけて！！！！！
     private const int _borad_Height = 13 - 2;
-    private Vector2Int _spherePos = new Vector2Int(3, _borad_Height);
+    public Vector2Int _spherePos = new Vector2Int(3, _borad_Height);
     // 仮で戻す位置を覚えておく変数
     private Vector3 _spherePostemp;
     // 時間を図る変数(数秒たつと自動で落下させるために使用)

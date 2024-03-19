@@ -87,7 +87,15 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         // リストの情報を取得
         var players = PhotonNetwork.PlayerList;
         PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
-        PhotonNetwork.LocalPlayer.SetSphereCoordinate(_testPos);
+        foreach (var player in players)
+        {
+            int i = 0;
+            if (PhotonNetwork.LocalPlayer.ActorNumber == player.ActorNumber)
+            {
+                PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[i]._spherePos);
+            }
+            i++; ;
+        }
         PhotonNetwork.LocalPlayer.CustomUpdate();
         if (photonView.IsMine)
         {
@@ -326,6 +334,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             {
                 if (_fieldData[i].FieldAllClear())
                 {
+                    Debug.Log("通ってる");
                     _soundManager.SEPlay(SoundSEData.AllClear);
                     _allClearTex[i] = Instantiate(AllClearImg, _imgPos[i].transform.position, Quaternion.identity);
                     Instantiate(_allClearEffect[i]);
