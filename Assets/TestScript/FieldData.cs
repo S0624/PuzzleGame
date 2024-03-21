@@ -763,7 +763,6 @@ public class FieldData : MonoBehaviour
         {
             if (_board[y, x] == (int)FieldContentsData.None)
             {
-                Debug.Log("Y" + y + "X" + x + "borad" + _board[y, x]);
                 return true;
             }
         }

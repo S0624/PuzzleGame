@@ -90,15 +90,16 @@ public static class GameRoomProperty
         var players = PhotonNetwork.PlayerList;
         return (int[])players[0].CustomProperties[_isDownSeed];
     }
-    // ボタンを取得する
+    // 位置を取得する
     public static Vector2 GetSphereCoordinate(this Player player)
     {
         if (player.CustomProperties[_isSpherePos] == null) return Vector2.zero;
         return (Vector2)player.CustomProperties[_isSpherePos];
     }
-    // ボタンを押したのかを取得する
+    // 位置を取得する
     public static void SetSphereCoordinate(this Player player, Vector2 isState)
     {
         propsToSet[_isSpherePos] = isState;
     }
 }
+

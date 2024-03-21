@@ -69,7 +69,6 @@ public class SphereMove : MonoBehaviour
     public void SphereUpdate()
     {
         // キーの入力情報取得
-        Debug.Log(_playerIndex);
         _inputManager.GetInputPlayerPadNum(_playerIndex);
         //if(_playerIndex < 0)
         //{
@@ -97,8 +96,6 @@ public class SphereMove : MonoBehaviour
                 MoveState();
                 RotationState();
             }
-
-
         }
         GhostSphereUpdate();
         //#endif
@@ -375,10 +372,9 @@ public class SphereMove : MonoBehaviour
         }
     }
 
-    private void SpherePos(int x = 0, int y = 0)
+    public void SpherePos(int x = 0, int y = 0)
     {
         this.transform.position = transform.position + new Vector3(x, y, 0);
-        //transform.DOMove(transform.position + new Vector3(x, y, 0), 0.1f).SetEase(Ease.InCubic);
         _spherePos.x += x;
         _spherePos.y += y;
     }

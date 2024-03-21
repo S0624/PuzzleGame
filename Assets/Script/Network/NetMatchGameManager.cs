@@ -59,6 +59,9 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     // テスト用名前の表示
     public TextMeshProUGUI[] _text;
     private Vector2 _testPos = Vector2.zero;
+
+    private Vector2Int _tempPos = Vector2Int.zero;
+    private Vector2Int _localSpherePos = Vector2Int.zero;
     // Start is called before the first frame update
     void Start()
     {
@@ -87,14 +90,14 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         // リストの情報を取得
         var players = PhotonNetwork.PlayerList;
         PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
+        int actor = 0;
         foreach (var player in players)
         {
-            int i = 0;
             if (PhotonNetwork.LocalPlayer.ActorNumber == player.ActorNumber)
             {
-                PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[i]._spherePos);
+                PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[actor]._spherePos);
             }
-            i++; ;
+            actor++; ;
         }
         PhotonNetwork.LocalPlayer.CustomUpdate();
         if (photonView.IsMine)
@@ -112,6 +115,26 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         for (int i = 0; i < players.Length; i++)
         {
             _text[i].text = players[i].GetButtonState().ToString();
+        }
+        int test = 0;
+        foreach (var player in players)
+        {
+            Debug.Log("おなかすいた" + player.ActorNumber);
+            if (PhotonNetwork.LocalPlayer.ActorNumber != player.ActorNumber)
+            {
+                var pos = player.GetSphereCoordinate();
+                Vector2Int testa = Vector2Int.zero;
+                testa.x = (int)pos.x;
+                testa.y = (int)pos.y;
+                _sphere[test]._spherePos = testa;
+                
+                Debug.Log("ラメ" + pos + "ｔら" + _sphere[test]._spherePos);
+                _localSpherePos = testa - _tempPos;
+
+                _sphere[test].SpherePos(_localSpherePos.x, _localSpherePos.y);
+                _tempPos = testa;
+            }
+            test++;
         }
         TestFixUpdate();
     }
@@ -153,7 +176,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             // 動いてなかったら生成.
             if (!_fieldData[i].MoveObstacleSphere())
             {
-                if (_moveSphere[i]._playerIndex >= 0)
+                //if (_moveSphere[i]._playerIndex >= 0)
                 {
                     _moveSphere[i].InstallationProcess(_fieldData[i].IsSetSphere(), _fieldData[i]);
                 }
@@ -207,7 +230,6 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             {
                 _isDecisionButtonPush = true;
             }
-            Debug.Log("とおってる");
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {

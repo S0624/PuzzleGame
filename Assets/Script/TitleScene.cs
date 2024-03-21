@@ -12,6 +12,8 @@ public class TitleScene : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Vsync Count を 0にすることにより、FPS を固定できるようになる
+        QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = 60;
     }
 
