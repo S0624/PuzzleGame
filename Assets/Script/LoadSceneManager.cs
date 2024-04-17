@@ -128,6 +128,11 @@ public class LoadSceneManager : MonoBehaviour
                 _soundManager.SEPlay(SoundSEData.TitlePushSE);
                 if (_selectCursor != null)
                 {
+                    //// 仮実装
+                    //if (_selectCursor.SelectNum() == 2)
+                    //{
+                    //    return;
+                    //}
                     // 選んだ画像を拡大する
                     _selectManager.ImageScaleChenge(_selectCursor.SelectNum());
                     if (_selectCursor.SelectNum() == 1)

@@ -36,7 +36,7 @@ public class SphereMove : MonoBehaviour
     // どの向きに回転させるか（回転処理に使用）
     private Vector2Int[] _sphereDirection = new Vector2Int[(int)Direction.max];
     // 何回ボタンを押されたかを図るために使用する変数
-    private int _direction = 0;
+    public int _direction = 0;
     // サウンドの取得
     private SoundManager _soundManager;
     public bool _isRegeneration = false;
@@ -439,7 +439,7 @@ public class SphereMove : MonoBehaviour
         return true;
     }
     // 回転処理.
-    private void SphereRotation()
+    public void SphereRotation()
     {
         foreach (Transform child in this.transform)
         {

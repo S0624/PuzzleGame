@@ -14,6 +14,10 @@ public static class GameRoomProperty
     private const string _isDownSeed = "Down";
     // スフィアの座標
     private const string _isSpherePos = "Pos";
+    // スフィアの方向
+    private const string _isSphereDir = "Dir";
+    // スフィアの設置
+    private const string _isSphereSet = "Set";
 
     private static readonly Hashtable propsToSet = new Hashtable();
 
@@ -67,7 +71,6 @@ public static class GameRoomProperty
         propsToSet[_isUpSeed] = upseed;
 
         propsToSet[_isDownSeed] = downseed;
-
     }
 
     /// <summary>
@@ -90,7 +93,7 @@ public static class GameRoomProperty
         var players = PhotonNetwork.PlayerList;
         return (int[])players[0].CustomProperties[_isDownSeed];
     }
-    // 位置を取得する
+    // 位置を参照する
     public static Vector2 GetSphereCoordinate(this Player player)
     {
         if (player.CustomProperties[_isSpherePos] == null) return Vector2.zero;
@@ -100,6 +103,28 @@ public static class GameRoomProperty
     public static void SetSphereCoordinate(this Player player, Vector2 isState)
     {
         propsToSet[_isSpherePos] = isState;
+    }
+    // 方向を参照する
+    public static int GetSphereDirection(this Player player)
+    {
+        if (player.CustomProperties[_isSphereDir] == null) return 0;
+        return (int)player.CustomProperties[_isSphereDir];
+    }
+    // 位置を取得する
+    public static void SetSphereDirection(this Player player, int isState)
+    {
+        propsToSet[_isSphereDir] = isState;
+    }
+    // 設置したかどうかを参照する
+    public static bool GetSphereSet(this Player player)
+    {
+        if (player.CustomProperties[_isSphereSet] == null) return false;
+        return (bool)player.CustomProperties[_isSphereSet];
+    }
+    // 設置したかどうかを取得する
+    public static void SetSphereSet(this Player player, bool isState)
+    {
+        propsToSet[_isSphereSet] = isState;
     }
 }
 

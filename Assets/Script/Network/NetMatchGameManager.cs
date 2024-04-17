@@ -96,6 +96,8 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             if (PhotonNetwork.LocalPlayer.ActorNumber == player.ActorNumber)
             {
                 PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[actor]._spherePos);
+                PhotonNetwork.LocalPlayer.SetSphereDirection(_sphere[actor]._direction);
+                PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetEnd);
             }
             actor++; ;
         }
@@ -116,25 +118,36 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         {
             _text[i].text = players[i].GetButtonState().ToString();
         }
-        int test = 0;
+        int add = 0;
         foreach (var player in players)
         {
             Debug.Log("おなかすいた" + player.ActorNumber);
             if (PhotonNetwork.LocalPlayer.ActorNumber != player.ActorNumber)
             {
-                var pos = player.GetSphereCoordinate();
-                Vector2Int testa = Vector2Int.zero;
-                testa.x = (int)pos.x;
-                testa.y = (int)pos.y;
-                _sphere[test]._spherePos = testa;
-                
-                Debug.Log("ラメ" + pos + "ｔら" + _sphere[test]._spherePos);
-                _localSpherePos = testa - _tempPos;
 
-                _sphere[test].SpherePos(_localSpherePos.x, _localSpherePos.y);
-                _tempPos = testa;
+                // 位置の代入
+                var pos = player.GetSphereCoordinate();
+                Vector2Int temppos = Vector2Int.zero;
+                temppos.x = (int)pos.x;
+                temppos.y = (int)pos.y;
+                _sphere[add]._spherePos = temppos;
+                
+                _localSpherePos = temppos - _tempPos;
+
+                _sphere[add].SpherePos(_localSpherePos.x, _localSpherePos.y);
+                _tempPos = temppos;
+
+                // 方向の代入
+                var dir = player.GetSphereDirection();
+                _sphere[add]._direction = dir;
+
+                // 設置フラグの代入
+                var isset = player.GetSphereSet();
+                _fieldData[add]._isSetEnd = isset;
+                Debug.Log(_fieldData[add]._isSetEnd);
+
             }
-            test++;
+            add++;
         }
         TestFixUpdate();
     }

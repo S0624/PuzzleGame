@@ -59,7 +59,7 @@ public class FieldData : MonoBehaviour
     private int _prevChainCount = 0;
     private int _bonus = 0;
     // 設置が終わったかどうかのフラグ.
-    private bool _isSetEnd = false;
+    public bool _isSetEnd = false;
     // 妨害用のスフィアのかず
     private int _obstacleNum;
     // 妨害用のスフィアの数.
@@ -735,30 +735,6 @@ public class FieldData : MonoBehaviour
     // すべて落したかの確認.
     private bool FallCheck(int x,int indexY)
     {
-        //var max = 0;
-        //for (int y = 0; y < _boradHeightMax; y++)
-        //{
-        //    if (_board[y, x] == (int)FieldContentsData.None)
-        //    {
-        //        max = y;
-        //    }
-        //    else
-        //    {
-        //        //if (max != 0) return true;
-        //        if (max != 0)
-        //        {
-        //            Debug.Log("Y" + y + "X" + x + "borad" + _board[y,x]);
-        //            return true;
-        //        }
-        //    }
-        //}
-        ////Debug.Log(max);
-        ////if(max != indexY)
-        ////{
-        ////    Debug.Log("あああ");
-        ////    return true;
-        ////}
-        //return false;
         for (int y = 0; y < indexY; y++)
         {
             if (_board[y, x] == (int)FieldContentsData.None)
@@ -851,7 +827,7 @@ public class FieldData : MonoBehaviour
         // 指定範囲外に出たら回せないようにする
         if (pos.y > _boradHeightMax - 1)
         {
-            Debug.Log("ちょちょちょ");
+            //Debug.Log("ちょちょちょ");
             return false;
         }
         // 上下の時のみ処理を行う
