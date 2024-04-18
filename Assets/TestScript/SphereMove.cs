@@ -247,7 +247,7 @@ public class SphereMove : MonoBehaviour
     }
 
     // 設置するときの処理
-    private void Installation()
+    public void Installation()
     {
         if (!_fieldObject.IsGameOver())
         {
@@ -258,18 +258,15 @@ public class SphereMove : MonoBehaviour
             foreach (Transform child in this.transform)
             {
                 // 子オブジェクトに対する処理をここに書く
-                //Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x, (int)child.transform.position.y - (int)this.transform.position.y) + _cubePos;
                 Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x + _spherePos.x,
                     (int)child.transform.position.y - (int)this.transform.position.y);
 
 
                 // HACK テスト用.
                 // こいつが悪さをしている
-                // こいつはforで置ける一番低い場所を取ってしまうので0からいくとそうなる（説明下手だな？）
+                // こいつはforで置ける一番低い場所を取ってしまうので0からいくとそうなる（説明下手だな）
                 pos = _fieldObject.SteepDescent(pos, _direction);
                 _colorNum[childcount] = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name,childcount);
-                //Debug.Log(child.position + "wa"+ child.name +"  " + pos.y + " " + _colorNum);
-                //Debug.Log("ここは" + pos);
                 
                 _fieldObject.IsNormalSphere(pos, _colorNum[childcount]);
                 childcount++;
@@ -339,6 +336,7 @@ public class SphereMove : MonoBehaviour
     public void InstallationProcess(bool isChain, FieldData controller)
     ///private void SphereReGenerete()
     {
+        Debug.Log(isChain + "a" + _isReGenereteSpher);
         if (isChain && _isReGenereteSpher)
         {
             // お邪魔を落とす.

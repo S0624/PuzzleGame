@@ -109,10 +109,10 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             //    Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
             //}
         }
-        foreach (var player in players)
-        {
-            Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}{player.GetSphereCoordinate()}");
-        }
+        //foreach (var player in players)
+        //{
+        //    Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}{player.GetSphereCoordinate()}");
+        //}
         // テスト用
         for (int i = 0; i < players.Length; i++)
         {
@@ -140,16 +140,23 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 // 方向の代入
                 var dir = player.GetSphereDirection();
                 _sphere[add]._direction = dir;
+                //_sphere[add].SphereRotation();
+                
 
                 // 設置フラグの代入
                 var isset = player.GetSphereSet();
                 _fieldData[add]._isSetEnd = isset;
-                Debug.Log(_fieldData[add]._isSetEnd);
+                if( isset ) { _fieldData[add].IsInstallaion();}
+
+                _moveSphere[add].InstallationProcess(_fieldData[add].IsSetSphere(), _fieldData[add]);
+                //_moveSphere[add].SphereReGenerete();
+
+                Debug.Log("add" + _fieldData[add]._isSetEnd);
 
             }
             add++;
         }
-        TestFixUpdate();
+        GameFixUpdate();
     }
     private void TestUpdate()
     {
@@ -210,7 +217,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         // お邪魔計算.
         ObstacleCalculation();
     }
-    private void TestFixUpdate()
+    private void GameFixUpdate()
     {
         // ゲームスタート画面の更新処理.
         if (_startCanvas.IsStartCanvas()) return;
