@@ -121,7 +121,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         int add = 0;
         foreach (var player in players)
         {
-            Debug.Log("おなかすいた" + player.ActorNumber);
+            //Debug.Log("おなかすいた" + player.ActorNumber);
             if (PhotonNetwork.LocalPlayer.ActorNumber != player.ActorNumber)
             {
 
@@ -151,7 +151,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 _moveSphere[add].InstallationProcess(_fieldData[add].IsSetSphere(), _fieldData[add]);
                 //_moveSphere[add].SphereReGenerete();
 
-                Debug.Log("add" + _fieldData[add]._isSetEnd);
+                //Debug.Log("add" + _fieldData[add]._isSetEnd);
 
             }
             add++;

@@ -363,8 +363,10 @@ public class FieldData : MonoBehaviour
                 }
                 // カラーの番号を取得
                 sphereColor = _sphere[y, x].GetComponent<SphereData>().GetColorType();
+
                 // 消えるかどうかの判定
                 IsRecursionCheckField(tempBorad, x, y, sphereColor);
+
                 // 消せる個数をチェックする
                 eraseCount = CountTempField(tempBorad);
                 // 指定された数よりも消せる数が多かったら
