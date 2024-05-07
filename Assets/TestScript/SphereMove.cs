@@ -379,7 +379,7 @@ public class SphereMove : MonoBehaviour
     // キューブの移動状態.
     private bool SphereMoveState()
     {
-        if (_inputframe > 8 || _inputManager.DGetInputWasPressData())
+        if (_inputframe > 5 || _inputManager.DGetInputWasPressData())
         {
             return true;
         }

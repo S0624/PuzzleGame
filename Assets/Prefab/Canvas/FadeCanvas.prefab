@@ -86,7 +86,7 @@ MonoBehaviour:
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  maskTexture: {fileID: 2800000, guid: f98866b2e3a27e24c9905296ee793fad, type: 3}
+  maskTexture: {fileID: 2800000, guid: 8c3d686785841794aa98f00a854d2d7e, type: 3}
   cutoutRange: 1
 --- !u!114 &11491604
 MonoBehaviour:
@@ -147,5 +147,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fade: {fileID: 11491604}
   _isFade: 0
-  _isTest: 0
-  _test: {fileID: 0}

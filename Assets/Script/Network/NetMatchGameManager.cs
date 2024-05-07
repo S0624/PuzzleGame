@@ -90,18 +90,36 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         // リストの情報を取得
         var players = PhotonNetwork.PlayerList;
         PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
+        bool isupdate = false;
         int actor = 0;
         foreach (var player in players)
         {
             if (PhotonNetwork.LocalPlayer.ActorNumber == player.ActorNumber)
             {
-                PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[actor]._spherePos);
-                PhotonNetwork.LocalPlayer.SetSphereDirection(_sphere[actor]._direction);
-                PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetEnd);
+
+                // 取得する処理
+                if (player.GetSphereCoordinate() != _sphere[actor]._spherePos)
+                {
+                    PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[actor]._spherePos);
+                    isupdate = true;
+                }
+                if (player.GetSphereDirection() != _sphere[actor]._direction)
+                {
+                    PhotonNetwork.LocalPlayer.SetSphereDirection(_sphere[actor]._direction);
+                    isupdate = true;
+                }
+                if (player.GetSphereSet() != _fieldData[actor]._isSetEnd)
+                {
+                    PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetEnd);
+                    isupdate = true;
+                }
             }
-            actor++; ;
+            actor++;
         }
-        PhotonNetwork.LocalPlayer.CustomUpdate();
+        if(isupdate) 
+        {
+            PhotonNetwork.LocalPlayer.CustomUpdate();
+        }
         if (photonView.IsMine)
         {
             //foreach (var player in players)
@@ -109,19 +127,15 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             //    Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}");
             //}
         }
-        //foreach (var player in players)
-        //{
-        //    Debug.Log($"{player.NickName}({player.ActorNumber}) - {player.GetButtonState()}{player.GetSphereCoordinate()}");
-        //}
+
         // テスト用
         for (int i = 0; i < players.Length; i++)
         {
             _text[i].text = players[i].GetButtonState().ToString();
         }
-        int add = 0;
+        int playernum = 0;
         foreach (var player in players)
         {
-            //Debug.Log("おなかすいた" + player.ActorNumber);
             if (PhotonNetwork.LocalPlayer.ActorNumber != player.ActorNumber)
             {
 
@@ -130,31 +144,31 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 Vector2Int temppos = Vector2Int.zero;
                 temppos.x = (int)pos.x;
                 temppos.y = (int)pos.y;
-                _sphere[add]._spherePos = temppos;
+                _sphere[playernum]._spherePos = temppos;
                 
                 _localSpherePos = temppos - _tempPos;
 
-                _sphere[add].SpherePos(_localSpherePos.x, _localSpherePos.y);
+                _sphere[playernum].SpherePos(_localSpherePos.x, _localSpherePos.y);
                 _tempPos = temppos;
 
                 // 方向の代入
                 var dir = player.GetSphereDirection();
-                _sphere[add]._direction = dir;
+                _sphere[playernum]._direction = dir;
                 //_sphere[add].SphereRotation();
                 
 
                 // 設置フラグの代入
                 var isset = player.GetSphereSet();
-                _fieldData[add]._isSetEnd = isset;
-                if( isset ) { _fieldData[add].IsInstallaion();}
+                _fieldData[playernum]._isSetEnd = isset;
+                if( isset ) { _fieldData[playernum].IsInstallaion();}
 
-                _moveSphere[add].InstallationProcess(_fieldData[add].IsSetSphere(), _fieldData[add]);
+                _moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
                 //_moveSphere[add].SphereReGenerete();
 
                 //Debug.Log("add" + _fieldData[add]._isSetEnd);
 
             }
-            add++;
+            playernum++;
         }
         GameFixUpdate();
     }
