@@ -32,7 +32,7 @@ public class SphereMove : MonoBehaviour
     // 移動用のスコア
     private int _moveScore = 0;
     // 再生成用のフラグ.
-    private bool _isReGenereteSpher = false;
+    public bool _isReGenereteSpher = false;
     // どの向きに回転させるか（回転処理に使用）
     private Vector2Int[] _sphereDirection = new Vector2Int[(int)Direction.max];
     // 何回ボタンを押されたかを図るために使用する変数
@@ -115,7 +115,6 @@ public class SphereMove : MonoBehaviour
             // 子オブジェクトに対する処理をここに書く
             Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x,
                 (int)child.transform.position.y);
-            //if (checkPos.y > pos.y)
             {
                 checkPos = pos;
             }
@@ -277,6 +276,28 @@ public class SphereMove : MonoBehaviour
             _isReGenereteSpher = true;
         }
     }
+    // HACK 消す用　ネットワーク用のデバック
+    public void test()
+    {
+        // 子オブジェクトの番号を取得する用に使用
+        int childcount = 0;
+        foreach (Transform child in this.transform)
+        {
+            // 子オブジェクトに対する処理をここに書く
+            Vector2Int pos = new Vector2Int((int)child.transform.position.x - (int)this.transform.position.x + _spherePos.x,
+                (int)child.transform.position.y - (int)this.transform.position.y);
+
+
+            // HACK テスト用.
+            // こいつが悪さをしている
+            // こいつはforで置ける一番低い場所を取ってしまうので0からいくとそうなる（説明下手だな）
+            pos = _fieldObject.SteepDescent(pos, _direction);
+            //_colorNum[childcount] = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name, childcount);
+            Debug.Log("提唱" + pos);
+           // _fieldObject.IsNormalSphere(pos, _colorNum[childcount]);
+            childcount++;
+        }
+    }
     /// <summary>
     /// ゴーストの更新処理
     /// </summary>
@@ -336,7 +357,6 @@ public class SphereMove : MonoBehaviour
     public void InstallationProcess(bool isChain, FieldData controller)
     ///private void SphereReGenerete()
     {
-        Debug.Log(isChain + "a" + _isReGenereteSpher);
         if (isChain && _isReGenereteSpher)
         {
             // お邪魔を落とす.
@@ -346,7 +366,7 @@ public class SphereMove : MonoBehaviour
             _isRegeneration = true;
             controller.IsSetReset();
             // スフィアを再生成する.
-            SphereReGenerete();
+             SphereReGenerete();
         }
     }
     // スフィアの再生成.

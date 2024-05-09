@@ -80,8 +80,6 @@ public static class GameRoomProperty
     public static int[] GetUpDColorSeed(this Player player)
     {
         var players = PhotonNetwork.PlayerList;
-        //if(players[0].CustomProperties[_isUpSeed] == null) return;
-        Debug.Log(players[0].CustomProperties[_isUpSeed]);
         return (int[])players[0].CustomProperties[_isUpSeed];
     }
     /// <summary>

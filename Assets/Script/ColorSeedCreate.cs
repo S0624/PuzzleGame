@@ -60,7 +60,6 @@ public class ColorSeedCreate : MonoBehaviour
         {
             return false;
         }
-        Debug.Log(downcolor[0]);
         for (int i = 0; i < _colorSeed.Length; i++)
         {
             _colorSeed[i].upColor = upcolor[i];

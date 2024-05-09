@@ -791,7 +791,6 @@ public class FieldData : MonoBehaviour
         {
             if (posY < 0)
             {
-                Debug.Log(posY);
                 //result.y = _boradHeightMax;
                 result.y = 0;
                 posY = _boradHeightMax;

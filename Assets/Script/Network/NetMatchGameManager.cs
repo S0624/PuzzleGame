@@ -62,6 +62,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
 
     private Vector2Int _tempPos = Vector2Int.zero;
     private Vector2Int _localSpherePos = Vector2Int.zero;
+    private bool _isTestSet = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -101,6 +102,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 if (player.GetSphereCoordinate() != _sphere[actor]._spherePos)
                 {
                     PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[actor]._spherePos);
+                    Debug.Log("Pos" + _sphere[actor]._spherePos);
                     isupdate = true;
                 }
                 if (player.GetSphereDirection() != _sphere[actor]._direction)
@@ -110,6 +112,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 }
                 if (player.GetSphereSet() != _fieldData[actor]._isSetEnd)
                 {
+                    Debug.Log(_fieldData[actor]._isSetEnd);
                     PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetEnd);
                     isupdate = true;
                 }
@@ -144,25 +147,40 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 Vector2Int temppos = Vector2Int.zero;
                 temppos.x = (int)pos.x;
                 temppos.y = (int)pos.y;
+                //_sphere[playernum]._spherePos = temppos;
+                
+                //_localSpherePos = temppos - _tempPos;
+
+                //_sphere[playernum].SpherePos(_localSpherePos.x, _localSpherePos.y);
                 _sphere[playernum]._spherePos = temppos;
                 
-                _localSpherePos = temppos - _tempPos;
-
-                _sphere[playernum].SpherePos(_localSpherePos.x, _localSpherePos.y);
                 _tempPos = temppos;
 
                 // 方向の代入
                 var dir = player.GetSphereDirection();
                 _sphere[playernum]._direction = dir;
-                //_sphere[add].SphereRotation();
+                //_sphere[playernum].SphereRotation();
                 
 
                 // 設置フラグの代入
                 var isset = player.GetSphereSet();
+                if( isset && !_isTestSet )
+                {
+                    //_sphere[playernum].FreeFallUpdate();
+                    _sphere[playernum].Installation();
+                    _sphere[playernum].test();
+                    Debug.Log("Do");
+                    _moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
+                    _isTestSet = true;
+                }
+                else if( !isset && _isTestSet )
+                {
+                    _isTestSet = false;
+                }
                 _fieldData[playernum]._isSetEnd = isset;
-                if( isset ) { _fieldData[playernum].IsInstallaion();}
 
-                _moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
+                if (_moveSphere[playernum]._isReGenereteSpher) { _isTestSet = false; }
+
                 //_moveSphere[add].SphereReGenerete();
 
                 //Debug.Log("add" + _fieldData[add]._isSetEnd);
@@ -210,10 +228,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             // 動いてなかったら生成.
             if (!_fieldData[i].MoveObstacleSphere())
             {
-                //if (_moveSphere[i]._playerIndex >= 0)
-                {
-                    _moveSphere[i].InstallationProcess(_fieldData[i].IsSetSphere(), _fieldData[i]);
-                }
+                _moveSphere[i].InstallationProcess(_fieldData[i].IsSetSphere(), _fieldData[i]);
             }
             // スフィアを再生成できるかのフラグが成立していたら
             if (_moveSphere[i]._isRegeneration)
@@ -301,7 +316,6 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             {
                 if (_seed.NetworkInitColor(players[i].GetUpDColorSeed(), players[i].GetDownDColorSeed()))
                 {
-                    Debug.Log("通ってる" + PhotonNetwork.LocalPlayer.ActorNumber);
                     _isColorInit = true;
                     ColorSeedInin(_seed);
                     _moveSphere[1]._playerIndex = 0;
