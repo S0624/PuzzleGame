@@ -91,7 +91,9 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         // リストの情報を取得
         var players = PhotonNetwork.PlayerList;
         PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
+        // 何か変更があった時のみ同期させるためにフラグを用意
         bool isupdate = false;
+        // 何番目か
         int actor = 0;
         foreach (var player in players)
         {
@@ -99,7 +101,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             {
 
                 // 取得する処理
-                if (player.GetSphereCoordinate() != _sphere[actor]._spherePos)
+                if (player.GetSphereCoordinate() != _sphere[actor]._spherePos && !_isTestSet)
                 {
                     PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[actor]._spherePos);
                     Debug.Log("Pos" + _sphere[actor]._spherePos);
@@ -141,41 +143,41 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.LocalPlayer.ActorNumber != player.ActorNumber)
             {
-
                 // 位置の代入
                 var pos = player.GetSphereCoordinate();
                 Vector2Int temppos = Vector2Int.zero;
                 temppos.x = (int)pos.x;
                 temppos.y = (int)pos.y;
                 //_sphere[playernum]._spherePos = temppos;
-                
-                //_localSpherePos = temppos - _tempPos;
 
-                //_sphere[playernum].SpherePos(_localSpherePos.x, _localSpherePos.y);
+                _localSpherePos = temppos - _tempPos;
+
+                _sphere[playernum].SpherePos(_localSpherePos.x, _localSpherePos.y);
                 _sphere[playernum]._spherePos = temppos;
-                
+
                 _tempPos = temppos;
 
                 // 方向の代入
                 var dir = player.GetSphereDirection();
                 _sphere[playernum]._direction = dir;
                 //_sphere[playernum].SphereRotation();
-                
+
 
                 // 設置フラグの代入
                 var isset = player.GetSphereSet();
-                if( isset && !_isTestSet )
+                if (isset && !_isTestSet)
                 {
                     //_sphere[playernum].FreeFallUpdate();
                     _sphere[playernum].Installation();
                     _sphere[playernum].test();
-                    Debug.Log("Do");
-                    _moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
+                    Debug.Log("とおった");
+                   // _moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
                     _isTestSet = true;
                 }
-                else if( !isset && _isTestSet )
+                else if (!isset && _isTestSet)
                 {
                     _isTestSet = false;
+                    _moveSphere[playernum].InstallationProcessTest(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
                 }
                 _fieldData[playernum]._isSetEnd = isset;
 

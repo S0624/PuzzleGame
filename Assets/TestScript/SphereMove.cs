@@ -18,7 +18,6 @@ public class SphereMove : MonoBehaviour
     //private float _speed;
     //private float currentSpeed;
     // 移動情報
-    // HACK たすけて！！！！！
     private const int _borad_Height = 13 - 2;
     public Vector2Int _spherePos = new Vector2Int(3, _borad_Height);
     // 仮で戻す位置を覚えておく変数
@@ -289,11 +288,9 @@ public class SphereMove : MonoBehaviour
 
 
             // HACK テスト用.
-            // こいつが悪さをしている
-            // こいつはforで置ける一番低い場所を取ってしまうので0からいくとそうなる（説明下手だな）
             pos = _fieldObject.SteepDescent(pos, _direction);
             //_colorNum[childcount] = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name, childcount);
-            Debug.Log("提唱" + pos);
+            Debug.Log("おいたよ" + pos);
            // _fieldObject.IsNormalSphere(pos, _colorNum[childcount]);
             childcount++;
         }
@@ -365,6 +362,23 @@ public class SphereMove : MonoBehaviour
             if (controller.MoveObstacleSphere()) return;
             _isRegeneration = true;
             controller.IsSetReset();
+            // スフィアを再生成する.
+             SphereReGenerete();
+        }
+    }
+    // スフィアを設置したときの処理.
+    public void InstallationProcessTest(bool isChain, FieldData controller)
+    ///private void SphereReGenerete()
+    {
+        if (isChain && _isReGenereteSpher)
+        {
+            // お邪魔を落とす.
+            controller.DisturbanceFall();
+            // お邪魔が落下中だったら次のスフィアを生成しない.
+            if (controller.MoveObstacleSphere()) return;
+            _isRegeneration = true;
+            controller.IsSetReset();
+            Debug.Log("りせっと");
             // スフィアを再生成する.
              SphereReGenerete();
         }
