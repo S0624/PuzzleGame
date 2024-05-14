@@ -290,7 +290,7 @@ public class SphereMove : MonoBehaviour
             // HACK テスト用.
             pos = _fieldObject.SteepDescent(pos, _direction);
             //_colorNum[childcount] = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name, childcount);
-            Debug.Log("おいたよ" + pos);
+            Debug.Log("おいたよ");
            // _fieldObject.IsNormalSphere(pos, _colorNum[childcount]);
             childcount++;
         }

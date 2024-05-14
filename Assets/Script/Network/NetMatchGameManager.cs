@@ -104,7 +104,6 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 if (player.GetSphereCoordinate() != _sphere[actor]._spherePos && !_isTestSet)
                 {
                     PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[actor]._spherePos);
-                    Debug.Log("Pos" + _sphere[actor]._spherePos);
                     isupdate = true;
                 }
                 if (player.GetSphereDirection() != _sphere[actor]._direction)
@@ -114,9 +113,9 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 }
                 if (player.GetSphereSet() != _fieldData[actor]._isSetEnd)
                 {
-                    Debug.Log(_fieldData[actor]._isSetEnd);
                     PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetEnd);
                     isupdate = true;
+                    Debug.Log(_fieldData[actor]._isSetEnd);
                 }
             }
             actor++;
@@ -171,17 +170,17 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                     _sphere[playernum].Installation();
                     _sphere[playernum].test();
                     Debug.Log("とおった");
-                   // _moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
+                    //_moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
+                    //_moveSphere[playernum].InstallationProcessTest(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
                     _isTestSet = true;
                 }
                 else if (!isset && _isTestSet)
                 {
                     _isTestSet = false;
-                    _moveSphere[playernum].InstallationProcessTest(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
                 }
-                _fieldData[playernum]._isSetEnd = isset;
+                //_fieldData[playernum]._isSetEnd = isset;
 
-                if (_moveSphere[playernum]._isReGenereteSpher) { _isTestSet = false; }
+                //if (_moveSphere[playernum]._isReGenereteSpher) { _isTestSet = false; }
 
                 //_moveSphere[add].SphereReGenerete();
 
@@ -309,7 +308,6 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 _seed.InitNetworkColor();
                 ColorSeedInin(_seed);
                 PhotonNetwork.LocalPlayer.SetCreateSeed(_seed._upSeed, _seed._downSeed);
-                Debug.Log("ここにとおってる");
                 _isColorInit = true;
                 _moveSphere[0]._playerIndex = 0;
                 break;
