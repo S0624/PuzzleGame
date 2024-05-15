@@ -60,6 +60,7 @@ public class FieldData : MonoBehaviour
     private int _bonus = 0;
     // 設置が終わったかどうかのフラグ.
     public bool _isSetEnd = false;
+    public bool _isSetPos = false;
     // 妨害用のスフィアのかず
     private int _obstacleNum;
     // 妨害用のスフィアの数.

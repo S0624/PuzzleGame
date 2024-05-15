@@ -59,6 +59,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     // テスト用名前の表示
     public TextMeshProUGUI[] _text;
     private Vector2 _testPos = Vector2.zero;
+    private　bool _isTestUpdate = false;
 
     private Vector2Int _tempPos = Vector2Int.zero;
     private Vector2Int _localSpherePos = Vector2Int.zero;
@@ -101,7 +102,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             {
 
                 // 取得する処理
-                if (player.GetSphereCoordinate() != _sphere[actor]._spherePos && !_isTestSet)
+                if (player.GetSphereCoordinate() != _sphere[actor]._spherePos && !_isTestUpdate && !_isTestSet)
                 {
                     PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[actor]._spherePos);
                     isupdate = true;
@@ -113,6 +114,8 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 }
                 if (player.GetSphereSet() != _fieldData[actor]._isSetEnd)
                 {
+                    // テスト用
+                    if (player.GetSphereSet()) {_isTestUpdate = true;}
                     PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetEnd);
                     isupdate = true;
                     Debug.Log(_fieldData[actor]._isSetEnd);
@@ -168,14 +171,17 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 {
                     //_sphere[playernum].FreeFallUpdate();
                     _sphere[playernum].Installation();
+                    //_sphere[playernum].NetInstallation(temppos);
                     _sphere[playernum].test();
-                    Debug.Log("とおった");
-                    //_moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
+                    Debug.Log("鬼面" + temppos);
+                    _moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
                     //_moveSphere[playernum].InstallationProcessTest(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
                     _isTestSet = true;
                 }
                 else if (!isset && _isTestSet)
                 {
+                    Debug.Log("たぶんとおった");
+                    _isTestUpdate = false;
                     _isTestSet = false;
                 }
                 //_fieldData[playernum]._isSetEnd = isset;

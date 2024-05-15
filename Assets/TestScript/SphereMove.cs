@@ -275,6 +275,33 @@ public class SphereMove : MonoBehaviour
             _isReGenereteSpher = true;
         }
     }
+    // 設置するときの処理
+    public void NetInstallation(Vector2Int spherepos)
+    {
+        if (!_fieldObject.IsGameOver())
+        {
+            // 子オブジェクトの番号を取得する用に使用
+            int childcount = 0;
+            // スコアを初期化する.
+            _moveScore = 0;
+            foreach (Transform child in this.transform)
+            {
+                // 子オブジェクトに対する処理をここに書く
+                Vector2Int pos = spherepos;
+
+                // こいつはforで置ける一番低い場所を取ってしまうので0から取得
+                pos = _fieldObject.SteepDescent(pos, _direction);
+                _colorNum[childcount] = _colorManager.GetComponent<SphereColorManager>().GetColorNumber(child.name,childcount);
+                
+                _fieldObject.IsNormalSphere(pos, _colorNum[childcount]);
+                childcount++;
+            }
+            // HACK 余りにも力業オブ力業.
+            this.transform.position = new Vector3(0,-10,0);
+            // 再生成のフラグを立てる.
+            _isReGenereteSpher = true;
+        }
+    }
     // HACK 消す用　ネットワーク用のデバック
     public void test()
     {
