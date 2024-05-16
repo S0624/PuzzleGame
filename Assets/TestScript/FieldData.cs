@@ -60,6 +60,7 @@ public class FieldData : MonoBehaviour
     private int _bonus = 0;
     // 設置が終わったかどうかのフラグ.
     public bool _isSetEnd = false;
+    public bool _isSetFlag  = false;
     public bool _isSetPos = false;
     // 妨害用のスフィアのかず
     private int _obstacleNum;
@@ -216,6 +217,7 @@ public class FieldData : MonoBehaviour
     // フィールド内にセットする
     public bool IsNormalSphere(Vector2Int pos, int val)
     {
+        _isSetFlag = true;
         // 再設置を避けるための処理
         if (_isSetEnd) return false;
         // 範囲外ではないかのチェック
