@@ -420,6 +420,8 @@ public class FieldData : MonoBehaviour
         {
             // 連鎖中.
             _isSetEnd = false;
+
+            _isSetFlag = false;
             //Debug.Log("れんさしてる");
         }
         // 初期化する.

@@ -66,6 +66,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     private Vector2Int _tempPos = Vector2Int.zero;
     private Vector2Int _localSpherePos = Vector2Int.zero;
     private bool _isTestSet = false;
+    private bool _isSetEnd = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -123,6 +124,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                     isupdate = true;
                     Debug.Log(_fieldData[actor]._isSetFlag);
                 }
+                Debug.Log("てってれー" + _fieldData[actor]._isSetEnd);
             }
             actor++;
         }
@@ -195,13 +197,17 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                     //_moveSphere[playernum].SphereReGenerete();
                     //_tempPos = Vector2Int.zero;
                 }
-                else if (!isset && _isTestSet)
+                //else if (_isTestSet && IsSetUpdate(playernum))
+                else if (isset && _isTestSet && IsSetUpdate(playernum))
+                //else if (!isset && _isTestSet && IsSetUpdate(playernum))
                 {
                     Debug.Log("たぶんとおった");
                     _isTestUpdate = false;
                     _isTestSet = false;
                     _fieldData[playernum]._isSetFlag = false;
+                    _isSetEnd = false;
                 }
+                Debug.Log("セット" + isset + "セットフラグ" + _isTestSet+ "関数" + IsSetUpdate(playernum));
                 _prevTemppos = _tempPos;
                 _prevDir = dir;
                 //_fieldData[playernum]._isSetEnd = isset;
@@ -361,7 +367,22 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             col.ColorRandam();
         }
     }
+    private bool IsSetUpdate(int actor)
+    {
+            Debug.Log("またね");
+        if (_isSetEnd != _fieldData[actor]._isSetEnd)
+        {
+            Debug.Log("あい");
+            _isSetEnd = _fieldData[actor]._isSetEnd;
+            if (_isSetEnd)
+            {
+                _isSetEnd = false;
+                return true;
+            }
+        }
 
+        return false;
+    }
     // ゲーム開始時に画像を表示
     private bool GenereteGameStart()
     {

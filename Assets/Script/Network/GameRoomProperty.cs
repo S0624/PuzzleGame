@@ -18,6 +18,8 @@ public static class GameRoomProperty
     private const string _isSphereDir = "Dir";
     // スフィアの設置
     private const string _isSphereSet = "Set";
+    // スフィアの設置
+    private const string _isSphereGet = "Get";
 
     private static readonly Hashtable propsToSet = new Hashtable();
 
@@ -123,6 +125,17 @@ public static class GameRoomProperty
     public static void SetSphereSet(this Player player, bool isState)
     {
         propsToSet[_isSphereSet] = isState;
+    }
+    // 設置したかどうかを参照する
+    public static bool GetIsSphereSet(this Player player)
+    {
+        if (player.CustomProperties[_isSphereGet] == null) return false;
+        return (bool)player.CustomProperties[_isSphereGet];
+    }
+    // 設置したかどうかを取得する
+    public static void SetIsSphereSet(this Player player, bool isState)
+    {
+        propsToSet[_isSphereGet] = isState;
     }
 }
 
