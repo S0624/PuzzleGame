@@ -14,6 +14,8 @@ public static class GameRoomProperty
     private const string _isDownSeed = "Down";
     // スフィアの座標
     private const string _isSpherePos = "Pos";
+    // スフィアの座標
+    private const string _isSphereSetPos = "SetPos";
     // スフィアの方向
     private const string _isSphereDir = "Dir";
     // スフィアの設置
@@ -103,6 +105,17 @@ public static class GameRoomProperty
     public static void SetSphereCoordinate(this Player player, Vector2 isState)
     {
         propsToSet[_isSpherePos] = isState;
+    }
+    // 位置を参照する
+    public static Vector2 TestGetSphereCoordinate(this Player player)
+    {
+        if (player.CustomProperties[_isSphereSetPos] == null) return Vector2.zero;
+        return (Vector2)player.CustomProperties[_isSphereSetPos];
+    }
+    // 位置を取得する
+    public static void TestSetSphereCoordinate(this Player player, Vector2 isState)
+    {
+        propsToSet[_isSphereSetPos] = isState;
     }
     // 方向を参照する
     public static int GetSphereDirection(this Player player)

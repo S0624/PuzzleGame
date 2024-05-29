@@ -16,6 +16,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     // Canvasを入れるよう
     [SerializeField] private GameObject Canvas;
     private GameObject _gameStartText = null;
+    private bool _isGameStart = true;
     private GameObject _gameOverImg = null;
     private GameObject _gameWinImg = null;
     private GameObject[] _allClearTex = new GameObject[2];
@@ -66,7 +67,9 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     private Vector2Int _tempPos = Vector2Int.zero;
     private Vector2Int _localSpherePos = Vector2Int.zero;
     private bool _isTestSet = false;
-    private bool _isSetEnd = false;
+    private bool _isSetFlag = false;
+
+    private int _testFrame = 1;
     // Start is called before the first frame update
     void Start()
     {
@@ -82,7 +85,6 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     {
         ColorSeedInit();
 
-
         // ネットワークテスト用関数
         TestUpdate();
         NetTestUpdate();
@@ -92,8 +94,10 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
 
     private void FixedUpdate()
     {
-        // リストの情報を取得
-        var players = PhotonNetwork.PlayerList;
+        GameFixUpdate();
+
+            // リストの情報を取得
+            var players = PhotonNetwork.PlayerList;
         PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
         // 何か変更があった時のみ同期させるためにフラグを用意
         bool isupdate = false;
@@ -103,27 +107,64 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         {
             if (PhotonNetwork.LocalPlayer.ActorNumber == player.ActorNumber)
             {
-
                 // 取得する処理
-                //if (player.GetSphereCoordinate() != _sphere[actor]._spherePos)
-                if (player.GetSphereCoordinate() != _sphere[actor]._spherePos && !_isTestUpdate && !_isTestSet)
+                if (player.GetSphereCoordinate() != _sphere[actor]._spherePos)
+                //if (player.GetSphereCoordinate() != _sphere[actor]._spherePos && !_isTestUpdate && !_isTestSet)
                 {
+                    Debug.Log("ここはとおってる");
                     PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[actor]._spherePos);
                     isupdate = true;
                 }
+                //てすと
+                if (player.TestGetSphereCoordinate() != _sphere[actor]._spherePosTemp)
+                //if (player.TestGetSphereCoordinate() != _sphere[actor]._spherePosTemp || player.TestGetSphereCoordinate().x == -1)
+                {
+                    if(player.TestGetSphereCoordinate().x == -1)
+                    {
+                        Debug.Log("aaa");
+                        _isTestSet = false;
+                    }
+                    else
+                    {
+                        Debug.Log("bbb");
+                    }
+                    //Debug.Log("はずれ" + _sphere[actor]._spherePosTemp);
+                    PhotonNetwork.LocalPlayer.TestSetSphereCoordinate(_sphere[actor]._spherePosTemp);
+                    isupdate = true;
+                }
                 if (player.GetSphereDirection() != _sphere[actor]._direction)
+                //if (player.GetSphereDirection() != _sphere[actor]._direction && !_isTestUpdate && !_isTestSet)
                 {
                     PhotonNetwork.LocalPlayer.SetSphereDirection(_sphere[actor]._direction);
                     isupdate = true;
                 }
-                if (player.GetSphereSet() != _fieldData[actor]._isSetFlag)
+
+                if (player.GetSphereSet() != _fieldData[actor]._isSetEnd)
                 {
                     // テスト用
-                    if (player.GetSphereSet()) {_isTestUpdate = true;}
-                    PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetFlag);
+                    if (player.GetSphereSet()) { _isTestUpdate = true; }
+                    PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetEnd);
                     isupdate = true;
-                    Debug.Log(_fieldData[actor]._isSetFlag);
+                    Debug.Log(_fieldData[actor]._isSetEnd);
                 }
+
+                //if (player.GetSphereSet() != _fieldData[actor]._isSetEnd)
+                //{
+                //    // テスト用
+                //    if (player.GetSphereSet()) {_isTestUpdate = true;}
+                //    PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetEnd);
+                //    isupdate = true;
+                //    Debug.Log(_fieldData[actor]._isSetEnd);
+                //}
+
+                //if (player.GetSphereSet() != _fieldData[actor]._isSetFlag)
+                //{
+                //    // テスト用
+                //    if (player.GetSphereSet()) {_isTestUpdate = true;}
+                //    PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetFlag);
+                //    isupdate = true;
+                //    Debug.Log(_fieldData[actor]._isSetFlag);
+                //}
                 Debug.Log("てってれー" + _fieldData[actor]._isSetEnd);
             }
             actor++;
@@ -157,7 +198,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 Vector2Int temppos = Vector2Int.zero;
                 temppos.x = (int)pos.x;
                 temppos.y = (int)pos.y;
-                //_sphere[playernum]._spherePos = temppos;
+                _sphere[playernum]._spherePos = temppos;
 
                 _localSpherePos = temppos - _tempPos;
 
@@ -171,43 +212,73 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 _sphere[playernum]._direction = dir;
                 _sphere[playernum].SphereRotation();
 
-
                 // 設置フラグの代入
-                var isset = player.GetSphereSet();
-                if (isset && !_isTestSet)
+                Debug.Log("設置フラグ" + player.GetSphereSet());
+                if(player.TestGetSphereCoordinate().x != -1)
                 {
-                    Vector2Int prevtemppos = Vector2Int.zero;
-                    prevtemppos.x = (int)_prevTemppos.x;
-                    prevtemppos.y = (int)_prevTemppos.y;
-                    if(temppos.y > prevtemppos.y) 
-                    {
-                        _sphere[playernum]._spherePos = prevtemppos;
-                    }
-                    if(_prevDir != dir)
+                    _sphere[playernum]._spherePosTemp.x = (int)player.TestGetSphereCoordinate().x;
+                    _sphere[playernum]._spherePosTemp.y = (int)player.TestGetSphereCoordinate().y;
+                    Debug.Log("とっと" + _isTestSet);
+
+                    if (_prevDir != dir)
                     {
                         _sphere[playernum]._direction = _prevDir;
                     }
-                    Debug.Log("ばしょ" + _prevTemppos);
-                    _sphere[playernum].Installation();
-                    //_sphere[playernum].NetInstallation(temppos);
-                    _sphere[playernum].test();
-                    _moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
-                    //_moveSphere[playernum].InstallationProcessTest(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
-                    _isTestSet = true;
-                    //_moveSphere[playernum].SphereReGenerete();
-                    //_tempPos = Vector2Int.zero;
+
+                    if (!_isTestSet)
+                    {
+                        if (_isGameStart) return;
+                        Debug.Log("ここ");
+                        if (!player.GetSphereSet()) return;
+                        _sphere[playernum]._spherePos.x = _sphere[playernum]._spherePosTemp.x;
+                        _sphere[playernum]._isSetInt = true;
+                        _sphere[playernum].Installation();
+                        _moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
+                        //_moveSphere[playernum].InstallationProcessTest(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
+                        _isTestSet = true;
+                        _sphere[playernum]._spherePos = new Vector2Int(3,11);
+                    }
+                    _sphere[playernum]._spherePosTemp = new Vector2Int(-1, -1);
+                    //PhotonNetwork.LocalPlayer.TestSetSphereCoordinate(_sphere[playernum]._spherePosTemp);
                 }
-                //else if (_isTestSet && IsSetUpdate(playernum))
-                else if (isset && _isTestSet && IsSetUpdate(playernum))
+
+                // 設置フラグの代入
+                //var isset = player.GetSphereSet();
+                //if (isset && !_isTestSet)
+                //{
+                //    Vector2Int prevtemppos = Vector2Int.zero;
+                //    prevtemppos.x = (int)_prevTemppos.x;
+                //    prevtemppos.y = (int)_prevTemppos.y;
+                //    if(temppos.y > prevtemppos.y) 
+                //    {
+                //        _sphere[playernum]._spherePos = prevtemppos;
+                //    }
+                //    if(_prevDir != dir)
+                //    {
+                //        _sphere[playernum]._direction = _prevDir;
+                //    }
+                //    Debug.Log("ばしょ" + _prevTemppos);
+                //    _sphere[playernum].Installation();
+                //    //_sphere[playernum].NetInstallation(temppos);
+                //    _sphere[playernum].test();
+                //    _moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
+                //    //_moveSphere[playernum].InstallationProcessTest(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
+                //    _isTestSet = true;
+                //    //_moveSphere[playernum].SphereReGenerete();
+                //    _moveSphere[playernum]._spherePos = new Vector2Int(3, 11);
+                //    _tempPos = Vector2Int.zero;
+                //}
+                ////else if (_isTestSet && IsSetUpdate(playernum))
+                ////else if (isset && _isTestSet && IsSetUpdate(playernum))
                 //else if (!isset && _isTestSet && IsSetUpdate(playernum))
-                {
-                    Debug.Log("たぶんとおった");
-                    _isTestUpdate = false;
-                    _isTestSet = false;
-                    _fieldData[playernum]._isSetFlag = false;
-                    _isSetEnd = false;
-                }
-                Debug.Log("セット" + isset + "セットフラグ" + _isTestSet+ "関数" + IsSetUpdate(playernum));
+                //{
+                //    Debug.Log("たぶんとおった");
+                //    _isTestUpdate = false;
+                //    _isTestSet = false;
+                //    _fieldData[playernum]._isSetFlag = false;
+                //    _isSetFlag = false;
+                //}
+                //Debug.Log("セット" + isset + "セットフラグ" + _isTestSet+ "関数" + IsSetUpdate(playernum));
                 _prevTemppos = _tempPos;
                 _prevDir = dir;
                 //_fieldData[playernum]._isSetEnd = isset;
@@ -218,9 +289,13 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 //Debug.Log("add" + _fieldData[add]._isSetEnd);
 
             }
+            else
+            {
+
+            }
             playernum++;
         }
-        GameFixUpdate();
+
     }
     private void TestUpdate()
     {
@@ -260,6 +335,15 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             // 動いてなかったら生成.
             if (!_fieldData[i].MoveObstacleSphere())
             {
+                //if (!_sphere[i]._isSetInt) return;
+                //_moveSphere[i].InstallationProcessTest(_fieldData[i].IsSetSphere(), _fieldData[i]);
+                //if (_testFrame == 0)
+                //{
+                //    _testFrame = 1;
+                //    return;
+                //}
+                //_testFrame--;
+                //_moveSphere[i].InstallationProcessTest(_fieldData[i].IsSetSphere(), _fieldData[i]);
                 _moveSphere[i].InstallationProcess(_fieldData[i].IsSetSphere(), _fieldData[i]);
             }
             // スフィアを再生成できるかのフラグが成立していたら
@@ -370,13 +454,13 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     private bool IsSetUpdate(int actor)
     {
             Debug.Log("またね");
-        if (_isSetEnd != _fieldData[actor]._isSetEnd)
+//        if (_isSetFlag != _fieldData[actor]._isSetFlag)
         {
             Debug.Log("あい");
-            _isSetEnd = _fieldData[actor]._isSetEnd;
-            if (_isSetEnd)
+            //_isSetFlag = _fieldData[actor]._isSetFlag;
+            //if (_isSetFlag)
             {
-                _isSetEnd = false;
+                //_isSetFlag = false;
                 return true;
             }
         }
@@ -393,6 +477,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         }
         if (_gameStartText)
         {
+            _isGameStart = true;
             return true;
         }
         else
@@ -408,6 +493,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 _isStartInit = true;
             }
         }
+        _isGameStart = false;
         return false;
     }
     // テスト用 ゲームオーバーになったら画像を表示

@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Photon.Pun.Demo.PunBasics;
 using UnityEngine;
 // HACK テスト用の移動実装
 
@@ -40,12 +41,18 @@ public class SphereMove : MonoBehaviour
     private SoundManager _soundManager;
     public bool _isRegeneration = false;
     private float _goshtalpha = 0.8f;
+
+    // テスト
+    public Vector2Int _spherePosTemp = new Vector2Int(-1, -1);
+    // テスト
+    public bool _isSetInt = false;
+    private int _testFrame = 1;
     // Start is called before the first frame update
     // 初期化処理
     void Start()
     {
         //SphereInit();
-
+        _spherePosTemp = new Vector2Int(-1, -1);
         _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
     // キューブの初期化処理.
@@ -253,6 +260,7 @@ public class SphereMove : MonoBehaviour
             int childcount = 0;
             // スコアを初期化する.
             _moveScore = 0;
+            _spherePosTemp = _spherePos;
             foreach (Transform child in this.transform)
             {
                 // 子オブジェクトに対する処理をここに書く
@@ -389,14 +397,22 @@ public class SphereMove : MonoBehaviour
             if (controller.MoveObstacleSphere()) return;
             _isRegeneration = true;
             controller.IsSetReset();
+            _spherePosTemp = new Vector2Int(-1, -1);
             // スフィアを再生成する.
-             SphereReGenerete();
+            SphereReGenerete();
         }
     }
     // スフィアを設置したときの処理.
     public void InstallationProcessTest(bool isChain, FieldData controller)
     ///private void SphereReGenerete()
     {
+        Debug.Log(_testFrame);
+        if (_testFrame != 0)
+        {
+            _testFrame = 0;
+            return;
+        }
+        _testFrame++;
         if (isChain && _isReGenereteSpher)
         {
             // お邪魔を落とす.
