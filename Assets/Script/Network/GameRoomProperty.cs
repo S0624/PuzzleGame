@@ -14,14 +14,20 @@ public static class GameRoomProperty
     private const string _isDownSeed = "Down";
     // スフィアの座標
     private const string _isSpherePos = "Pos";
-    // スフィアの座標
-    private const string _isSphereSetPos = "SetPos";
+    // スフィアの色
+    private const string _isSphereSetColor = "Color";
     // スフィアの方向
     private const string _isSphereDir = "Dir";
     // スフィアの設置
     private const string _isSphereSet = "Set";
     // スフィアの設置
     private const string _isSphereGet = "Get";
+    // スフィアの設置
+    private const string _isSet = "IsSet";
+    // フィールドの取得
+    private const string _fielddata = "Field";
+    // 邪魔スフィアの取得
+    private const string _isObstacle = "obs";
 
     private static readonly Hashtable propsToSet = new Hashtable();
 
@@ -61,7 +67,7 @@ public static class GameRoomProperty
         return (bool)player.CustomProperties[_isBotton];
     }
     // ボタンを押したのかを取得する
-    public static void ButtonDown(this Player player,bool isState)
+    public static void ButtonDown(this Player player, bool isState)
     {
         propsToSet[_isBotton] = isState;
     }
@@ -96,26 +102,26 @@ public static class GameRoomProperty
         return (int[])players[0].CustomProperties[_isDownSeed];
     }
     // 位置を参照する
-    public static Vector2 GetSphereCoordinate(this Player player)
+    public static Vector2 IsGetSphereCoordinate(this Player player)
     {
         if (player.CustomProperties[_isSpherePos] == null) return Vector2.zero;
         return (Vector2)player.CustomProperties[_isSpherePos];
     }
     // 位置を取得する
-    public static void SetSphereCoordinate(this Player player, Vector2 isState)
+    public static void IsSetSphereCoordinate(this Player player, Vector2 isState)
     {
         propsToSet[_isSpherePos] = isState;
     }
-    // 位置を参照する
-    public static Vector2 TestGetSphereCoordinate(this Player player)
+    // 色を参照する
+    public static int GetSphereColor(this Player player)
     {
-        if (player.CustomProperties[_isSphereSetPos] == null) return Vector2.zero;
-        return (Vector2)player.CustomProperties[_isSphereSetPos];
+        if (player.CustomProperties[_isSphereSetColor] == null) return 0;
+        return (int)player.CustomProperties[_isSphereSetColor];
     }
-    // 位置を取得する
-    public static void TestSetSphereCoordinate(this Player player, Vector2 isState)
+    // 色を取得する
+    public static void SetSphereColor(this Player player, int isState)
     {
-        propsToSet[_isSphereSetPos] = isState;
+        propsToSet[_isSphereSetColor] = isState;
     }
     // 方向を参照する
     public static int GetSphereDirection(this Player player)
@@ -149,6 +155,81 @@ public static class GameRoomProperty
     public static void SetIsSphereSet(this Player player, bool isState)
     {
         propsToSet[_isSphereGet] = isState;
+    }
+    // 設置したかどうかを参照する
+    public static bool TestGetSphereSet(this Player player)
+    {
+        if (player.CustomProperties[_isSet] == null) return false;
+        return (bool)player.CustomProperties[_isSet];
+    }
+    // 設置したかどうかを取得する
+    public static void TestSetIsSphereSet(this Player player, bool isState)
+    {
+        propsToSet[_isSet] = isState;
+    }
+    /// <summary>
+    /// フィールドのデータを記憶させる
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="data"></param>
+    public static void SetFieldData(this Player player, int[] data)
+    {
+        propsToSet[_fielddata] = data;
+
+        //        propsToSet[_isObstacleH] = height;
+
+    }
+    /// <summary>
+    /// おじゃまの取得(横)
+    /// </summary>
+    /// <returns></returns>
+    public static int[] GetFieldData(this Player player, int num)
+    {
+        var players = PhotonNetwork.PlayerList;
+        //if ((int[]) players[0].CustomProperties[_isObstacleW] == null) return null;
+        //return (int[])players[0].CustomProperties[_isObstacleW];
+        if ((int[])players[num].CustomProperties[_fielddata] == null) return null;
+        return (int[])players[num].CustomProperties[_fielddata];
+    }
+    //    /// <summary>
+    //    /// おじゃまのデータを記憶させる
+    //    /// </summary>
+    //    /// <param name="player"></param>
+    //    /// <param name="width"></param>
+    //    public static void SetObstacleData(this Player player, int[,] width)
+    //    {
+    //        propsToSet[_isObstacleW] = width;
+
+    ////        propsToSet[_isObstacleH] = height;
+
+    //    }
+    /// <summary>
+    ///// おじゃまの取得(横)
+    ///// </summary>
+    ///// <returns></returns>
+    //public static int[,] GetObstaclWidth(this Player player,int test)
+    //{
+    //    var players = PhotonNetwork.PlayerList;
+    //    return (int[,])players[test].CustomProperties[_isObstacleW];
+    //}
+    /// <summary>
+    /// おじゃまのデータを記憶させる
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="width"></param>
+    public static void SetObstacleData(this Player player, int obs)
+    {
+        propsToSet[_isObstacle] = obs;
+    }
+    
+    /// <summary>
+    /// おじゃまの取得(横)
+    /// </summary>
+    /// <returns></returns>
+    public static int GetObstacle(this Player player)
+    {
+        if (player.CustomProperties[_isObstacle] == null) return 0;
+        return (int)player.CustomProperties[_isObstacle];
     }
 }
 

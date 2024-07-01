@@ -438,6 +438,12 @@ public class SphereMove : MonoBehaviour
         _colorManager.GetComponent<SphereColorManager>().ColorChenge(this.gameObject.name);
         _isReGenereteSpher = false;
     }
+    // スフィアの再生成.
+    public void SphereColorReset()
+    {
+        // 回転の角度をもとに戻してあげる.
+        _colorManager.GetComponent<SphereColorManager>().NetColorChenge(this.gameObject.name);
+    }
     // ゲームオーバーだったら消す.(テスト)
     private void SphereDestory()
     {
@@ -452,6 +458,10 @@ public class SphereMove : MonoBehaviour
         this.transform.position = transform.position + new Vector3(x, y, 0);
         _spherePos.x += x;
         _spherePos.y += y;
+    }
+    public void NetSpherePos()
+    {
+        this.transform.localPosition =  new Vector3(_spherePos.x, _spherePos.y, 0);
     }
     // キューブの移動状態.
     private bool SphereMoveState()

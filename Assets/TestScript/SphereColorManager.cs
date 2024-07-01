@@ -33,7 +33,7 @@ public class SphereColorManager : MonoBehaviour
     // カラーの取得.
     public ColorTable _colorTable;
     // テスト用なのでけす
-    int _seedCount = 0;
+    public int _seedCount = 0;
     // 色の番号
     private int _colorNum;
 
@@ -75,10 +75,22 @@ public class SphereColorManager : MonoBehaviour
     // 色の変更処理.
     public void ColorChenge(string name)
     {
-
         if (name == _sphereColor[0].name)
         {
             _seedCount++;
+            // 入れ替えの処理.
+            for (int i = 0; i < _sphereColor.Length; i++)
+            {
+                _sphereColor[i].transform.GetChild(0).GetComponent<Renderer>().material.color = _colorTable.GetColor(_seed.SetColorNum(ArrayNum(i), Direction.Up));
+                _sphereColor[i].transform.GetChild(1).GetComponent<Renderer>().material.color = _colorTable.GetColor(_seed.SetColorNum(ArrayNum(i), Direction.Down));
+            }
+        }
+    }
+    // 色の変更処理.
+    public void NetColorChenge(string name)
+    {
+        if (name == _sphereColor[0].name)
+        {
             // 入れ替えの処理.
             for (int i = 0; i < _sphereColor.Length; i++)
             {

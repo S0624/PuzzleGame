@@ -60,7 +60,7 @@ public class FieldData : MonoBehaviour
     private int _bonus = 0;
     // 設置が終わったかどうかのフラグ.
     public bool _isSetEnd = false;
-    public bool _isSetFlag  = false;
+    public bool _isSetFlag = false;
     public bool _isSetPos = false;
     // 妨害用のスフィアのかず
     private int _obstacleNum;
@@ -73,6 +73,8 @@ public class FieldData : MonoBehaviour
     // HACK テスト用のフラグ(処理が終わったよ、のフラグ)
     private bool _isProcess = false;
 
+    public int[,] _tempBoard = new int[_borad_Height, _borad_Width];
+    private bool _isErase = false;
     // フィールドの処理のフラグ
     private bool _isField = false;
     // サウンドの取得
@@ -103,11 +105,13 @@ public class FieldData : MonoBehaviour
         _sphereDirection[(int)Direction.Down] = new Vector2Int(0, -1);
         ResetIsSet();
         _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
+
+        _tempBoard = _board;
     }
     // フラグのリセット
     private void ResetIsSet()
     {
-        for(int i = 0; i < _borad_Width; i++)
+        for (int i = 0; i < _borad_Width; i++)
         {
             _isSet[i] = false;
         }
@@ -127,7 +131,7 @@ public class FieldData : MonoBehaviour
             }
         }
     }
-    // テスト用でおじゃまを降らせる処理.
+    // テスト用でFを降らせる処理.
     public void DisturbanceFall()
     {
         // 下から詰めるけどランダムに降らせたい.
@@ -153,7 +157,7 @@ public class FieldData : MonoBehaviour
     private int IndexXCheck()
     {
         int rand = Random.Range(0, _boradWidthMax);
-        if(_isSet[rand])
+        if (_isSet[rand])
         {
             IndexXCheck();
         }
@@ -229,6 +233,32 @@ public class FieldData : MonoBehaviour
         _sphere[pos.y, pos.x] = Instantiate(_prefabSphere, world_position, _prefabSphere.transform.rotation, transform);
         _sphere[pos.y, pos.x].GetComponent<SphereData>().SetColorType((ColorType)val);
 
+        // テスト
+        _tempBoard = _board;
+
+        // 設置したよ
+        _isInstallaion = true;
+        _isSetSphere = true;
+
+        return true;
+    }
+    // フィールド内にセットする
+    public bool IsNormalSphereTest(Vector2Int pos, int val)
+    {
+        _isSetFlag = true;
+        // 再設置を避けるための処理
+        //if (_isSetEnd) return false;
+        // 範囲外ではないかのチェック
+        if (!IsCanSetSphere(pos)) return false;
+        // 色番号をセット.
+        _board[pos.y, pos.x] = val;
+
+        Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
+        _sphere[pos.y, pos.x] = Instantiate(_prefabSphere, world_position, _prefabSphere.transform.rotation, transform);
+        _sphere[pos.y, pos.x].GetComponent<SphereData>().SetColorType((ColorType)val);
+        // テスト
+        _tempBoard = _board;
+
         // 設置したよ
         _isInstallaion = true;
         _isSetSphere = true;
@@ -253,6 +283,8 @@ public class FieldData : MonoBehaviour
         world_position.y += _borad_Height;
         _sphere[pos.y, pos.x] = Instantiate(_disturbanceSphere, world_position, _disturbanceSphere.transform.rotation, transform);
         _sphere[pos.y, pos.x].GetComponent<SphereData>().SetColorType((ColorType)val);
+        // テスト
+        _tempBoard = _board;
 
         // 設置したよ
         _isSetSphere = true;
@@ -267,7 +299,7 @@ public class FieldData : MonoBehaviour
             return true;
         }
         // 範囲外じゃないかチェックする.
-        if(pos.y < 0 || pos.y > _borad_Height)
+        if (pos.y < 0 || pos.y > _borad_Height)
         {
             return false;
         }
@@ -392,7 +424,7 @@ public class FieldData : MonoBehaviour
     }
     private void Update()
     {
-        
+
     }
     public void FieldUpdate()
     {
@@ -434,7 +466,7 @@ public class FieldData : MonoBehaviour
         {
             for (int x = 0; x < _borad_Width; x++)
             {
-                if (_board[y, x] == (int)ColorType.hindrance && MoveCheck(x,y))
+                if (_board[y, x] == (int)ColorType.hindrance && MoveCheck(x, y))
                 {
                     // デバック文表示してるよ
                     //Debug.Log("落下途中やで");
@@ -444,7 +476,7 @@ public class FieldData : MonoBehaviour
         }
         return false;
     }
-    private bool MoveCheck(int x,int y)
+    private bool MoveCheck(int x, int y)
     {
         if (_sphere[y, x] != null)
         {
@@ -476,7 +508,7 @@ public class FieldData : MonoBehaviour
         {
             for (int y = 0; y < _borad_Height; y++)
             {
-                tempField[y,x] = (int)FieldContentsData.None;
+                tempField[y, x] = (int)FieldContentsData.None;
             }
         }
     }
@@ -489,7 +521,7 @@ public class FieldData : MonoBehaviour
         if (y > _boradHeightMax) return false;
 
 
-        if(_sphere[y, x] == null) return false;
+        if (_sphere[y, x] == null) return false;
         //指定した位置に指定された色が置かれているかチェックをする
         if (_sphere[y, x].GetComponent<SphereData>().GetColorType() == colorType) return true;
 
@@ -524,10 +556,10 @@ public class FieldData : MonoBehaviour
             if (indexY < 0) continue;
             if (indexY > _boradHeightMax) continue;
 
-            if (tempField[indexY,indexX] == 0)//すでにつながっている判定されている部分はチェックしない
+            if (tempField[indexY, indexX] == 0)//すでにつながっている判定されている部分はチェックしない
             {
                 // 位置をずらしてチェックする
-                IsRecursionCheckField(tempField,indexX, indexY,color);
+                IsRecursionCheckField(tempField, indexX, indexY, color);
             }
         }
         return false;
@@ -540,7 +572,7 @@ public class FieldData : MonoBehaviour
         {
             for (int y = 0; y < _borad_Height; y++)
             {
-                if (tempField[y,x] == (int)FieldContentsData.Octopus)
+                if (tempField[y, x] == (int)FieldContentsData.Octopus)
                 {
                     count++;
                 }
@@ -568,7 +600,7 @@ public class FieldData : MonoBehaviour
         }
     }
     // HACK 光らせたいからそのテスト
-    private void FrashField(int[,] tempField,bool frash)
+    private void FrashField(int[,] tempField, bool frash)
     {
         _isFlashAnimation = frash;
         // HACK テスト実装
@@ -587,7 +619,7 @@ public class FieldData : MonoBehaviour
                 if (tempField[y, x] == (int)FieldContentsData.Octopus)
                 {
                     _isEraseNowFlag = true;
-                     //点滅？処理.
+                    //点滅？処理.
                     _sphere[y, x].GetComponent<SphereData>().ChangeColor((float)alpha);
                 }
             }
@@ -659,14 +691,14 @@ public class FieldData : MonoBehaviour
     /// </summary>
     /// <param name="x">X座標</param>
     /// <param name="y">Y座標</param>
-    private void SphereDestory(int x,int y)
+    private void SphereDestory(int x, int y)
     {
         Destroy(_sphere[y, x]);
         _sphere[y, x] = null;
         _board[y, x] = (int)FieldContentsData.None;
     }
     // 消すときのエフェクト表示.
-    private void EraseEffect(int posX,int posY)
+    private void EraseEffect(int posX, int posY)
     {
         Vector3 pos = transform.position + new Vector3(posX, posY, 0.0f);
         _sphereColor = _colorTable.GetColor(_board[posY, posX]);
@@ -715,7 +747,7 @@ public class FieldData : MonoBehaviour
         }
     }
     // 消えた時に落とす処理.
-    private void FallDownField(int x ,int falldown = 0)
+    private void FallDownField(int x, int falldown = 0)
     {
         // 落す処理(配列の情報をずらす(現在のフィールドにあるキューブを落す))
         int hight = 0;
@@ -734,13 +766,13 @@ public class FieldData : MonoBehaviour
                 //hight = y;
             }
         }
-        if(FallCheck(x , hight))
+        if (FallCheck(x, hight))
         {
             FallDownField(x, falldown);
         }
     }
     // すべて落したかの確認.
-    private bool FallCheck(int x,int indexY)
+    private bool FallCheck(int x, int indexY)
     {
         for (int y = 0; y < indexY; y++)
         {
@@ -810,7 +842,7 @@ public class FieldData : MonoBehaviour
         return result;
     }
 
-//#endif
+    //#endif
     // うごかすキューブをフィールドの座標に変換する
     public Vector3 fieldPos(Vector2Int pos)
     {
@@ -853,7 +885,7 @@ public class FieldData : MonoBehaviour
                 return false;
             }
         }
-        
+
         return true;
 
     }
@@ -863,14 +895,14 @@ public class FieldData : MonoBehaviour
     public Vector2Int MoveRotaCheck(Vector2Int pos, Vector2Int direction)
     {
         Vector2Int rotaPos = new Vector2Int();
-        if(pos.x < 0)
+        if (pos.x < 0)
         {
-            rotaPos = new Vector2Int(1,0);
+            rotaPos = new Vector2Int(1, 0);
             return rotaPos;
         }
         if (pos.x >= _borad_Width)
         {
-            rotaPos = new Vector2Int(-1,0);
+            rotaPos = new Vector2Int(-1, 0);
             return rotaPos;
         }
         if (pos.y < 0)
@@ -879,7 +911,7 @@ public class FieldData : MonoBehaviour
             return rotaPos;
         }
         if (pos.y > _boradHeightMax) return rotaPos;
-        if (_sphere[pos.y,pos.x] != null)
+        if (_sphere[pos.y, pos.x] != null)
         {
             rotaPos = -direction;
             return rotaPos;
@@ -915,7 +947,7 @@ public class FieldData : MonoBehaviour
         }
         // お邪魔計算.
         _obstacleCount = (int)((_score * _eraseCount) * (_bonus) * 0.0125f);
-        
+
         //Debug.Log("連鎖数:" + _chainCount + "ボーナス:" + _bonus);
         //Debug.Log(_obstacleCount);
         //Debug.Log(_bonus);
@@ -923,7 +955,7 @@ public class FieldData : MonoBehaviour
     }
     public void SetObstacle(int num)
     {
-        _obstacleNum= num;
+        _obstacleNum = num;
     }
     public int GetTotalObstacle()
     {
@@ -956,7 +988,7 @@ public class FieldData : MonoBehaviour
     {
         // HACK とりあえず雑にテストでゲームオーバー処理をしようとしてる
         // 2をマイナスしている理由は12のところがばってんで13は使用しないので12をみたいため
-        if(_sphere[_boradHeightMax - 1, 2] != null || _sphere[_boradHeightMax - 1, 3] != null)
+        if (_sphere[_boradHeightMax - 1, 2] != null || _sphere[_boradHeightMax - 1, 3] != null)
         {
             return true;
         }
@@ -965,22 +997,76 @@ public class FieldData : MonoBehaviour
     public Vector2 ErasePos()
     {
         Vector2 pos = _erasePos;
-        pos.x = RangeCheck((int)_erasePos.x,_borad_Width);
-        pos.y = RangeCheck((int)_erasePos.y,_borad_Height);
+        pos.x = RangeCheck((int)_erasePos.x, _borad_Width);
+        pos.y = RangeCheck((int)_erasePos.y, _borad_Height);
 
         Vector3 world_position = transform.position + new Vector3(pos.x, pos.y, 0.0f);
         return world_position;
     }
-    public int RangeCheck(int pos,int max)
+    public int RangeCheck(int pos, int max)
     {
-        if(pos < 2)
+        if (pos < 2)
         {
             pos = 2;
         }
-        else if(pos > max - 2)
+        else if (pos > max - 2)
         {
             pos = max - 2;
         }
         return pos;
     }
+
+    public int[] NetFieldUpdate()
+    {
+        var max = _borad_Height * _borad_Width;
+        int[] temp = new int[max];
+        int i = 0;
+        for (int y = 0; y < _borad_Height; y++)
+        {
+            for (int x = 0; x < _borad_Width; x++)
+            {
+                temp[i] = _tempBoard[y, x];
+                i++;
+            }
+        }
+        //_tempBoard;
+        return temp;
+    }
+/// <summary>
+/// フィールドの中身の同期
+/// </summary>
+/// <param name="temp">仮で保存しているフィールドの中身</param>
+/// <param name="num">何番目か</param>
+    public void FieldSynchronization(int temp, int num)
+    {
+        int add = 0;
+        for (int y = 0; y < _borad_Height; y++)
+        {
+            for (int x = 0; x < _borad_Width; x++)
+            {
+                // 一致したときのみ処理を行う
+                if (num == add)
+                {
+                    // 中身が入っていた場合初期化処理を行う
+                    if (_sphere[y, x] != null)
+                    {
+                        _tempBoard[y, x] = 0;
+                        _board[y, x] = 0;
+                        Destroy(_sphere[y, x]);
+                    }
+                    if (temp != (int)FieldContentsData.None)
+                    {
+                        IsNormalSphereTest(new Vector2Int(x, y), temp);
+                    }
+                    else if (temp == (int)FieldContentsData.None)
+                    {
+                        _board[y, x] = (int)FieldContentsData.None;
+                    }
+                    _tempBoard[y, x] = temp;
+                    _board[y, x] = temp;
+                }
+                add++;
+            }
+        }
+    } 
 }

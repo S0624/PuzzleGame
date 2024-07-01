@@ -14,7 +14,7 @@ public class ColorSeedCreate : MonoBehaviour
     static public int _colorDifficulty = 1;
     public int[] _upSeed = new int[50];
     public int[] _downSeed = new int[50];
-
+    public int _colorNow = 0;
     // カラーの種生成.
     public void InitColor()
     {
@@ -80,6 +80,7 @@ public class ColorSeedCreate : MonoBehaviour
         {
             return _downSeed[num];
         }
+        _colorNow = num;
         // ここまで来たらエラーになる.
         Debug.Assert(true);
         return 0;

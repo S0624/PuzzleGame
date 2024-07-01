@@ -1,4 +1,5 @@
 ﻿using Photon.Pun;
+using Photon.Pun.Demo.PunBasics;
 using TMPro;
 using UnityEngine;
 
@@ -32,6 +33,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     // お邪魔スフィアの管理用の変数.
     private int[] _obstacle = new int[2];
     private int[] _obstacleAdd = new int[2];
+    private bool _isStop = false;
     private int _obstacleCount = 0;
     private int[] _obstaclePrev = new int[2];
     private int _obstacleMax = 15;
@@ -67,7 +69,8 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     private Vector2Int _tempPos = Vector2Int.zero;
     private Vector2Int _localSpherePos = Vector2Int.zero;
     private bool _isTestSet = false;
-    private bool _isSetFlag = false;
+    //private bool _isSetFlag = false;
+    private bool[] _isSetFlag = new bool[2];
 
     private int _testFrame = 1;
     // Start is called before the first frame update
@@ -96,8 +99,8 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     {
         GameFixUpdate();
 
-            // リストの情報を取得
-            var players = PhotonNetwork.PlayerList;
+        // リストの情報を取得
+        var players = PhotonNetwork.PlayerList;
         PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
         // 何か変更があった時のみ同期させるためにフラグを用意
         bool isupdate = false;
@@ -108,65 +111,116 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             if (PhotonNetwork.LocalPlayer.ActorNumber == player.ActorNumber)
             {
                 // 取得する処理
-                if (player.GetSphereCoordinate() != _sphere[actor]._spherePos)
+                if (player.IsGetSphereCoordinate() != _sphere[actor]._spherePos)
                 //if (player.GetSphereCoordinate() != _sphere[actor]._spherePos && !_isTestUpdate && !_isTestSet)
                 {
-                    Debug.Log("ここはとおってる");
-                    PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[actor]._spherePos);
+                    PhotonNetwork.LocalPlayer.IsSetSphereCoordinate(_sphere[actor].transform.localPosition);
                     isupdate = true;
                 }
-                //てすと
-                if (player.TestGetSphereCoordinate() != _sphere[actor]._spherePosTemp)
-                //if (player.TestGetSphereCoordinate() != _sphere[actor]._spherePosTemp || player.TestGetSphereCoordinate().x == -1)
-                {
-                    if(player.TestGetSphereCoordinate().x == -1)
-                    {
-                        Debug.Log("aaa");
-                        _isTestSet = false;
-                    }
-                    else
-                    {
-                        Debug.Log("bbb");
-                    }
-                    //Debug.Log("はずれ" + _sphere[actor]._spherePosTemp);
-                    PhotonNetwork.LocalPlayer.TestSetSphereCoordinate(_sphere[actor]._spherePosTemp);
-                    isupdate = true;
-                }
+                ////てすと
+                //if (player.GetSphereCoordinate() != _sphere[actor]._spherePosTemp)
+                ////if (player.TestGetSphereCoordinate() != _sphere[actor]._spherePosTemp || player.TestGetSphereCoordinate().x == -1)
+                //{
+                //    if(player.GetSphereCoordinate().x == -1)
+                //    {
+                //        _isTestSet = false;
+                //    }
+
+                //    //Debug.Log("はずれ" + _sphere[actor]._spherePosTemp);
+                //    PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[actor]._spherePosTemp);
+                //    isupdate = true;
+                //}
                 if (player.GetSphereDirection() != _sphere[actor]._direction)
-                //if (player.GetSphereDirection() != _sphere[actor]._direction && !_isTestUpdate && !_isTestSet)
+                {
+                    PhotonNetwork.LocalPlayer.SetSphereDirection(_sphere[actor]._direction);
+                    isupdate = true;
+                }
+                if (player.GetSphereColor() != _sphere[actor]._direction)
                 {
                     PhotonNetwork.LocalPlayer.SetSphereDirection(_sphere[actor]._direction);
                     isupdate = true;
                 }
 
-                if (player.GetSphereSet() != _fieldData[actor]._isSetEnd)
+                if (player.GetSphereColor() != _colorManager[actor]._seedCount)
                 {
                     // テスト用
-                    if (player.GetSphereSet()) { _isTestUpdate = true; }
-                    PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetEnd);
+                    PhotonNetwork.LocalPlayer.SetSphereColor(_colorManager[actor]._seedCount);
                     isupdate = true;
-                    Debug.Log(_fieldData[actor]._isSetEnd);
                 }
+                //if (Input.GetKeyDown("z"))
+                //if (player.GetObstaclWidth(actor) != _fieldData[actor]._tempBoard)
+                if (player.GetFieldData(actor) != _fieldData[actor].NetFieldUpdate())
+                {
+                    //Debug.Log(player.GetObstaclWidth()[0,0]);
+                    // テスト用
+                    PhotonNetwork.LocalPlayer.SetFieldData(_fieldData[actor].NetFieldUpdate());
+                    isupdate = true;
 
-                //if (player.GetSphereSet() != _fieldData[actor]._isSetEnd)
-                //{
-                //    // テスト用
-                //    if (player.GetSphereSet()) {_isTestUpdate = true;}
-                //    PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetEnd);
-                //    isupdate = true;
-                //    Debug.Log(_fieldData[actor]._isSetEnd);
-                //}
+                    //Debug.Log(_fieldData[actor]._isSetEnd);
+                }
+                if (player.GetObstacle() != _obstacleAdd[actor])
+                {
+                    //if (_fieldData[actor].GetObstacle() != 0)
+                    {
+                        //Debug.Log(player.GetObstaclWidth()[0,0]);
+                        // テスト用
+                        PhotonNetwork.LocalPlayer.SetObstacleData(_obstacleAdd[actor]);
+                        Debug.Log("わんだほい");
+                        isupdate = true;
+                    }
 
-                //if (player.GetSphereSet() != _fieldData[actor]._isSetFlag)
-                //{
-                //    // テスト用
-                //    if (player.GetSphereSet()) {_isTestUpdate = true;}
-                //    PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetFlag);
-                //    isupdate = true;
-                //    Debug.Log(_fieldData[actor]._isSetFlag);
-                //}
-                Debug.Log("てってれー" + _fieldData[actor]._isSetEnd);
-            }
+                }
+                    //    //Debug.Log(_fieldData[actor]._isSetEnd);
+                    //}
+
+                    //if (player.GetObstacle() != _fieldData[actor].GetObstacle())
+                    //{
+                    //    if (_fieldData[actor].GetObstacle() != 0)
+                    //    {
+                    //        //Debug.Log(player.GetObstaclWidth()[0,0]);
+                    //        // テスト用
+                    //        PhotonNetwork.LocalPlayer.SetObstacleData(_fieldData[actor].GetObstacle());
+                    //        _obstacle[actor] = _fieldData[actor].GetObstacle();
+                    //        if (_isStop)
+                    //        {
+                    //            _obstacleAdd[actor] += _obstacle[actor];
+                    //        }
+                    //        else
+                    //        {
+                    //            _obstacleAdd[actor] = _obstacle[actor];
+                    //        }
+                    //        Debug.Log("とおった" + _fieldData[actor].GetObstacle() + _obstacleAdd[actor]);
+
+                    //        isupdate = true;
+                    //        _isStop = false;
+                    //    }
+                    //    else
+                    //    {
+                    //        _isStop = true;
+                    //    }
+
+                    //    //Debug.Log(_fieldData[actor]._isSetEnd);
+                    //}
+
+                    //if (player.GetSphereSet() != _fieldData[actor]._isSetEnd)
+                    //{
+                    //    // テスト用
+                    //    if (player.GetSphereSet()) {_isTestUpdate = true;}
+                    //    PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetEnd);
+                    //    isupdate = true;
+                    //    Debug.Log(_fieldData[actor]._isSetEnd);
+                    //}
+
+                    //if (player.GetSphereSet() != _fieldData[actor]._isSetFlag)
+                    //{
+                    //    // テスト用
+                    //    if (player.GetSphereSet()) {_isTestUpdate = true;}
+                    //    PhotonNetwork.LocalPlayer.SetSphereSet(_fieldData[actor]._isSetFlag);
+                    //    isupdate = true;
+                    //    Debug.Log(_fieldData[actor]._isSetFlag);
+                    //}
+                    //Debug.Log("てってれー" + _fieldData[actor]._isSetEnd);
+                }
             actor++;
         }
         if(isupdate) 
@@ -194,54 +248,98 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 // テスト
                 _sphere[playernum]._spherePos = new Vector2Int(3, 11);
                 // 位置の代入
-                var pos = player.GetSphereCoordinate();
+                var pos = player.IsGetSphereCoordinate();
                 Vector2Int temppos = Vector2Int.zero;
                 temppos.x = (int)pos.x;
                 temppos.y = (int)pos.y;
                 _sphere[playernum]._spherePos = temppos;
 
-                _localSpherePos = temppos - _tempPos;
+                //_localSpherePos = temppos - _tempPos;
 
-                _sphere[playernum].SpherePos(_localSpherePos.x, _localSpherePos.y);
-                _sphere[playernum]._spherePos = temppos;
+                //_sphere[playernum].SpherePos(_localSpherePos.x, _localSpherePos.y);
+                _sphere[playernum].NetSpherePos();
+                //_sphere[playernum]._spherePos = temppos;
 
-                _tempPos = temppos;
+                //_tempPos = temppos;
 
                 // 方向の代入
                 var dir = player.GetSphereDirection();
                 _sphere[playernum]._direction = dir;
                 _sphere[playernum].SphereRotation();
 
+                //_colorManager[0]._seedCount++;
+                
                 // 設置フラグの代入
-                Debug.Log("設置フラグ" + player.GetSphereSet());
-                if(player.TestGetSphereCoordinate().x != -1)
+                //if (player.GetSphereCoordinate().x != -1)
+                //{
+                    //_sphere[playernum]._spherePosTemp.x = (int)player.GetSphereCoordinate().x;
+                    //_sphere[playernum]._spherePosTemp.y = (int)player.GetSphereCoordinate().y;
+                    //Debug.Log("とっと" + _isTestSet);
+
+                    //if (_prevDir != dir)
+                    //{
+                    //    _sphere[playernum]._direction = _prevDir;
+                    //}
+
+                    //if (!_isTestSet)
+                    //{
+                    //    if (_isGameStart) return;
+                    //    //if (!player.GetSphereSet()) return;
+                    //    _sphere[playernum]._spherePos.x = _sphere[playernum]._spherePosTemp.x;
+                    //    _sphere[playernum]._isSetInt = true;
+                    //    _sphere[playernum].Installation();
+                    //    _moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
+                    //    //_moveSphere[playernum].InstallationProcessTest(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
+                    //    Debug.Log("らら");
+                    //    _isTestSet = true;
+                    //    _sphere[playernum]._spherePos = new Vector2Int(3, 11);
+                    //    _isSetFlag[playernum] = true;
+
+                    //    // テスト用
+                    //    PhotonNetwork.LocalPlayer.TestSetIsSphereSet(false);
+                    //    PhotonNetwork.LocalPlayer.CustomUpdate();
+                    //}
+                //}
+                // 色の同期処理
+                if (player.GetSphereColor() != _colorManager[playernum]._seedCount)
                 {
-                    _sphere[playernum]._spherePosTemp.x = (int)player.TestGetSphereCoordinate().x;
-                    _sphere[playernum]._spherePosTemp.y = (int)player.TestGetSphereCoordinate().y;
-                    Debug.Log("とっと" + _isTestSet);
-
-                    if (_prevDir != dir)
-                    {
-                        _sphere[playernum]._direction = _prevDir;
-                    }
-
-                    if (!_isTestSet)
-                    {
-                        if (_isGameStart) return;
-                        Debug.Log("ここ");
-                        if (!player.GetSphereSet()) return;
-                        _sphere[playernum]._spherePos.x = _sphere[playernum]._spherePosTemp.x;
-                        _sphere[playernum]._isSetInt = true;
-                        _sphere[playernum].Installation();
-                        _moveSphere[playernum].InstallationProcess(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
-                        //_moveSphere[playernum].InstallationProcessTest(_fieldData[playernum].IsSetSphere(), _fieldData[playernum]);
-                        _isTestSet = true;
-                        _sphere[playernum]._spherePos = new Vector2Int(3,11);
-                    }
-                    _sphere[playernum]._spherePosTemp = new Vector2Int(-1, -1);
-                    //PhotonNetwork.LocalPlayer.TestSetSphereCoordinate(_sphere[playernum]._spherePosTemp);
+                    _colorManager[playernum]._seedCount = player.GetSphereColor();
+                    _sphere[playernum].SphereColorReset();
                 }
 
+                if (player.GetFieldData(playernum) != _fieldData[playernum].NetFieldUpdate())
+                {
+                    for(int a = 0; a < _fieldData[playernum].NetFieldUpdate().Length; a++)
+                    {
+                        //Debug.Log("aaaa");
+                        if (player.GetFieldData(playernum)[a] != _fieldData[playernum].NetFieldUpdate()[a])
+                        {
+                            _fieldData[playernum].FieldSynchronization(player.GetFieldData(playernum)[a],a);
+                        }
+                    }
+                    //for (int y = 0; y < _fieldData[playernum].testH().Length; y++)
+                    //{
+                    //    if(player.GetObstaclWidth(playernum)[y] != _fieldData[playernum].testH()[y])
+                    //    {
+                    //        Debug.Log(y);
+                    //    }
+                    //        Debug.Log((player.GetObstaclWidth(playernum).Length + "やっほー" + _fieldData[playernum].testH().Length));
+                    // }
+
+                    //_fieldData[playernum].testT(player.GetObstaclWidth(playernum));
+                }
+                if (player.GetObstacle() != _obstacleAdd[playernum])
+                {
+                    // テスト用
+                    _obstacleAdd[playernum] = player.GetObstacle();
+                    Debug.Log("わー");
+
+                }
+
+                //_obstacle[playernum] = player.GetObstacle();
+
+                //_sphere[playernum]._spherePosTemp = new Vector2Int(-1, -1);
+                //PhotonNetwork.LocalPlayer.TestSetSphereCoordinate(_sphere[playernum]._spherePosTemp);
                 // 設置フラグの代入
                 //var isset = player.GetSphereSet();
                 //if (isset && !_isTestSet)
@@ -268,31 +366,28 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 //    _moveSphere[playernum]._spherePos = new Vector2Int(3, 11);
                 //    _tempPos = Vector2Int.zero;
                 //}
-                ////else if (_isTestSet && IsSetUpdate(playernum))
-                ////else if (isset && _isTestSet && IsSetUpdate(playernum))
-                //else if (!isset && _isTestSet && IsSetUpdate(playernum))
-                //{
-                //    Debug.Log("たぶんとおった");
-                //    _isTestUpdate = false;
-                //    _isTestSet = false;
-                //    _fieldData[playernum]._isSetFlag = false;
-                //    _isSetFlag = false;
-                //}
-                //Debug.Log("セット" + isset + "セットフラグ" + _isTestSet+ "関数" + IsSetUpdate(playernum));
-                _prevTemppos = _tempPos;
-                _prevDir = dir;
+
+                //_prevTemppos = _tempPos;
+                //_prevDir = dir;
                 //_fieldData[playernum]._isSetEnd = isset;
 
                 //if (_moveSphere[playernum]._isReGenereteSpher) { _isTestSet = false; }
 
-
                 //Debug.Log("add" + _fieldData[add]._isSetEnd);
 
             }
-            else
-            {
+            //else
+            //{
+            //    //if (_isSetFlag[playernum])
+            //    //{
+            //    //    Debug.Log("color");
+            //    //    // テスト用
+            //    //    PhotonNetwork.LocalPlayer.TestSetIsSphereSet(true);
+            //    //    PhotonNetwork.LocalPlayer.CustomUpdate();
+            //    //}
 
-            }
+            //    //_isSetFlag[playernum] = player.TestGetSphereSet();
+            //}
             playernum++;
         }
 
@@ -318,49 +413,106 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         // ゲームオーバーになったら処理を止めるよ.
         if (_isGameOver) return;
         // スフィアの回転処理.
-        // キューブの移動処理.
-        for (int i = 0; i < _moveSphere.Length; i++)
+        // リストの情報を取得
+        var players = PhotonNetwork.PlayerList;
+        var add = 0;
+        foreach (var player in players)
         {
-            // セットしていなかったらうごかせる.
-            if (!_fieldData[i].IsSetSphere())
+        // キューブの移動処理.
+            if (PhotonNetwork.LocalPlayer.ActorNumber == player.ActorNumber)
             {
-                if (_moveSphere[i]._playerIndex >= 0)
+                if (_obstaclePrev[add] != _fieldData[add].GetObstacle())
                 {
-                    _moveSphere[i].SphereUpdate();
+                    _obstacle[add] = _fieldData[add].GetObstacle();
+                    if (_obstacle[add] != 0)
+                    {
+                        //Debug.Log(player.GetObstaclWidth()[0,0]);
+                        // テスト用
+                        if (_isStop)
+                        {
+                            _obstacleAdd[add] += _obstacle[add];
+                        }
+                        else
+                        {
+                            _obstacleAdd[add] = _obstacle[add];
+                        }
+
+                        _isStop = false;
+                    }
+                    else
+                    {
+                        _isStop = true;
+                    }
+                }
+                _obstaclePrev[add] = _obstacle[add];
+                    //Debug.Log(_fieldData[actor]._isSetEnd);
+                //for (int i = 0; i < _moveSphere.Length; i++)
+                {
+            // セットしていなかったらうごかせる.
+            if (!_fieldData[add].IsSetSphere())
+            {
+                _moveSphere[add].SphereUpdate();
+            }
+        }
+                //for (int i = 0; i < _moveSphere.Length; i++)
+                {
+                    // 動いてなかったら生成.
+                    if (!_fieldData[add].MoveObstacleSphere())
+                    {
+                        //if (!_sphere[i]._isSetInt) return;
+                        //_moveSphere[i].InstallationProcessTest(_fieldData[i].IsSetSphere(), _fieldData[i]);
+                        //if (_testFrame == 0)
+                        //{
+                        //    _testFrame = 1;
+                        //    return;
+                        //}
+                        //_testFrame--;
+                        //_moveSphere[i].InstallationProcessTest(_fieldData[i].IsSetSphere(), _fieldData[i]);
+                        // test = _fieldData[i].IsSetSphere();
+                        // テスト用
+                        //var players = PhotonNetwork.PlayerList;
+                        //foreach (var player in players)
+                        //{
+                        //    var a = 0;
+                        //    if (PhotonNetwork.LocalPlayer.ActorNumber != player.ActorNumber && test && !_isSetFlag[a])
+                        //    //if (PhotonNetwork.LocalPlayer.ActorNumber != player.ActorNumber && _fieldData[i].IsSetSphere())
+                        //    {
+                        //        _isSetFlag[a] = false;
+                        //        PhotonNetwork.LocalPlayer.TestSetIsSphereSet(true);
+                        //        PhotonNetwork.LocalPlayer.CustomUpdate();
+                        //    }
+                        //    a++;
+                        //    //_isSetFlag[a] = false;
+                        //}
+                        //Debug.Log(_isSetFlag[i]);
+                        //if (!_isSetFlag[i]) return;
+
+                        //if (add != 1)
+                        //{
+                        //    _moveSphere[add].InstallationProcess(_fieldData[add].IsSetSphere(), _fieldData[add]);
+                        //}
+
+                        _moveSphere[add].InstallationProcess(_fieldData[add].IsSetSphere(), _fieldData[add]);
+                        _isSetFlag[add] = false;
+                    }
+                    // スフィアを再生成できるかのフラグが成立していたら
+                    if (_moveSphere[add]._isRegeneration)
+                    {
+                        // カウントをリセットす
+                        _moveSphere[add]._isRegeneration = false;
+                        _isSetFall[add] = false;
+                    }
+                }
+                foreach (var field in _fieldData)
+                {
+                    // フィールドの更新処理.
+                    field.FieldUpdate();
                 }
             }
+                // お邪魔計算.
+                ObstacleCalculation(add);
+            add++;
         }
-        for (int i = 0; i < _moveSphere.Length; i++)
-        {
-            // 動いてなかったら生成.
-            if (!_fieldData[i].MoveObstacleSphere())
-            {
-                //if (!_sphere[i]._isSetInt) return;
-                //_moveSphere[i].InstallationProcessTest(_fieldData[i].IsSetSphere(), _fieldData[i]);
-                //if (_testFrame == 0)
-                //{
-                //    _testFrame = 1;
-                //    return;
-                //}
-                //_testFrame--;
-                //_moveSphere[i].InstallationProcessTest(_fieldData[i].IsSetSphere(), _fieldData[i]);
-                _moveSphere[i].InstallationProcess(_fieldData[i].IsSetSphere(), _fieldData[i]);
-            }
-            // スフィアを再生成できるかのフラグが成立していたら
-            if (_moveSphere[i]._isRegeneration)
-            {
-                // カウントをリセットす
-                _moveSphere[i]._isRegeneration = false;
-                _isSetFall[i] = false;
-            }
-        }
-        foreach (var field in _fieldData)
-        {
-            // フィールドの更新処理.
-            field.FieldUpdate();
-        }
-        // お邪魔計算.
-        ObstacleCalculation();
     }
     private void GameFixUpdate()
     {
@@ -372,6 +524,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         // キューブの移動処理.
         for (int i = 0; i < _moveSphere.Length; i++)
         {
+            if (_isSetFlag[i]) return;
             // セットしていなかったらうごかせる.
             if (!_fieldData[i].IsSetSphere())
             {
@@ -451,22 +604,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             col.ColorRandam();
         }
     }
-    private bool IsSetUpdate(int actor)
-    {
-            Debug.Log("またね");
-//        if (_isSetFlag != _fieldData[actor]._isSetFlag)
-        {
-            Debug.Log("あい");
-            //_isSetFlag = _fieldData[actor]._isSetFlag;
-            //if (_isSetFlag)
-            {
-                //_isSetFlag = false;
-                return true;
-            }
-        }
 
-        return false;
-    }
     // ゲーム開始時に画像を表示
     private bool GenereteGameStart()
     {
@@ -552,99 +690,126 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         }
     }
     // 邪魔スフィアの計算(相殺処理)
-    private void ObstacleCalculation()
+    private void ObstacleCalculation(int add)
     {
-        // 連鎖が終わった時に落とす.
-        for (int i = 0; i < _fieldData.Length; i++)
-        {
-            // とりあえず値を取得するよ.
-            _obstacleAdd[i] = _fieldData[i].GetObstacle();
-            // 今持っている数値が大きかったら代入するよ
-            if (_obstacle[i] < _obstacleAdd[i])
-            {
-                _obstacle[i] = _obstacleAdd[i];
-            }
+        //////連鎖が終わった時に落とす.
+        ////for (int i = 0; i < _fieldData.Length; i++)
+        ////{
+        ////    //とりあえず値を取得するよ.
+        ////if (_obstacle[add] != 0)
+        ////    {
+        ////        _obstacle[add] = _fieldData[add].GetObstacle();
+        ////        Debug.Log(add + "表示" + _obstacle[add]);
+        ////    }
+        ////    _obstacleAdd[add] = _fieldData[add].GetObstacle();
+        ////    // 今持っている数値が大きかったら代入するよ
+        ////    if (_obstacle[add] < _obstacleAdd[add])
+        ////    {
+        ////        _obstacle[add] = _obstacleAdd[add];
+        ////    }
 
-            if (_obstaclePrev[i] != _obstacle[i])
-            {
-                _total += (_obstacle[_leftPlayer] - _obstacle[_rightPlayer]);
-            }
-            _obstaclePrev[i] = _obstacle[i];
+        ////    if (_obstaclePrev[add] != _obstacle[add])
+        ////    {
+        ////        _total += (_obstacle[_leftPlayer] - _obstacle[_rightPlayer]);
+        ////    }
+        ////    _obstaclePrev[add] = _obstacle[add];
+        ////}
+
+        ////// 最大数は30にしたいので30より多い数を送らないようにする.
+        //_total = MaxLimit(_total);
+        if(_obstacleAdd[0] > _obstacleAdd[1])
+        {
+            _obstacleAdd[0] = _obstacleAdd[0] - _obstacleAdd[1];
+            _obstacleAdd[1] = 0; 
+            Debug.Log("right");
         }
-        //// 最大数は30にしたいので30より多い数を送らないようにする.
-        _total = MaxLimit(_total);
+        else if (_obstacleAdd[1] > _obstacleAdd[0])
+        {
+            _obstacleAdd[1] = _obstacleAdd[1] - _obstacleAdd[0];
+            _obstacleAdd[0] = 0;
+            Debug.Log("left");
+        }
+        else if (_obstacleAdd[0] == _obstacleAdd[1])
+        {
+            _obstacleAdd[0] = 0;
+            _obstacleAdd[1] = 0;
+            Debug.Log("こんにちわ");
+        }
+
 #if true
-        // デバック用におじゃまの数表示
+        //デバック用におじゃまの数表示
         ObsText();
 #endif
 
-        if (_total > 0)
-        {
-            if (!_fieldData[_leftPlayer].IsFieldUpdate() && _fieldData[_rightPlayer].IsInstallaion() && !_isSetFall[_rightPlayer])
-            {
-                if (!_fieldData[_rightPlayer].IsFieldUpdate())
-                {
-                    _fieldData[_rightPlayer].SetObstacle(_total);
-                    _fieldData[_rightPlayer].GetInstallation();
-                    _isSetFall[_rightPlayer] = true;
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else if (_fieldData[_rightPlayer].IsInstallaion())
-            {
-                _fieldData[_rightPlayer].GetInstallation();
-                return;
+        //if (_total > 0)
+        //{
+        //    if (!_fieldData[_leftPlayer].IsFieldUpdate() && _fieldData[_rightPlayer].IsInstallaion() && !_isSetFall[_rightPlayer])
+        //    {
+        //        if (!_fieldData[_rightPlayer].IsFieldUpdate())
+        //        {
+        //            _fieldData[_rightPlayer].SetObstacle(_total);
+        //            _fieldData[_rightPlayer].GetInstallation();
+        //            _isSetFall[_rightPlayer] = true;
+        //            Debug.Log("阿弥陀");
+        //        }
+        //        else
+        //        {
+        //            return;
+        //        }
+        //    }
+        //    else if (_fieldData[_rightPlayer].IsInstallaion())
+        //    {
+        //        _fieldData[_rightPlayer].GetInstallation();
+        //        return;
 
-            }
-            else
-            {
-                return;
-            }
-        }
-        else if (_total < 0)
-        {
-            if (!_fieldData[_rightPlayer].IsFieldUpdate() && _fieldData[_leftPlayer].IsInstallaion() && !_isSetFall[_leftPlayer])
-            {
-                if (!_fieldData[_leftPlayer].IsFieldUpdate())
-                {
-                    _fieldData[_leftPlayer].SetObstacle(_total * -1);
-                    _fieldData[_leftPlayer].GetInstallation();
-                    _isSetFall[_leftPlayer] = true;
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else if (_fieldData[_leftPlayer].IsInstallaion())
-            {
-                _fieldData[_leftPlayer].GetInstallation();
-                return;
+        //    }
+        //    else
+        //    {
+        //        return;
+        //    }
+        //}
+        //else if (_total < 0)
+        //{
+        //    if (!_fieldData[_rightPlayer].IsFieldUpdate() && _fieldData[_leftPlayer].IsInstallaion() && !_isSetFall[_leftPlayer])
+        //    {
+        //        if (!_fieldData[_leftPlayer].IsFieldUpdate())
+        //        {
+        //            _fieldData[_leftPlayer].SetObstacle(_total * -1);
+        //            _fieldData[_leftPlayer].GetInstallation();
+        //            _isSetFall[_leftPlayer] = true;
+        //            Debug.Log("家紋");
+        //        }
+        //        else
+        //        {
+        //            return;
+        //        }
+        //    }
+        //    else if (_fieldData[_leftPlayer].IsInstallaion())
+        //    {
+        //        _fieldData[_leftPlayer].GetInstallation();
+        //        return;
 
-            }
-            else
-            {
-                return;
-            }
-        }
+        //    }
+        //    else
+        //    {
+        //        return;
+        //    }
+        //}
 
-        // 初期化
-        for (int i = 0; i < _fieldData.Length; i++)
-        {
-            // とりあえず値を取得するよ.
-            _obstacle[i] = 0;
-            _obstacleAdd[i] = 0;
-        }
-        _total = _obstacleCount;
-        _obstacleCount = 0;
+        //// 初期化
+        //for (int i = 0; i < _fieldData.Length; i++)
+        //{
+        //    // とりあえず値を取得するよ.
+        //    _obstacle[i] = 0;
+        //    _obstacleAdd[i] = 0;
+        //}
+        //_total = _obstacleCount;
+        //_obstacleCount = 0;
     }
     // 最大数の制限処理
     private int MaxLimit(int total)
     {
-        // 最大数は30にしたいので30より多い数を送らないようにする.
+        // 最大数は30にしたいのでMAXより多い数を送らないようにする.
         if (total > _obstacleMax)
         {
             _obstacleCount = total - _obstacleMax;
@@ -660,18 +825,23 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     // テキスト用
     private void ObsText()
     {
-        if (_total < 0 || _obstacleCount < 0)
+        for(int i = 0 ; i < _obstacleText.Length; i++)
         {
-            _obstacleText[_leftPlayer].SetObstacleCount((_total + _obstacleCount) * -1);
+            _obstacleText[i].SetObstacleCount(_obstacleAdd[i]);
         }
-        else if (_total > 0 || _obstacleCount > 0)
-        {
-            _obstacleText[_rightPlayer].SetObstacleCount(_total + _obstacleCount);
-        }
-        else
-        {
-            _obstacleText[_leftPlayer].SetObstacleCount(0);
-            _obstacleText[_rightPlayer].SetObstacleCount(0);
-        }
+
+        //if (_total < 0 || _obstacleCount < 0)
+        //{
+        //    _obstacleText[_leftPlayer].SetObstacleCount((_total + _obstacleCount) * -1);
+        //}
+        //else if (_total > 0 || _obstacleCount > 0)
+        //{
+        //    _obstacleText[_rightPlayer].SetObstacleCount(_total + _obstacleCount);
+        //}
+        //else
+        //{
+        //    _obstacleText[_leftPlayer].SetObstacleCount(0);
+        //    _obstacleText[_rightPlayer].SetObstacleCount(0);
+        //}
     }
 }
