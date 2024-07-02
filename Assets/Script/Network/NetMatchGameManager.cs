@@ -36,6 +36,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     private bool _isStop = false;
     private int _obstacleCount = 0;
     private int[] _obstaclePrev = new int[2];
+    private int[] _obstacleAddPrev = new int[2];
     private int _obstacleMax = 15;
     // ゲームオーバーかどうかのフラグを取得する.
     private bool _isGameOver = false;
@@ -332,8 +333,6 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 {
                     // テスト用
                     _obstacleAdd[playernum] = player.GetObstacle();
-                    Debug.Log("わー");
-
                 }
 
                 //_obstacle[playernum] = player.GetObstacle();
@@ -717,23 +716,34 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
 
         ////// 最大数は30にしたいので30より多い数を送らないようにする.
         //_total = MaxLimit(_total);
-        if(_obstacleAdd[0] > _obstacleAdd[1])
+        if (_obstacleAdd[0] > _obstacleAdd[1])
         {
-            _obstacleAdd[0] = _obstacleAdd[0] - _obstacleAdd[1];
-            _obstacleAdd[1] = 0; 
-            Debug.Log("right");
+            if (_obstacleAddPrev[0] != _obstacleAdd[0])
+            {
+                _obstacleAdd[0] = _obstacleAdd[0] - _obstacleAdd[1];
+                _obstacleAdd[1] = 0;
+                Debug.Log("right");
+            }
         }
         else if (_obstacleAdd[1] > _obstacleAdd[0])
         {
-            _obstacleAdd[1] = _obstacleAdd[1] - _obstacleAdd[0];
-            _obstacleAdd[0] = 0;
-            Debug.Log("left");
+            if (_obstacleAddPrev[1] != _obstacleAdd[1])
+            {
+                Debug.Log(_obstacleAdd[1] + "a" + _obstacleAdd[0]);
+                _obstacleAdd[1] = _obstacleAdd[1] - _obstacleAdd[0];
+                _obstacleAdd[0] = 0;
+                Debug.Log("left");
+            }
         }
         else if (_obstacleAdd[0] == _obstacleAdd[1])
         {
             _obstacleAdd[0] = 0;
             _obstacleAdd[1] = 0;
             Debug.Log("こんにちわ");
+        }
+        for(int i = 0; i < _obstacleAdd.Length; i++)
+        {
+            _obstacleAddPrev[i] = _obstacleAdd[i];
         }
 
 #if true
