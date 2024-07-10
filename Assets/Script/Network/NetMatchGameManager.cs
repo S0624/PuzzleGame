@@ -425,15 +425,15 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                     _obstacle[add] = _fieldData[add].GetObstacle();
                     if (_obstacle[add] != 0)
                     {
-                        //Debug.Log(player.GetObstaclWidth()[0,0]);
+                        Debug.Log("だだ" + _obstacle[add]);
                         // テスト用
-                        if (_isStop)
+                        //if (_isStop)
                         {
                             _obstacleAdd[add] += _obstacle[add];
                         }
-                        else
+                        //else
                         {
-                            _obstacleAdd[add] = _obstacle[add];
+                            //_obstacleAdd[add] = _obstacle[add];
                         }
 
                         _isStop = false;
@@ -741,7 +741,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             _obstacleAdd[1] = 0;
             Debug.Log("こんにちわ");
         }
-        for(int i = 0; i < _obstacleAdd.Length; i++)
+        for (int i = 0; i < _obstacleAdd.Length; i++)
         {
             _obstacleAddPrev[i] = _obstacleAdd[i];
         }

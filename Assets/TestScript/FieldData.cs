@@ -79,6 +79,7 @@ public class FieldData : MonoBehaviour
     private bool _isField = false;
     // サウンドの取得
     private SoundManager _soundManager;
+    private int _prevObstacleNum = 0;
     // ボードの中を全消しする(クリアする).
     private void ClearAll()
     {
@@ -948,6 +949,12 @@ public class FieldData : MonoBehaviour
         // お邪魔計算.
         _obstacleCount = (int)((_score * _eraseCount) * (_bonus) * 0.0125f);
 
+        if(_prevObstacleNum != _obstacleCount)
+        {
+            _obstacleCount = _obstacleCount - _prevObstacleNum;
+            if(_obstacleCount < 0) { _obstacleCount = 0; }
+        }
+        _prevObstacleNum = _obstacleCount;
         //Debug.Log("連鎖数:" + _chainCount + "ボーナス:" + _bonus);
         //Debug.Log(_obstacleCount);
         //Debug.Log(_bonus);
