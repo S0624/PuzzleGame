@@ -36,7 +36,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     private bool _isStop = false;
     private int _obstacleCount = 0;
     private int[] _obstaclePrev = new int[2];
-    private int[] _obstacleAddPrev = new int[2];
+    private int[] _prevObstacleAdd = new int[2];
     private int _obstacleMax = 15;
     // ゲームオーバーかどうかのフラグを取得する.
     private bool _isGameOver = false;
@@ -166,7 +166,6 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                         //Debug.Log(player.GetObstaclWidth()[0,0]);
                         // テスト用
                         PhotonNetwork.LocalPlayer.SetObstacleData(_obstacleAdd[actor]);
-                        Debug.Log("わんだほい");
                         isupdate = true;
                     }
 
@@ -716,34 +715,50 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
 
         ////// 最大数は30にしたいので30より多い数を送らないようにする.
         //_total = MaxLimit(_total);
-        if (_obstacleAdd[0] > _obstacleAdd[1])
-        {
-            if (_obstacleAddPrev[0] != _obstacleAdd[0])
-            {
-                _obstacleAdd[0] = _obstacleAdd[0] - _obstacleAdd[1];
-                _obstacleAdd[1] = 0;
-                Debug.Log("right");
-            }
-        }
-        else if (_obstacleAdd[1] > _obstacleAdd[0])
-        {
-            if (_obstacleAddPrev[1] != _obstacleAdd[1])
-            {
-                Debug.Log(_obstacleAdd[1] + "a" + _obstacleAdd[0]);
-                _obstacleAdd[1] = _obstacleAdd[1] - _obstacleAdd[0];
-                _obstacleAdd[0] = 0;
-                Debug.Log("left");
-            }
-        }
-        else if (_obstacleAdd[0] == _obstacleAdd[1])
+
+        var testNum =  _obstacleAdd[0] - _obstacleAdd[1];
+        if(testNum < 0)
         {
             _obstacleAdd[0] = 0;
-            _obstacleAdd[1] = 0;
-            Debug.Log("こんにちわ");
+            _obstacleAdd[1] = testNum * -1;
         }
+        else if(testNum > 0)
+        {
+            _obstacleAdd[0] = testNum;
+            _obstacleAdd[1] = 0;
+        }
+        else
+        {
+
+        }
+        //if (_obstacleAdd[0] > _obstacleAdd[1])
+        //{
+        //    //if (_prevObstacleAdd[0] != _obstacleAdd[0])
+        //    {
+        //        _obstacleAdd[1] = _obstacleAdd[0] - _obstacleAdd[1];
+        //        _obstacleAdd[1] = 0;
+        //        Debug.Log("right");
+        //    }
+        //}
+        //else if (_obstacleAdd[1] > _obstacleAdd[0])
+        //{
+        //    //if (_prevObstacleAdd[1] != _obstacleAdd[1])
+        //    {
+        //        Debug.Log(_obstacleAdd[1] + "a" + _obstacleAdd[0]);
+        //        _obstacleAdd[0] = _obstacleAdd[1] - _obstacleAdd[0];
+        //        _obstacleAdd[0] = 0;
+        //        Debug.Log("left");
+        //    }
+        //}
+        //else if (_obstacleAdd[0] == _obstacleAdd[1])
+        //{
+        //    _obstacleAdd[0] = 0;
+        //    _obstacleAdd[1] = 0;
+        //    Debug.Log("こんにちわ");
+        //}
         for (int i = 0; i < _obstacleAdd.Length; i++)
         {
-            _obstacleAddPrev[i] = _obstacleAdd[i];
+            _prevObstacleAdd[i] = _obstacleAdd[i];
         }
 
 #if true
