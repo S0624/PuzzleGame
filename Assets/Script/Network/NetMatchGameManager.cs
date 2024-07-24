@@ -32,7 +32,8 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     private bool _isGameStartText = false;
     // お邪魔スフィアの管理用の変数.
     private int[] _obstacle = new int[2];
-    private int[] _obstacleAdd = new int[2];
+    private int[] _addObstacle = new int[2];
+    private int[] _obstacleTemp = new int[2];
     private bool _isStop = false;
     private int _obstacleCount = 0;
     private int[] _obstaclePrev = new int[2];
@@ -82,6 +83,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             _allClearTex[i] = null;
         }
         ColorSeedInit();
+        _addObstacle[0] = 20;
         _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
     // Update is called once per frame
@@ -118,19 +120,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                     PhotonNetwork.LocalPlayer.IsSetSphereCoordinate(_sphere[actor].transform.localPosition);
                     isupdate = true;
                 }
-                ////てすと
-                //if (player.GetSphereCoordinate() != _sphere[actor]._spherePosTemp)
-                ////if (player.TestGetSphereCoordinate() != _sphere[actor]._spherePosTemp || player.TestGetSphereCoordinate().x == -1)
-                //{
-                //    if(player.GetSphereCoordinate().x == -1)
-                //    {
-                //        _isTestSet = false;
-                //    }
 
-                //    //Debug.Log("はずれ" + _sphere[actor]._spherePosTemp);
-                //    PhotonNetwork.LocalPlayer.SetSphereCoordinate(_sphere[actor]._spherePosTemp);
-                //    isupdate = true;
-                //}
                 if (player.GetSphereDirection() != _sphere[actor]._direction)
                 {
                     PhotonNetwork.LocalPlayer.SetSphereDirection(_sphere[actor]._direction);
@@ -159,13 +149,14 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
 
                     //Debug.Log(_fieldData[actor]._isSetEnd);
                 }
-                if (player.GetObstacle() != _obstacleAdd[actor])
+                if (player.GetObstacle() != _addObstacle[actor])
                 {
                     //if (_fieldData[actor].GetObstacle() != 0)
                     {
                         //Debug.Log(player.GetObstaclWidth()[0,0]);
+                        Debug.Log("とおったお");
                         // テスト用
-                        PhotonNetwork.LocalPlayer.SetObstacleData(_obstacleAdd[actor]);
+                        PhotonNetwork.LocalPlayer.SetObstacleData(_addObstacle[actor]);
                         isupdate = true;
                     }
 
@@ -312,6 +303,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                     for(int a = 0; a < _fieldData[playernum].NetFieldUpdate().Length; a++)
                     {
                         //Debug.Log("aaaa");
+                        //if(player.GetFieldData(playernum)[a] == null) { continue; }
                         if (player.GetFieldData(playernum)[a] != _fieldData[playernum].NetFieldUpdate()[a])
                         {
                             _fieldData[playernum].FieldSynchronization(player.GetFieldData(playernum)[a],a);
@@ -328,10 +320,10 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
 
                     //_fieldData[playernum].testT(player.GetObstaclWidth(playernum));
                 }
-                if (player.GetObstacle() != _obstacleAdd[playernum])
+                if (player.GetObstacle() != _addObstacle[playernum])
                 {
                     // テスト用
-                    _obstacleAdd[playernum] = player.GetObstacle();
+                    _addObstacle[playernum] = player.GetObstacle();
                 }
 
                 //_obstacle[playernum] = player.GetObstacle();
@@ -421,36 +413,40 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             {
                 if (_obstaclePrev[add] != _fieldData[add].GetObstacle())
                 {
+                    Debug.Log("とおった" + _obstacle[add]);
                     _obstacle[add] = _fieldData[add].GetObstacle();
-                    if (_obstacle[add] != 0)
+                    //if (_obstacle[add] != 0)
                     {
-                        Debug.Log("だだ" + _obstacle[add]);
                         // テスト用
                         //if (_isStop)
                         {
-                            _obstacleAdd[add] += _obstacle[add];
+                            _addObstacle[add] += _obstacle[add];
+                            Debug.Log("だだ" + _addObstacle[add]);
                         }
                         //else
                         {
                             //_obstacleAdd[add] = _obstacle[add];
                         }
 
-                        _isStop = false;
+                        //_isStop = false;
                     }
-                    else
-                    {
-                        _isStop = true;
-                    }
+                    //else
+                    //{
+                    //    _isStop = true;
+                    //}
                 }
                 _obstaclePrev[add] = _obstacle[add];
                     //Debug.Log(_fieldData[actor]._isSetEnd);
                 //for (int i = 0; i < _moveSphere.Length; i++)
                 {
-            // セットしていなかったらうごかせる.
-            if (!_fieldData[add].IsSetSphere())
+                    //if (_moveSphere[1]) return;
+                    if(add == 1) {
+                    // セットしていなかったらうごかせる.
+                    if (!_fieldData[add].IsSetSphere())
             {
                 _moveSphere[add].SphereUpdate();
             }
+                        }
         }
                 //for (int i = 0; i < _moveSphere.Length; i++)
                 {
@@ -716,21 +712,37 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         ////// 最大数は30にしたいので30より多い数を送らないようにする.
         //_total = MaxLimit(_total);
 
-        var testNum =  _obstacleAdd[0] - _obstacleAdd[1];
+        var testNum =   _addObstacle[0] - _addObstacle[1];
+        Debug.Log(_addObstacle[0] + "あ" + _addObstacle[1] + "い" + testNum);
         if(testNum < 0)
         {
-            _obstacleAdd[0] = 0;
-            _obstacleAdd[1] = testNum * -1;
+            _addObstacle[0] = 0;
+            _addObstacle[1] = testNum * -1;
         }
         else if(testNum > 0)
         {
-            _obstacleAdd[0] = testNum;
-            _obstacleAdd[1] = 0;
+            _addObstacle[0] = testNum;
+            _addObstacle[1] = 0;
         }
-        else
+        else if (testNum == 0)
         {
-
+            _addObstacle[0] = 0;
+            _addObstacle[1] = 0;
         }
+        
+        //// リストの情報を取得
+        //var players = PhotonNetwork.PlayerList;
+        //int actor = 0;
+        //foreach (var player in players)
+        //{
+        //    if (PhotonNetwork.LocalPlayer.ActorNumber != player.ActorNumber)
+        //    {
+        //        PhotonNetwork.LocalPlayer.SetObstacleData(_addObstacle[actor]);
+        //        //PhotonNetwork.LocalPlayer.CustomUpdate();
+        //        actor++;
+        //    }
+        //}
+
         //if (_obstacleAdd[0] > _obstacleAdd[1])
         //{
         //    //if (_prevObstacleAdd[0] != _obstacleAdd[0])
@@ -756,9 +768,9 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         //    _obstacleAdd[1] = 0;
         //    Debug.Log("こんにちわ");
         //}
-        for (int i = 0; i < _obstacleAdd.Length; i++)
+        for (int i = 0; i < _addObstacle.Length; i++)
         {
-            _prevObstacleAdd[i] = _obstacleAdd[i];
+            _prevObstacleAdd[i] = _addObstacle[i];
         }
 
 #if true
@@ -852,7 +864,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     {
         for(int i = 0 ; i < _obstacleText.Length; i++)
         {
-            _obstacleText[i].SetObstacleCount(_obstacleAdd[i]);
+            _obstacleText[i].SetObstacleCount(_addObstacle[i]);
         }
 
         //if (_total < 0 || _obstacleCount < 0)
