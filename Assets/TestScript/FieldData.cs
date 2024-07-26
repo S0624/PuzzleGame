@@ -986,7 +986,7 @@ public class FieldData : MonoBehaviour
         _isSetEnd = false;
     }
     // おじゃまの数の取得用.
-    public int GetObstacle()
+    public int GetObstacleNum()
     {
         return _obstacleCount;
     }

@@ -28,6 +28,8 @@ public static class GameRoomProperty
     private const string _fielddata = "Field";
     // 邪魔スフィアの取得
     private const string _isObstacle = "obs";
+    // 邪魔スフィアの取得
+    private const string _isObstacleTest = "test";
 
     private static readonly Hashtable propsToSet = new Hashtable();
 
@@ -230,6 +232,17 @@ public static class GameRoomProperty
     {
         if (player.CustomProperties[_isObstacle] == null) return 0;
         return (int)player.CustomProperties[_isObstacle];
+    }
+
+    public static void SetObstacleDataTest(this Player player, int obs)
+    {
+        propsToSet[_isObstacleTest] = obs;
+    }
+
+    public static int GetObstacleTotal(this Player player)
+    {
+        if (player.CustomProperties[_isObstacleTest] == null) return 0;
+        return (int)player.CustomProperties[_isObstacleTest];
     }
 }
 

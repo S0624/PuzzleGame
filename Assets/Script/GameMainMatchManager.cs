@@ -237,7 +237,7 @@ public class GameMainMatchManager : MonoBehaviour
         for (int i = 0; i < _fieldData.Length; i++)
         {
             // とりあえず値を取得するよ.
-            _obstacleAdd[i] = _fieldData[i].GetObstacle();
+            _obstacleAdd[i] = _fieldData[i].GetObstacleNum();
             // 今持っている数値が大きかったら代入するよ
             if (_obstacle[i] < _obstacleAdd[i])
             {
