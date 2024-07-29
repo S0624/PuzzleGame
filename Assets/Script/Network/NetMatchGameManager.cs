@@ -86,16 +86,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         _obstacle[0] = 20;
         _soundManager = GameObject.Find("SoundManager").GetComponent<SoundManager>();
     }
-    // Update is called once per frame
-    void Update()
-    {
-        ColorSeedInit();
 
-        // ネットワークテスト用関数
-        TestUpdate();
-        NetTestUpdate();
-
-    }
     
 
     private void FixedUpdate()
@@ -155,9 +146,12 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                     isupdate = true;
                 }
                 // テスト用
-                if (player.GetObstacle() != _addObstacle[actor])
+                if(player.ActorNumber == 0)
+                //if (player.GetObstacleTotal1P() != _obstacleTemp[actor])
                 {
-                    PhotonNetwork.LocalPlayer.SetObstacleDataTest(_obstacleTemp[actor]);
+                    Debug.Log(_obstacleTemp[0] + "a" + _obstacleTemp[1]);
+                    PhotonNetwork.LocalPlayer.SetObstacleDataLeft(_obstacleTemp[0]);
+                    PhotonNetwork.LocalPlayer.SetObstacleDataRight(_obstacleTemp[1]);
                     isupdate = true;
                 }
                 //    //Debug.Log(_fieldData[actor]._isSetEnd);
@@ -257,8 +251,21 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 _sphere[playernum]._direction = dir;
                 _sphere[playernum].SphereRotation();
                 // おじゃまの取得
-                Debug.Log("なんばんですか" +  playernum + _obstacleTemp[playernum]);
-                _obstacleTemp[playernum] = player.GetObstacleTotal();
+                Debug.Log(player.ActorNumber + "なんばんですか"
+                    +  playernum + _obstacleTemp[playernum]);
+                Debug.Log("とおってますか" + player.GetObstacleTotal1P());
+                // 1P側のみ処理したい残骸
+                if(playernum == 0)
+                { 
+                    //_obstacleTemp[playernum] = player.GetObstacleTotal1P();
+                    //_obstacleTemp[0] = player.GetObstacleTotal1P();
+                    _obstacleTemp[1] = player.GetObstacleTotal2P();
+                }
+                else if (playernum == 1)
+                {
+                    _obstacleTemp[0] = player.GetObstacleTotal1P();
+                    _obstacleTemp[1] = player.GetObstacleTotal2P();
+                }
                 //_colorManager[0]._seedCount++;
 
                 // 設置フラグの代入
@@ -391,6 +398,16 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             //}
             playernum++;
         }
+
+    }
+        // Update is called once per frame
+    void Update()
+    {
+        ColorSeedInit();
+
+        // ネットワークテスト用関数
+        TestUpdate();
+        NetTestUpdate();
 
     }
     private void TestUpdate()
@@ -882,7 +899,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             _obstacle[i] = 0;
 
             var ans = _obstacleTemp[0] - _obstacleTemp[1];
-            Debug.Log(ans);
+            //Debug.Log(ans + "てんぷ" + _obstacleTemp[0]);
             if (ans < 0)
             {
                 _obstacleTemp[0] = 0;

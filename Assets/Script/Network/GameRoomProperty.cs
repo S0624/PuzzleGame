@@ -29,7 +29,8 @@ public static class GameRoomProperty
     // 邪魔スフィアの取得
     private const string _isObstacle = "obs";
     // 邪魔スフィアの取得
-    private const string _isObstacleTest = "test";
+    private const string _isObstacle1P = "1P";
+    private const string _isObstacle2P = "2P";
 
     private static readonly Hashtable propsToSet = new Hashtable();
 
@@ -188,8 +189,6 @@ public static class GameRoomProperty
     public static int[] GetFieldData(this Player player, int num)
     {
         var players = PhotonNetwork.PlayerList;
-        //if ((int[]) players[0].CustomProperties[_isObstacleW] == null) return null;
-        //return (int[])players[0].CustomProperties[_isObstacleW];
         if ((int[])players[num].CustomProperties[_fielddata] == null) return null;
         return (int[])players[num].CustomProperties[_fielddata];
     }
@@ -234,15 +233,26 @@ public static class GameRoomProperty
         return (int)player.CustomProperties[_isObstacle];
     }
 
-    public static void SetObstacleDataTest(this Player player, int obs)
+    public static void SetObstacleDataLeft(this Player player, int obs)
     {
-        propsToSet[_isObstacleTest] = obs;
+        propsToSet[_isObstacle1P] = obs;
     }
 
-    public static int GetObstacleTotal(this Player player)
+    public static int GetObstacleTotal1P(this Player player)
     {
-        if (player.CustomProperties[_isObstacleTest] == null) return 0;
-        return (int)player.CustomProperties[_isObstacleTest];
+        if (player.CustomProperties[_isObstacle1P] == null) return 0;
+        return (int)player.CustomProperties[_isObstacle1P];
+    }
+    public static void SetObstacleDataRight(this Player player, int obs)
+    {
+        propsToSet[_isObstacle2P] = obs;
+    }
+
+    public static int GetObstacleTotal2P(this Player player)
+    {
+        var players = PhotonNetwork.PlayerList;
+        if (players[0].CustomProperties[_isObstacle2P] == null) return 0;
+        return (int)players[0].CustomProperties[_isObstacle2P];
     }
 }
 
