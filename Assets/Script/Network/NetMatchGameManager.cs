@@ -258,11 +258,12 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 if(playernum == 0)
                 { 
                     //_obstacleTemp[playernum] = player.GetObstacleTotal1P();
-                    //_obstacleTemp[0] = player.GetObstacleTotal1P();
+                    _obstacleTemp[0] = player.GetObstacleTotal1P();
                     _obstacleTemp[1] = player.GetObstacleTotal2P();
                 }
                 else if (playernum == 1)
                 {
+                    Debug.Log("懐中時計");
                     _obstacleTemp[0] = player.GetObstacleTotal1P();
                     _obstacleTemp[1] = player.GetObstacleTotal2P();
                 }
