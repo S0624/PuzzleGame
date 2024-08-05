@@ -73,6 +73,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     private bool _isTestSet = false;
     //private bool _isSetFlag = false;
     private bool[] _isSetFlag = new bool[2];
+    private bool _isTestSum  = false;   
 
     private int _testFrame = 1;
     // Start is called before the first frame update
@@ -140,13 +141,15 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
 
                     //Debug.Log(_fieldData[actor]._isSetEnd);
                 }
-                if (player.GetObstacle() != _addObstacle[actor])
+                if (player.GetObstacle() != _obstacle[actor])
                 {
                     PhotonNetwork.LocalPlayer.SetObstacleData(_obstacle[actor]);
+                    _obstacle[actor] = 0;
+                    //_isTestSum = false;
                     isupdate = true;
                 }
                 // テスト用
-                if (PhotonNetwork.LocalPlayer.ActorNumber == players[0].ActorNumber)
+                if (PhotonNetwork.LocalPlayer.ActorNumber == PhotonNetwork.PlayerList[0].ActorNumber)
                 //if(player.ActorNumber == 0)
                 //if (player.GetObstacleTotal1P() != _obstacleTemp[actor])
                 {
@@ -211,14 +214,19 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 if(playernum == 0)
                 { 
                     ////_obstacleTemp[playernum] = player.GetObstacleTotal1P();
-                    //_obstacleTemp[0] = player.GetObstacleTotal1P();
-                    //_obstacleTemp[1] = player.GetObstacleTotal2P();
+                    Debug.Log("ぱっぱら");
+                    _obstacleTemp[0] = player.GetObstacleTotal1P();
+                    _obstacleTemp[1] = player.GetObstacleTotal2P();
+
+                    _obstacle[playernum] = player.GetObstacle();
                 }
                 else if (playernum == 1)
                 {
-                    Debug.Log("懐中時計");
-                    _obstacleTemp[0] = player.GetObstacleTotal1P();
-                    _obstacleTemp[1] = player.GetObstacleTotal2P();
+                    //_obstacle[playernum] = _fieldData[playernum].GetObstacleNum();
+                    _obstacle[playernum] = player.GetObstacle();
+                    Debug.Log("洗脳" + _obstacle[playernum]);
+                    //_obstacleTemp[0] = player.GetObstacleTotal1P();
+                    //_obstacleTemp[1] = player.GetObstacleTotal2P();
                 }
                 //_colorManager[0]._seedCount++;
 
@@ -395,7 +403,10 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 if (_obstacle[add] != _fieldData[add].GetObstacleNum())
                 {
                     Debug.Log(add + "kazu" + _obstacle[add]);
-                    _obstacle[add] = _fieldData[add].GetObstacleNum();
+                    if(_fieldData[add].GetObstacleNum() != 0)
+                    {
+                        _obstacle[add] = _fieldData[add].GetObstacleNum();
+                    }
                 }
                 //_obstaclePrev[add] = _obstacle[add];
                     //Debug.Log(_fieldData[actor]._isSetEnd);
@@ -797,8 +808,12 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     {
         for(int i = 0 ; i < _obstacleText.Length; i++)
         {
-            _obstacleTemp[i] += _obstacle[i];
-            _obstacle[i] = 0;
+            //if(!_isTestSum)
+            {
+                _obstacleTemp[i] += _obstacle[i];
+                //_isTestSum = true;
+            }
+            //_obstacle[i] = 0;
 
             var ans = _obstacleTemp[0] - _obstacleTemp[1];
             //Debug.Log(ans + "てんぷ" + _obstacleTemp[0]);
@@ -817,7 +832,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 _obstacleTemp[0] = 0;
                 _obstacleTemp[1] = 0;
             }
-            Debug.Log(_obstacleTemp[0] + "はい" + _obstacleTemp[1]);
+            //Debug.Log(_obstacleTemp[0] + "はい" + _obstacleTemp[1]);
             _obstacleText[i].SetObstacleCount(_obstacleTemp[i]);
         }
 
