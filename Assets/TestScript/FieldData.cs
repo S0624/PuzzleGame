@@ -137,7 +137,7 @@ public class FieldData : MonoBehaviour
     {
         // 下から詰めるけどランダムに降らせたい.
         // そんでたぶんこのままだと大変なことになる気がする.
-
+        Debug.Log(_obstacleNum);
         if (_obstacleNum >= _borad_Width)
         {
             BlockObstruction(_obstacleNum / _borad_Width);
