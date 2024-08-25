@@ -53,8 +53,6 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     // 右のプレイヤー
     private int _rightPlayer = (int)PlayerNumber.RightPlayer;
 
-    // ボタンの取得
-    private bool _isDecisionButtonPush = false;
     // オブジェクトの取得.
     public ColorSeedCreate _seed;
     public SphereColorManager[] _colorManager;
@@ -62,7 +60,6 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
     public SphereMove[] _sphere;
 
     // テスト用名前の表示
-    public TextMeshProUGUI[] _text;
     private Vector2 _testPos = Vector2.zero;
     private　bool _isTestUpdate = false;
     private Vector2 _prevTemppos = Vector2.zero;
@@ -96,7 +93,6 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
 
         // リストの情報を取得
         var players = PhotonNetwork.PlayerList;
-        PhotonNetwork.LocalPlayer.ButtonDown(_isDecisionButtonPush);
         // 何か変更があった時のみ同期させるためにフラグを用意
         bool isupdate = false;
         // 何番目か
@@ -170,11 +166,6 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         //    //}
         //}
 
-        // テスト用
-        for (int i = 0; i < players.Length; i++)
-        {
-            _text[i].text = players[i].GetButtonState().ToString();
-        }
         int playernum = 0;
         foreach (var player in players)
         {
@@ -346,11 +337,9 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
         ColorSeedInit();
 
         // ネットワークテスト用関数
-        TestUpdate();
-        NetTestUpdate();
-
+        NetworkUpdate();
     }
-    private void TestUpdate()
+    private void NetworkUpdate()
     {
         // ゲームスタート画面の更新処理.
         if (_startCanvas.IsStartCanvas())
@@ -390,13 +379,13 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
                 //for (int i = 0; i < _moveSphere.Length; i++)
                 {
                     //if (_moveSphere[1]) return;
-                    if(add == 1) {
+                    //if(add == 0) {
                         // セットしていなかったらうごかせる.
                         if (!_fieldData[add].IsSetSphere())
                         {
                             _moveSphere[add].SphereUpdate();
                         }
-                        }
+                        //}
         }
                 //for (int i = 0; i < _moveSphere.Length; i++)
                 {
@@ -446,29 +435,7 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
             }
         }
     }
-    private void NetTestUpdate()
-    {
-        // ネットワークテスト用関数
-        if (Input.GetKeyDown("z"))
-        {
-            if (_isDecisionButtonPush)
-            {
-                _isDecisionButtonPush = false;
-            }
-            else
-            {
-                _isDecisionButtonPush = true;
-            }
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            _testPos.x++;
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            _testPos.x--;
-        }
-    }
+   
 
     /// <summary>
     /// 色の初期化と同期
@@ -607,13 +574,19 @@ public class NetMatchGameManager : MonoBehaviourPunCallbacks
 #endif
         for (int i = 0; i < _obstacleText.Length; i++)
         {
-            if (!_fieldData[i].IsFieldUpdate() && _fieldData[_rightPlayer].IsInstallaion())
+            if (!_fieldData[i].IsFieldUpdate() && _fieldData[i].IsInstallaion())
             {
                 if (!_fieldData[i].IsFieldUpdate())
                 {
                     Debug.Log("とおった");
-                    Debug.Log("wa" + i + "wa" + _obstacleTemp[i]);
-                    _fieldData[i].SetObstacle(_obstacleTemp[i]);
+                    var test = 0;
+                    if(i == 0)
+                    {
+                        test = 1;
+                    }
+                    Debug.Log("wa" + i + "wa" + _obstacleTemp[test]);
+                    _fieldData[i].SetObstacle(_obstacleTemp[test]);
+                    _obstacleTemp[test] = 0;
                     _fieldData[i].GetInstallation();
                     _isSetFall[i] = true;
                 }
